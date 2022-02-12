@@ -1,0 +1,124 @@
+.aside {
+  padding-top: 20px;
+  padding-bottom: 15px;
+  color: $main_gray;
+
+  &-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  &-caption {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+
+    &.__mb-18 {
+      margin-bottom: 18px;
+    }
+  }
+
+  &-overlay {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .2);
+    opacity: 0;
+    transition: opacity .3s;
+
+    .__opened & {
+      opacity: 1;
+      pointer-events: all;
+    }
+  }
+
+  &-holder {
+    pointer-events: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 11;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &-container {
+    pointer-events: all;
+    transition: transform .3s;
+    transform: translateX(100%);
+    min-width: 100px;
+    overflow-x: hidden;
+    position: relative;
+    padding: 70px 15px 15px;
+    height: 100%;
+    overflow-y: auto;
+    background: #fff;
+
+    .__opened & {
+      transform: translateX(0);
+    }
+  }
+
+  &-close {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+
+    span {
+      position: relative;
+      z-index: 1;
+      background: #fff;
+      border-radius: 10px;
+      height: 2px;
+      margin: 1px auto;
+      width: 50%;
+      transition: all .4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+      &:nth-of-type(1) {
+        width: 20%;
+        margin: 0;
+        transform-origin: bottom;
+        transform: rotatez(45deg) translate(-2px, 2px)
+      }
+
+      &:nth-of-type(2) {
+        width: 44%;
+        transform-origin: top;
+        transform: rotatez(-45deg)
+      }
+
+      &:nth-of-type(3) {
+        margin: 0;
+        transform-origin: bottom;
+        width: 20%;
+        transform: translate(2px, -1px) rotatez(45deg);
+      }
+    }
+
+  }
+}
+
+.react-slidedown {
+  height: 0;
+  overflow: hidden;
+  transition-property: none;
+  transition-duration: .5s;
+  transition-timing-function: ease-in-out;
+}
+
+.react-slidedown.transitioning {
+  overflow-y: hidden;
+}
+
+.react-slidedown.closed {
+  display: none;
+}

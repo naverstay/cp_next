@@ -1,0 +1,293 @@
+.header {
+  z-index: 11;
+  position: relative;
+  padding-top: 30px;
+
+  @include respond-to-min($tablet) {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-navbar {
+    position: relative;
+
+    &__link {
+      transition: color .3s, background-color .3s;
+      background: none;
+      border: 0;
+      cursor: pointer;
+      color: $gray_link;
+      font-size: 12px;
+      text-decoration: none;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        color: $main_blue_light;
+      }
+    }
+
+    &__list {
+      list-style: none;
+
+      li {
+        display: flex;
+      }
+
+      @include respond-to-min($wide) {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-flow: row nowrap;
+        padding-right: 12px;
+
+        li {
+          margin: 0 15px;
+        }
+      }
+    }
+
+    @include respond-to-min($wide) {
+      flex: 1 0 auto;
+      padding-left: 35px;
+    }
+
+    @include respond-to-max($wide) {
+      transition: transform .3s, box-shadow .3s;
+      z-index: 9;
+      padding-top: 115px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 200px;
+      background: #fff;
+      transform: translateX(-100%);
+
+      .__open-mob-menu & {
+        transform: translateX(0);
+        box-shadow: 0 0 20px rgba(71, 93, 244, 0.1);
+      }
+
+      &__list {
+        height: 100%;
+        overflow-y: auto;
+
+        .header-navbar__link {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          width: 100%;
+          height: 30px;
+          padding: 0 30px;
+
+          &:hover {
+            color: #fff;
+            background: $main_blue_light;
+          }
+        }
+      }
+    }
+  }
+
+  &-menu {
+    @include burger();
+
+    .__open-mob-menu & {
+      @include burger_open();
+    }
+
+    @include respond-to-min($tablet) {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+    }
+
+    @include respond-to-min($wide) {
+      display: none;
+    }
+  }
+
+  &-order {
+    white-space: nowrap;
+    margin-left: 35px;
+
+    &__label {
+      margin-right: 8px;
+      padding-right: 6px;
+      transition: border .3s;
+      border-right: 1px solid #97a4f9;
+
+      .__disabled & {
+        border-color: #fff;
+      }
+    }
+
+    &__count {
+      text-align: center;
+      min-width: 35px;
+    }
+
+    @include respond-to-min($tablet) {
+      margin-left: 45px;
+    }
+
+    @include respond-to-min($dt) {
+      margin-left: 60px;
+    }
+
+    .__auth & {
+      margin-left: 25px;
+
+      @include respond-to-max($dt) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  &-phone {
+    color: $gray_link;
+    font-size: 12px;
+    position: relative;
+    text-decoration: none;
+    white-space: nowrap;
+
+    .btn__icon {
+      display: none;
+    }
+
+    &:hover {
+      color: $main_blue_light;
+    }
+
+    @include respond-to-max($dt) {
+      @include btn();
+
+      .btn__icon {
+        display: block;
+
+        + span {
+          display: none;
+        }
+      }
+
+    }
+  }
+
+  &-logo {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 24px;
+    color: $main_gray;
+    white-space: nowrap;
+    max-width: 100%;
+    padding: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include respond-to-min($tablet) {
+      margin: 0 20px 0 0;
+      padding: 0;
+    }
+
+    @include respond-to-min($dt) {
+      margin-right: 30px;
+    }
+  }
+
+  &-popup {
+    @extend %menu_hide;
+    font-size: 12px;
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    margin-top: 10px;
+    right: 0;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 20px 0 rgba(71, 93, 244, 0.1);
+    width: 270px;
+    max-width: 88vw;
+    padding: 15px 20px;
+
+    &.__show {
+      @extend %menu_show;
+    }
+
+    @include respond-to-max($tablet) {
+
+      &__holder {
+        //position: relative;
+      }
+    }
+
+    &__title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 0 5px;
+    }
+
+    p {
+      margin: 5px 0;
+      line-height: 1.3;
+    }
+  }
+
+  &-right,
+  &-left {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+
+    //&.__auth {
+    //  @include respond-to-min($tablet) {
+    //    max-width: 47%;
+    //  }
+    //
+    //  @include respond-to-min($dt) {
+    //    max-width: 65%;
+    //  }
+    //}
+
+    &.__auth,
+    .header-popup__holder {
+      > .btn {
+        .btn-inner {
+          max-width: 100%;
+        }
+
+        @include respond-to-min($tablet) {
+          padding: 0 20px;
+          max-width: 140px;
+        }
+
+        @include respond-to-min($dt) {
+          max-width: 300px;
+        }
+      }
+    }
+  }
+
+  @include respond-to-max($dt) {
+    &-right {
+      padding-left: 20px;
+    }
+  }
+
+  @include respond-to-max($tablet) {
+    &-left {
+      justify-content: space-between;
+    }
+
+    &-right {
+      padding-left: 0;
+      padding-top: 12px;
+      justify-content: flex-end;
+    }
+  }
+}

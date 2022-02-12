@@ -1,0 +1,55 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  color: $gray_link;
+  font-size: 10px;
+  line-height: 1.4;
+  padding: 27px 0;
+
+  &-link {
+    text-decoration: underline;
+    color: $gray_link;
+
+    &:hover {
+      color: $main_blue_light;
+    }
+  }
+
+  &-offer,
+  &-sales,
+  &-phone {
+    white-space: nowrap;
+
+    @include respond-to-max($tablet) {
+      margin-top: 22px;
+    }
+  }
+
+  @include respond-to-max($tablet) {
+    padding-top: 50px;
+
+    &-phone {
+      padding-right: 45px;
+    }
+  }
+
+  &-content {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-copyright {
+    width: 100%;
+    flex: 1 0 auto;
+
+    @include respond-to-min($tablet) {
+      max-width: 50%;
+      width: 385px;
+    }
+  }
+}

@@ -1,0 +1,353 @@
+.requisites {
+
+  &-results {
+    padding: 20px 0 10px;
+    font-size: 12px;
+    //overflow: hidden;
+
+    .custom-select {
+      min-width: 100px;
+      margin-left: 5px;
+      margin-right: 5px;
+
+      .select__menu {
+        width: auto;
+      }
+
+      .select__menu-list {
+        white-space: nowrap;
+      }
+    }
+
+    &__count {
+      width: 82px;
+    }
+
+    &__remove {
+      .btn {
+        width: 30px;
+      }
+    }
+
+    &__table {
+      display: flex;
+      flex-flow: column nowrap;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    &__row {
+      padding: 16px 10px;
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: stretch;
+      align-items: center;
+      transition: background .3s;
+
+      &:not(.__head) {
+        cursor: pointer;
+      }
+
+      &.__head {
+        white-space: pre;
+        padding: 8px 10px;
+        min-height: 48px;
+      }
+
+      &.__even {
+        background: $main_gray_light;
+      }
+
+      &.__odd {
+        background: #fff;
+      }
+
+      @include respond-to-max($wide) {
+        display: grid;
+        grid-template-areas:
+          "item_1 price_1 cart_1"
+          "item_2 price_2 cart_2"
+          "item_3 price_3 cart_3"
+          "item_4 price_4 cart_4"
+          "item_5 price_5 cart_5";
+        grid-template-columns: 7.5fr 6fr 50px;
+
+        &.__head {
+          display: none;
+        }
+
+        &.__even {
+          background: #fff;
+        }
+
+        &.__odd {
+          background: $main_gray_light;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        grid-template-areas: unset;
+        grid-template-columns: unset;
+      }
+
+      &:not(.__head):hover {
+        background: $main_gray_hover;
+      }
+    }
+
+    &__cell {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-left: 10px;
+
+      &.__company_name {
+
+      }
+
+      &.__inn {
+
+      }
+
+      &.__bank_account {
+        white-space: nowrap;
+      }
+
+      &.__bank_name {
+        white-space: nowrap;
+      }
+
+      &.__pack_quant {
+        white-space: nowrap;
+      }
+
+      &.__undistributed_amount {
+        text-align: center;
+        display: none;
+
+        p {
+          padding-right: 10px;
+        }
+      }
+
+      &.__available {
+        display: none;
+      }
+
+      &.__contact_name {
+        display: none;
+      }
+
+      &.__rm {
+        .input {
+          padding-right: 40px;
+        }
+      }
+
+      @include respond-to-max($wide) {
+
+        &.__inn,
+        &.__company_name {
+          grid-column: 1;
+          //align-self: baseline;
+        }
+
+        &.__company_name {
+          grid-row: 1;
+        }
+
+        &.__inn {
+          grid-row: 2;
+
+          .orders-results__label:not(.__show) {
+            display: none;
+          }
+        }
+
+        &.__bank_account {
+          white-space: nowrap;
+          grid-row: 3;
+          grid-column: 1;
+        }
+
+        &.__bank_name {
+          grid-row: 5;
+          white-space: nowrap;
+          grid-column: 1;
+        }
+
+        &.__bic {
+          grid-row: 4;
+          grid-column: 1;
+        }
+
+        &.__undistributed_amount {
+          text-align: left;
+          grid-row: 1;
+          grid-column: 2;
+
+          .orders-results__label {
+            display: block;
+            padding-right: 0;
+            padding-bottom: 4px;
+          }
+        }
+
+        &.__available {
+          grid-row: 2;
+          grid-column: 2;
+
+          .orders-results__label {
+            display: block;
+            padding-right: 0;
+            padding-bottom: 4px;
+          }
+        }
+
+        &.__contact_name {
+          text-align: left;
+          grid-row: 3;
+          grid-column: 2;
+        }
+
+        &.__rm {
+          grid-row: 1 / 5;
+          grid-column: 3;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        display: block;
+        text-align: left;
+        width: 100%;
+
+        &.__inn {
+
+        }
+
+        &.__inn,
+        &.__company_name {
+          padding-right: 40px;
+        }
+
+        &.__pack_quant {
+          margin-bottom: 10px;
+        }
+
+        &.__undistributed_amount {
+
+        }
+
+        &.__available {
+
+        }
+
+        &.__contact_name {
+          width: auto;
+          padding-right: 0;
+          text-align: left;
+        }
+
+        &.__rm {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          padding: 0;
+          width: auto;
+        }
+      }
+
+      @include respond-to-min($wide) {
+        flex: 1;
+
+        &.__company_name {
+          width: 10.5%;
+
+          .__head & {
+            text-align: center;
+          }
+        }
+
+        &.__inn {
+          width: 10%;
+          text-align: center;
+        }
+
+        &.__bank_account {
+          text-align: center;
+          width: 10.5%;
+        }
+
+        &.__bic {
+          width: 7%;
+          text-align: center;
+        }
+
+        &.__bank_name {
+          text-align: center;
+          width: 20%;
+        }
+
+        &.__pack_quant {
+          text-align: center;
+          width: 9%;
+        }
+
+        &.__undistributed_amount {
+          width: 13.5%;
+          text-align: center;
+        }
+
+        &.__available {
+          width: 12.5%;
+          text-align: center;
+        }
+
+        &.__contact_name {
+          width: 16%;
+          text-align: left;
+
+          .__head & {
+            span {
+              display: inline-block;
+              vertical-align: middle;
+              text-align: center;
+            }
+          }
+        }
+
+        &.__rm {
+          flex: 1 0 40px;
+          max-width: 40px;
+          opacity: 0;
+          pointer-events: none;
+
+          .requisites-results__row:hover & {
+            opacity: 1;
+            pointer-events: all;
+          }
+        }
+      }
+    }
+
+    &__label {
+      padding-right: 4px;
+
+      @include respond-to-min($wide) {
+        display: none;
+
+        &.__show {
+          display: block;
+        }
+      }
+    }
+  }
+
+}
+

@@ -1,0 +1,187 @@
+@use "sass:math";
+
+// Set the grid defaults
+// -----------------------------------------------------------------------------
+$column-count: 12 !default;
+$gutter-size: 15px !default;
+
+// Find the width of 1 column, based upon the column count
+// -----------------------------------------------------------------------------
+@function find_column_width($columns: $column-count) {
+  $column-width: math.div(100%, $columns);
+
+  @return $column-width;
+}
+
+// Create a grid container to house the columns
+// -----------------------------------------------------------------------------
+@mixin grid($nested: false, $gutters: true) {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  margin-left: -5px;
+  margin-right: -5px;
+
+  @if $nested {
+    flex: 0 1 auto;
+  }
+
+  @media screen and (min-width: $wide) {
+    margin-left: -$gutter-size;
+    margin-right: -$gutter-size;
+  }
+
+  @if $gutters {
+    > * {
+      padding-left: 5px;
+      padding-right: 5px;
+      box-sizing: border-box;
+
+      @media screen and (min-width: $wide) {
+        padding-left: $gutter-size;
+        padding-right: $gutter-size;
+      }
+    }
+  }
+}
+
+// Create a column of the grid
+// -----------------------------------------------------------------------------
+@mixin column($columns: 0, $md: null, $lg: null, $xl: null) {
+  $width: find_column_width();
+  $flex-basis: $width * $columns;
+
+  // Setting $columns = 0 will set the column to be auto width and fill available space
+  @if ($columns == 0) {
+    flex: 1 0 0;
+    width: auto;
+  } @else {
+    flex: 0 0 $flex-basis;
+    min-width: $flex-basis;
+  }
+
+  // Set the column width on medium screens
+  @if ($md != null) {
+    @media screen and (min-width: $tablet) {
+      $flex-basis: $width * $md;
+      @if ($md == 0) {
+        flex: 1 0 0;
+        width: auto;
+      } @else {
+        flex: 0 0 $flex-basis;
+        min-width: $flex-basis;
+      }
+    }
+  }
+
+  // Set the column width on large screens
+  @if ($lg != null) {
+    @media screen and (min-width: $dt) {
+      $flex-basis: $width * $lg;
+      @if ($lg == 0) {
+        flex: 1 0 0;
+        width: auto;
+      } @else {
+        flex: 0 0 $flex-basis;
+        min-width: $flex-basis;
+      }
+    }
+  }
+
+  // Set the column width on large screens
+  @if ($xl != null) {
+    @media screen and (min-width: $wide) {
+      $flex-basis: $width * $xl;
+      @if ($xl == 0) {
+        flex: 1 0 0;
+        width: auto;
+      } @else {
+        flex: 0 0 $flex-basis;
+        min-width: $flex-basis;
+      }
+    }
+  }
+}
+
+// Create a column for a specific breakpoint
+// Never needed if purely using grid as mixins
+// -----------------------------------------------------------------------------
+@mixin mq-column($breakpoint: 'md', $columns: 0) {
+  $width: find_column_width();
+  $flex-basis: $width * $columns;
+
+  @if ($breakpoint == 'xl') {
+    @media screen and (min-width: $wide) {
+      @if ($columns == 0) {
+        flex: 1 0 0;
+        width: auto;
+      } @else {
+        flex: 0 0 $flex-basis;
+        min-width: $flex-basis;
+      }
+    }
+  } @else if ($breakpoint == 'lg') {
+    @media screen and (min-width: $dt) {
+      @if ($columns == 0) {
+        flex: 1 0 0;
+        width: auto;
+      } @else {
+        flex: 0 0 $flex-basis;
+        min-width: $flex-basis;
+      }
+    }
+  } @else {
+    @media screen and (min-width: $tablet) {
+      @if ($columns == 0) {
+        flex: 1 0 0;
+        width: auto;
+      } @else {
+        flex: 0 0 $flex-basis;
+        min-width: $flex-basis;
+      }
+    }
+  }
+}
+
+.row {
+  @include grid();
+}
+
+.column {
+  @include column();
+}
+
+// Make some base columns
+@for $i from 1 through 12 {
+  .sm-col-#{$i} {
+    @include column($i);
+  }
+}
+
+// Make some base columns for medium
+@for $i from 1 through 12 {
+  .md-col-#{$i} {
+    @include mq-column('md', $i);
+  }
+}
+
+// Make some base columns for large
+@for $i from 1 through 12 {
+  .lg-col-#{$i} {
+    @include mq-column('lg', $i);
+  }
+}
+
+@media screen and (min-width: $dt) {
+  .lg-col-2_5 {
+    flex: 0 0 20.6%;
+    min-width: 20.6%;
+  }
+}
+
+// Make some base columns for large
+@for $i from 1 through 12 {
+  .xl-col-#{$i} {
+    @include mq-column('xl', $i);
+  }
+}

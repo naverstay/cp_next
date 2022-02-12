@@ -1,0 +1,94 @@
+.main {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 auto;
+  padding-top: 15px;
+  min-height: 450px;
+
+  @include respond-to-min($tablet) {
+    padding-top: 30px;
+  }
+
+  @include respond-to-min($wide) {
+    padding-top: 50px;
+  }
+
+  .main-content {
+    will-change: transform;
+    padding-top: 0;
+    transition: padding $form_transition, opacity $form_transition;
+    transition-delay: $form_transition + $title_transition;
+    opacity: 1;
+
+    //&:not(:empty) {
+    //  padding-top: 25px;
+    //  flex: 1 0 auto;
+    //  opacity: 1;
+    //
+    //  @include respond-to-min($dt) {
+    //    padding-top: 35px;
+    //  }
+    //}
+  }
+
+  &:not(.__center) .main-content {
+    padding-top: 25px;
+    flex: 1 0 auto;
+    opacity: 1;
+
+    @include respond-to-min($dt) {
+      padding-top: 35px;
+    }
+  }
+
+  //.main-content:empty +,
+  &.__center {
+    .main-content {
+      opacity: 0;
+    }
+
+    .form-search {
+      padding-top: 120px;
+      padding-bottom: 60px;
+      top: Max(220px, 35.3vh);
+      transform: translateY(-47%);
+      transition-delay: 0s;
+
+      @include respond-to-min($tablet) {
+        top: Max(220px, 45.5vh);
+      }
+
+      @include respond-to-min($dt) {
+        top: Max(220px, 42.2vh);
+      }
+
+      @include respond-to-min($wide) {
+        top: Max(220px, 42.75vh);
+      }
+
+      .form-content {
+        //margin-bottom: 60px;
+
+        @include respond-to-min($tablet) {
+          //margin-bottom: 115px;
+        }
+      }
+
+      .form-search__title {
+        transition-delay: $form_transition;
+        opacity: 1;
+      }
+
+      @include respond-to-min($tablet) {
+        padding-top: 130px;
+        padding-bottom: 115px;
+
+        .form-content {
+          //margin-bottom: 115px;
+        }
+      }
+    }
+
+  }
+}

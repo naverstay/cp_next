@@ -1,0 +1,30 @@
+@import '../../node_modules/sanitize.css/sanitize.css';
+@import '../../node_modules/react-notifications-component/dist/scss/notification';
+@import 'vars';
+@import '../icons/variables';
+@import '../icons/style.scss';
+@import 'fonts';
+@import 'mixins';
+@import 'grid';
+@import 'global';
+@import 'notifications';
+@import 'button';
+@import 'loader';
+@import 'main';
+
+@import 'header';
+@import 'catalogue';
+@import 'breadcrumbs';
+@import 'aside';
+@import 'article';
+@import 'search';
+@import 'cart';
+@import 'orders';
+@import 'requisites';
+@import 'details';
+@import 'elaboration';
+@import 'profile';
+@import 'form';
+@import 'share';
+
+@import 'footer';

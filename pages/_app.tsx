@@ -1,9 +1,18 @@
-import '@/assets/style.css'
+import './../src/styles/app.scss';
 
-import { AppProps } from 'next/app'
+import { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+
+import Layout from '@/components/Layout/layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const router = useRouter();
+
+  return (
+    <Layout history={router}>
+      <Component {...pageProps} />
+    </Layout>
+  );
 }
 
-export default MyApp
+export default MyApp;

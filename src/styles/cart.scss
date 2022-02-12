@@ -1,0 +1,354 @@
+.cart {
+
+  &-results {
+    padding: 10px 0;
+    font-size: 12px;
+    overflow: hidden;
+
+    &.__elaboration {
+      overflow: visible;
+    }
+
+    @include respond-to-min($tablet) {
+      width: calc(100% - 299px);
+      float: left;
+    }
+
+    &__count {
+      width: 82px;
+    }
+
+    &__remove {
+      .btn {
+        width: 30px;
+      }
+    }
+
+    &__table {
+      display: flex;
+      flex-flow: column nowrap;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    &__row {
+      padding: 16px 10px;
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: stretch;
+      align-items: center;
+      transition: background .3s;
+
+      &.__head {
+        //z-index: 10;
+        white-space: nowrap;
+        //position: sticky;
+        //top: 0;
+      }
+
+      &.__even {
+        background: $main_gray_light;
+      }
+
+      &.__odd {
+        background: #fff;
+      }
+
+      @include respond-to-max($wide) {
+        display: grid;
+        grid-template-areas:
+          "item_1 price_1 cart_1"
+          "item_2 price_2 cart_2"
+          "item_3 price_3 cart_3"
+          "item_4 price_4 cart_4"
+          "item_5 price_5 cart_5";
+        grid-template-columns: 7.5fr 6fr 50px;
+
+        &.__head {
+          display: none;
+        }
+
+        &.__even {
+          background: #fff;
+        }
+
+        &.__odd {
+          background: $main_gray_light;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        grid-template-areas: unset;
+        grid-template-columns: unset;
+      }
+
+      &:not(.__head):hover {
+        background: $main_gray_hover;
+      }
+    }
+
+    &__cell {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-left: 10px;
+
+      &.__supplier {
+
+      }
+
+      &.__name {
+
+      }
+
+      &.__quantity {
+        white-space: nowrap;
+      }
+
+      &.__price_unit {
+        white-space: nowrap;
+      }
+
+      &.__moq {
+        white-space: nowrap;
+      }
+
+      &.__pack_quant {
+        white-space: nowrap;
+      }
+
+      &.__pricebreaks {
+        text-align: center;
+
+        p {
+          padding-right: 10px;
+        }
+      }
+
+      &.__total {
+        text-align: left;
+      }
+
+      &.__delivery_period {
+        text-align: center;
+      }
+
+      &.__cart {
+        .input {
+          padding-right: 40px;
+        }
+      }
+
+      @include respond-to-max($wide) {
+
+        &.__name,
+        &.__supplier {
+          grid-column: 1;
+          //align-self: baseline;
+        }
+
+        &.__supplier {
+          grid-row: 2 / 4;
+        }
+
+        &.__name {
+          grid-row: 1;
+
+          .search-results__label:not(.__show) {
+            display: none;
+          }
+        }
+
+        &.__quantity {
+          grid-row: 4 / 5;
+          grid-column: 2;
+          display: flex;
+          flex-flow: row wrap;
+          align-items: center;
+
+          .cart-results__label {
+            margin-right: 6px;
+          }
+        }
+
+        &.__price_unit {
+          white-space: nowrap;
+          transform: translateY(-200%);
+          grid-row: 3;
+          position: absolute;
+          grid-column: 2;
+        }
+
+        &.__moq {
+          grid-row: 3;
+          position: absolute;
+          white-space: nowrap;
+          transform: translateY(-100%);
+          grid-column: 2;
+        }
+
+        &.__pack_quant {
+          grid-row: 4 / 5;
+          grid-column: 1;
+        }
+
+        &.__pricebreaks {
+          text-align: left;
+          grid-row: 1;
+          grid-column: 2;
+
+          .search-results__label {
+            display: block;
+            padding-right: 0;
+            padding-bottom: 4px;
+          }
+        }
+
+        &.__total {
+          grid-row: 2;
+          grid-column: 2;
+
+          .search-results__label {
+            display: block;
+            padding-right: 0;
+            padding-bottom: 4px;
+          }
+        }
+
+        &.__delivery_period {
+          text-align: left;
+          grid-row: 3;
+          grid-column: 2;
+        }
+
+        &.__cart {
+          grid-row: 1 / 5;
+          grid-column: 3;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        display: block;
+        text-align: left;
+        width: 100%;
+
+        &.__name {
+          order: -1;
+          margin-bottom: 5px;
+        }
+
+        &.__name,
+        &.__supplier {
+          padding-right: 40px;
+        }
+
+        &.__pack_quant {
+          margin-bottom: 10px;
+        }
+
+        &.__pricebreaks {
+
+        }
+
+        &.__total {
+
+        }
+
+        &.__quantity {
+          order: 1
+
+        }
+
+        &.__delivery_period {
+          width: auto;
+          padding-right: 0;
+          text-align: left;
+        }
+
+        &.__cart {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          padding: 0;
+          width: auto;
+        }
+      }
+
+      @include respond-to-min($wide) {
+
+        &.__supplier {
+          width: 23.5%;
+        }
+
+        &.__name {
+          width: 20%;
+        }
+
+        &.__quantity {
+          text-align: center;
+          width: 11%;
+        }
+
+        &.__price_unit {
+          text-align: center;
+          width: 7.5%;
+        }
+
+        &.__moq {
+          text-align: center;
+          width: 4.8%;
+        }
+
+        &.__pack_quant {
+          text-align: center;
+          width: 9%;
+        }
+
+        &.__pricebreaks {
+          width: 10%;
+          text-align: center;
+        }
+
+        &.__total {
+          width: 12%;
+        }
+
+        &.__delivery_period {
+          width: 10%;
+          text-align: left;
+        }
+
+        &.__cart {
+          flex: 1 0 40px;
+          opacity: 0;
+          pointer-events: none;
+
+          .cart-results__row:hover & {
+            opacity: 1;
+            pointer-events: all;
+          }
+        }
+      }
+    }
+
+    &__label {
+      padding-right: 4px;
+
+      @include respond-to-min($wide) {
+        display: none;
+
+        &.__show {
+          display: block;
+        }
+      }
+    }
+  }
+
+}
+

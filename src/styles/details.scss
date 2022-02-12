@@ -1,0 +1,331 @@
+.details {
+
+  &-results {
+    padding: 10px 0;
+    overflow: hidden;
+
+    &__trigger {
+      padding: 16px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      background: $main_gray;
+      color: #fff;
+      font-weight: bold;
+      margin: 1px 0;
+      font-size: 18px;
+      transition: color .3s, background .3s;
+
+      &.__collapsed {
+        background: $gray_placeholder;
+      }
+    }
+
+    &__value {
+
+      &.__completed {
+        text-shadow: 0 0 2px #729021;
+      }
+    }
+
+    &__item {
+      display: block;
+      cursor: pointer;
+
+      + .details-results__item {
+        margin-top: 2px;
+      }
+    }
+
+    &__table {
+      font-size: 12px;
+      display: flex;
+      flex-flow: column nowrap;
+
+      &.__sticky {
+        z-index: 9;
+        display: none;
+        position: fixed;
+        top: 0;
+        width: 1170px;
+        box-shadow: 0 0 20px rgba(71, 93, 244, 0.25);
+
+        .__stick & {
+          display: flex;
+        }
+
+        &.__cart {
+          width: 871px;
+        }
+
+        .requisites-results__row,
+        .orders-results__row,
+        .details-results__row,
+        .cart-results__row {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+      }
+    }
+
+    &__row {
+      padding: 16px 10px;
+      border-radius: 4px;
+      position: relative;
+      flex-flow: row nowrap;
+      justify-content: stretch;
+      align-items: center;
+      transition: background .3s;
+      display: grid;
+      grid-template-areas:
+          "item_1 norm_1 term_1 price_1 total_1 cart_1 comment_1"
+          "item_2 norm_2 term_2 price_2 total_2 cart_2 comment_2"
+          "item_3 norm_3 term_3 price_3 total_3 cart_3 comment_3";
+      grid-template-columns: auto 65px 55px 75px 0px 115px 230px;
+      //                       todo  best times total_3 | 95px
+      &.__head {
+        text-align: center;
+        white-space: pre;
+        grid-template-areas:"item_1 norm_1 term_1 price_1 total_1 cart_1 comment_1";
+        padding: 8px 10px;
+
+        .details-results__cell {
+          grid-row: 1 !important;
+        }
+      }
+
+      &.__even {
+        background: $main_gray_light;
+      }
+
+      &.__odd {
+        background: #fff;
+      }
+
+      @include respond-to-max($dt) {
+        min-height: 0;
+        grid-template-areas:
+          "item_1 term_1 price_1 total_1"
+          "item_2 term_2 price_2 total_2"
+          "item_3 term_3 price_3 total_3";
+        grid-template-columns: 3.5fr 2fr 2.5fr 2fr;
+
+        &.__head {
+          display: none;
+        }
+      }
+
+      @include respond-to-max($tablet) {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        grid-template-areas: unset;
+        grid-template-columns: unset;
+      }
+
+      &:not(.__head):hover {
+        background: $main_gray_hover;
+      }
+    }
+
+    &__cell {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-left: 10px;
+
+      &.__name {
+        font-weight: bold;
+      }
+
+      &.__quantity {
+        white-space: nowrap;
+      }
+
+      &.__price_unit {
+        white-space: nowrap;
+      }
+
+
+      &.__pack_quant {
+        white-space: nowrap;
+      }
+
+      &.__pricebreaks {
+        text-align: right;
+
+        p {
+          padding-right: 10px;
+        }
+      }
+
+      &.__total {
+        text-align: left;
+      }
+
+      &.__delivery_period {
+        text-align: center;
+      }
+
+      &.__cart {
+        .input {
+          padding-right: 40px;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        &.__name {
+          grid-row: 1;
+        }
+
+        &.__supplier {
+          grid-row: 2;
+        }
+
+        &.__manufacturer {
+          grid-row: 3;
+        }
+
+        &.__quantity {
+          grid-row: 1;
+          grid-column: 2;
+        }
+
+        &.__price {
+          grid-row: 2;
+          grid-column: 2;
+        }
+
+        &.__sum {
+          grid-row: 3;
+          grid-column: 2;
+        }
+
+        &.__comment {
+          grid-row: 1 / 4;
+          grid-column: 4;
+        }
+
+        &.__calculated_delivery_date {
+          grid-row: 1; // todo best times 2
+          grid-column: 3;
+        }
+
+        &.__real_delivery_date {
+          grid-row: 2; // todo best times 3
+          grid-column: 3;
+
+          &:first-letter {
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      @include respond-to-max($tablet) {
+        display: block;
+        text-align: left;
+        width: 100%;
+      }
+
+      @include respond-to-max($mobile + 100px) {
+        &.__total {
+
+          &:after {
+            width: 40vw;
+          }
+        }
+      }
+
+      @include respond-to-max($mobile) {
+        &.__total {
+
+          &:after {
+            display: none;
+          }
+        }
+      }
+
+      @include respond-to-min($tablet) {
+        &.__name,
+        &.__supplier,
+        &.__manufacturer {
+          padding-left: 0;
+        }
+      }
+
+      @include respond-to-min($dt) {
+
+        &.__name {
+          grid-row: 1;
+          grid-column: 1;
+        }
+
+        &.__supplier {
+          grid-row: 2;
+          grid-column: 1;
+        }
+
+        &.__manufacturer {
+          grid-row: 3;
+          grid-column: 1;
+        }
+
+        &.__quantity {
+          grid-row: 1 / 4;
+          grid-column: 2;
+          white-space: pre;
+          text-align: center;
+        }
+
+        &.__price {
+          grid-row: 1 / 4;
+          grid-column: 3;
+          text-align: center;
+        }
+
+        &.__sum {
+          grid-row: 1 / 4;
+          grid-column: 4;
+          text-align: center;
+        }
+
+        &.__statuses {
+          text-align: center;
+          grid-row: 2 / 4;
+          grid-column: 5;
+        }
+
+        &.__calculated_delivery_date {
+          grid-row: 1 / 3;
+          grid-column: 6;
+          text-align: center;
+        }
+
+        &.__real_delivery_date {
+          grid-row: 2 / 4;
+          grid-column: 6;
+          text-align: center;
+        }
+
+        &.__comment {
+          grid-row: 1 / 4;
+          grid-column: 7;
+          text-align: left;
+        }
+      }
+    }
+
+    &__label {
+      padding-right: 4px;
+
+      @include respond-to-min($dt) {
+        display: none;
+
+        &.__show {
+          display: block;
+        }
+      }
+    }
+  }
+
+}
+

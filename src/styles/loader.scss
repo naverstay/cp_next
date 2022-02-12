@@ -1,0 +1,48 @@
+.loader {
+  //width: 40px;
+  //height: 40px;
+  //position: absolute;
+  //left: 50%;
+  //top: 50%;
+  //transform: translate(-50%, -50%);
+
+  margin: 2em auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+
+
+}
+
+.skeleton {
+  display: none;
+
+  &-holder {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  &-mob {
+    @include respond-to-max($tablet) {
+      display: block;
+    }
+  }
+
+  &-tab {
+    @include respond-to-min-max($tablet, $dt) {
+      display: block;
+    }
+  }
+
+  &-dt {
+    @include respond-to-min-max($dt, $wide) {
+      display: block;
+    }
+  }
+
+  &-wide {
+    @include respond-to-min($wide) {
+      display: block;
+    }
+  }
+}

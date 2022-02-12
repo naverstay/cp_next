@@ -1,0 +1,559 @@
+.search {
+
+  &-results {
+    padding: 10px 0;
+    overflow: hidden;
+
+    &__trigger {
+      padding: 16px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      background: $main_gray;
+      color: #fff;
+      font-weight: bold;
+      margin: 1px 0;
+      font-size: 18px;
+      transition: color .3s, background .3s;
+
+      &.__collapsed {
+        background: $gray_placeholder;
+      }
+    }
+
+    &__cart {
+      display: block;
+      position: relative;
+      width: 100%;
+      min-height: 30px;
+
+      .search-results__add {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        > .btn {
+          width: 30px;
+        }
+      }
+    }
+
+    &__item {
+      display: block;
+      cursor: pointer;
+
+      + .search-results__item {
+        margin-top: 2px;
+      }
+    }
+
+    &__table {
+      font-size: 12px;
+      display: flex;
+      flex-flow: column nowrap;
+
+      &.__sticky {
+        z-index: 9;
+        display: none;
+        position: fixed;
+        top: 0;
+        width: 1170px;
+        box-shadow: 0 0 20px rgba(71, 93, 244, 0.25);
+
+        .__stick & {
+          display: flex;
+        }
+
+        &.__cart {
+          width: 871px;
+        }
+
+        .requisites-results__row,
+        .orders-results__row,
+        .search-results__row,
+        .cart-results__row {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        @include respond-to-max($wide) {
+          display: none;
+        }
+      }
+    }
+
+    &__moq {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    &__row {
+      padding: 16px 10px;
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: stretch;
+      align-items: center;
+      transition: background .3s;
+
+      &.__head {
+        //z-index: 10;
+        white-space: nowrap;
+        //position: sticky;
+        //top: 0;
+
+
+        &.__moq-spacer {
+          .search-results__cell.__moq {
+            display: none;
+          }
+        }
+      }
+
+      &.__even {
+        background: $main_gray_light;
+      }
+
+      &.__odd {
+        background: #fff;
+      }
+
+      @include respond-to-max($wide) {
+        //flex-wrap: wrap;
+        //justify-content: space-between;
+        //padding-right: 140px;
+
+        display: grid;
+        min-height: 100px;
+        grid-template-areas:
+          "item_1 norm_1 term_1 price_1 total_1 cart_1 "
+          "item_2 norm_2 term_2 price_2 total_2 cart_2 "
+          "item_3 norm_3 term_3 price_3 total_3 cart_3 "
+          "item_4 norm_4 term_4 price_4 total_4 cart_4 ";
+        grid-template-columns: 6.6fr 130px 1fr 2fr 3.5fr 122px;
+
+        &.__head {
+          display: none;
+        }
+
+        &.__even {
+          background: #fff;
+        }
+
+        &.__odd {
+          background: $main_gray_light;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        min-height: 0;
+        grid-template-areas:
+          "item_1 term_1 price_1 total_1 cart_1"
+          "item_2 term_2 price_2 total_2 cart_2"
+          "item_3 term_3 price_3 total_3 cart_3"
+          "item_4 term_4 price_4 total_4 cart_4"
+          "item_5 term_5 price_5 total_5 cart_5"
+          "item_6 term_6 price_6 total_6 cart_6"
+          "item_7 term_7 price_7 total_7 cart_7"
+          "item_8 term_8 price_8 total_8 cart_8";
+        grid-template-columns: auto 20px 100px 25px 132px;
+      }
+
+      @include respond-to-max($tablet) {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        grid-template-areas: unset;
+        grid-template-columns: unset;
+      }
+
+      @include respond-to-min($wide) {
+        &.__moq-spacer {
+          .search-results__cell.__moq {
+            position: absolute;
+            left: 34.2%;
+            top: 50%;
+            margin-top: 30px;
+            margin-left: 10px;
+
+            .search-results__label {
+              display: unset;
+
+              &::after {
+                content: ':';
+              }
+            }
+          }
+        }
+      }
+
+      &:not(.__head):hover {
+        background: $main_gray_hover;
+      }
+    }
+
+    &__cell {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-left: 10px;
+
+      &.__supplier {
+
+      }
+
+      &.__name {
+
+      }
+
+      &.__manufacturer {
+
+      }
+
+      &.__quantity {
+        white-space: nowrap;
+      }
+
+      &.__price_unit {
+        white-space: nowrap;
+      }
+
+      &.__moq {
+        white-space: nowrap;
+      }
+
+      &.__pack_quant {
+        white-space: nowrap;
+      }
+
+      &.__pricebreaks {
+        text-align: right;
+
+        p {
+          padding-right: 10px;
+        }
+      }
+
+      &.__total {
+        text-align: left;
+      }
+
+      &.__delivery_period {
+        text-align: center;
+      }
+
+      &.__cart {
+        .input {
+          padding-right: 40px;
+        }
+      }
+
+      @include respond-to-max($wide) {
+
+        &.__name,
+        &.__supplier,
+        &.__manufacturer {
+          grid-column: 1;
+          //align-self: baseline;
+        }
+
+        &.__supplier {
+          grid-row: 2 / 4;
+        }
+
+        &.__name {
+          grid-row: 2 / 4;
+          transform: translateY(-100%);
+
+          .search-results__label:not(.__show) {
+            display: none;
+          }
+        }
+
+        &.__manufacturer {
+          grid-row: 2 / 4;
+          transform: translateY(100%);
+        }
+
+        &.__quantity {
+          grid-row: 3;
+          position: absolute;
+          grid-column: 2;
+          white-space: nowrap;
+          transform: translateY(-300%);
+        }
+
+        &.__price_unit {
+          white-space: nowrap;
+          transform: translateY(-200%);
+          grid-row: 3;
+          position: absolute;
+          grid-column: 2;
+        }
+
+        &.__moq {
+          grid-row: 3;
+          position: absolute;
+          white-space: nowrap;
+          transform: translateY(-100%);
+          grid-column: 2;
+        }
+
+        &.__pack_quant {
+          grid-row: 3;
+          grid-column: 2;
+          position: absolute;
+          white-space: nowrap;
+        }
+
+        &.__pricebreaks {
+          grid-row: 1 / 5;
+          grid-column: 4;
+
+          .search-results__label {
+            display: block;
+            padding-right: 0;
+            padding-bottom: 4px;
+          }
+        }
+
+        &.__total {
+          grid-row: 1 / 5;
+          grid-column: 5;
+
+          .search-results__label {
+            display: block;
+            padding-right: 0;
+            padding-bottom: 4px;
+          }
+        }
+
+        &.__delivery_period {
+          text-align: left;
+          grid-row: 1 / 5;
+          grid-column: 3;
+
+          span {
+            white-space: nowrap;
+            display: block;
+          }
+
+        }
+
+        &.__cart {
+          grid-row: 1 / 5;
+          grid-column: 6;
+        }
+      }
+
+      @include respond-to-max($dt) {
+        &.__supplier {
+          grid-row: 2;
+        }
+
+        &.__name {
+          grid-row: 1;
+          transform: none;
+        }
+
+        &.__manufacturer {
+          grid-row: 3;
+          transform: none;
+        }
+
+        &.__quantity {
+          grid-row: 5;
+        }
+
+        &.__price_unit {
+          grid-row: 6;
+        }
+
+        &.__moq {
+          grid-row: 7;
+        }
+
+        &.__pack_quant {
+          grid-row: 8;
+        }
+
+        &.__moq,
+        &.__pack_quant,
+        &.__quantity,
+        &.__price_unit {
+          grid-column: 1;
+          position: relative;
+          white-space: nowrap;
+          transform: none;
+          align-self: baseline;
+        }
+
+        &.__pricebreaks {
+          height: 100%;
+          grid-row: 1 / 7;
+          grid-column: 3;
+        }
+
+        &.__total {
+          height: 100%;
+          grid-row: 1 / 7;
+          grid-column: 4 / 6;
+          padding-left: 18px;
+        }
+
+        &.__delivery_period {
+          padding-right: 10px;
+          text-align: right;
+          grid-row: 8;
+          grid-column: 3 / 5;
+
+          span {
+            display: unset;
+          }
+        }
+
+        &.__cart {
+          padding-right: 10px;
+          grid-row: 8;
+          grid-column: 5;
+        }
+      }
+
+      @include respond-to-max($tablet) {
+        display: block;
+        text-align: left;
+        width: 100%;
+
+        &.__name {
+          order: -1;
+        }
+
+        &.__name,
+        &.__supplier,
+        &.__manufacturer {
+          margin-bottom: 3px;
+        }
+
+        &.__pack_quant {
+          margin-bottom: 10px;
+        }
+
+        &.__pricebreaks {
+          padding-left: 20px;
+          width: auto;
+          margin-bottom: 15px;
+        }
+
+        &.__total {
+          margin-right: auto;
+          width: auto;
+          margin-bottom: 15px;
+
+          &:after {
+            content: '';
+            display: block;
+            width: 60vw;
+          }
+        }
+
+        &.__delivery_period {
+          width: auto;
+          padding-right: 0;
+          text-align: left;
+        }
+
+        &.__cart {
+          width: 132px;
+        }
+      }
+
+      @include respond-to-max($mobile + 100px) {
+        &.__total {
+
+          &:after {
+            width: 40vw;
+          }
+        }
+      }
+
+      @include respond-to-max($mobile) {
+        &.__total {
+
+          &:after {
+            display: none;
+          }
+        }
+      }
+
+      @include respond-to-min($wide) {
+
+        &.__supplier {
+          width: 12%;
+        }
+
+        &.__name {
+          width: 15.2%;
+        }
+
+        &.__manufacturer {
+          width: 11%;
+        }
+
+        &.__quantity {
+          text-align: center;
+          width: 6.2%;
+        }
+
+        &.__price_unit {
+          text-align: center;
+          width: 7.5%;
+        }
+
+        &.__moq {
+          text-align: center;
+          width: 4.8%;
+        }
+
+        &.__pack_quant {
+          text-align: center;
+          width: 5.2%;
+        }
+
+        &.__pricebreaks {
+          width: 8%;
+        }
+
+        &.__total {
+          width: 13%;
+        }
+
+        &.__delivery_period {
+          width: 7%;
+        }
+
+        &.__cart {
+          flex: 1 0 112px;
+          text-align: center;
+        }
+      }
+    }
+
+    &__update {
+      @include respond-to-min($dt) {
+        text-align: center;
+      }
+    }
+
+    &__label {
+      padding-right: 4px;
+
+      @include respond-to-min($wide) {
+        display: none;
+
+        &.__show {
+          display: block;
+        }
+      }
+    }
+  }
+}

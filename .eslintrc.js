@@ -2,7 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true,
+    node: true
   },
   extends: [
     'eslint:recommended',
@@ -13,32 +13,32 @@ module.exports = {
     'plugin:import/typescript',
     'plugin:@next/next/recommended',
     // 競合を避けるため、prettierは一番最後に書く
-    'plugin:prettier/recommended',
+    'plugin:prettier/recommended'
   ],
   globals: {
     Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
+    SharedArrayBuffer: 'readonly'
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
     ecmaVersion: 2021,
     sourceType: 'module',
-    project: './tsconfig.json',
+    project: './tsconfig.json'
   },
   settings: {
     react: {
-      version: 'detect',
+      version: 'detect'
     },
     'import/resolver': {
       node: {
-        extensions: ['.js', '.ts', '.tsx'],
-      },
-    },
+        extensions: ['.js', '.ts', '.tsx']
+      }
+    }
   },
-  plugins: ['jsx-a11y', 'import'],
+  plugins: ['jsx-a11y', 'import', '@typescript-eslint', 'react-hooks', 'prettier'],
   rules: {
     // prettier の設定
     'prettier/prettier': [
@@ -48,12 +48,12 @@ module.exports = {
         tabWidth: 2,
         semi: false,
         singleQuote: true,
-        printWidth: 120,
-      },
+        printWidth: 120
+      }
     ],
     // React Hooks のための設定
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'off',
     // prop types を使っていないので off
     'react/prop-types': 'off',
     // Next.js では React を import しなくてもよいので off にする
@@ -64,7 +64,7 @@ module.exports = {
     // next/linkのchildのaタグの空hrefを許容する
     'jsx-a11y/anchor-is-valid': 'off',
     // 未使用の変数がある場合エラーにする（デフォルトは warning）
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': 'off',
     // named-exportを許可
     'import/prefer-default-export': 'off',
     // 絶対パスでのモジュールの読み込みをokにする
@@ -79,18 +79,20 @@ module.exports = {
           {
             pattern: '~/**',
             group: 'external',
-            position: 'after',
-          },
+            position: 'after'
+          }
         ],
         'newlines-between': 'always',
         alphabetize: {
           order: 'asc',
-          caseInsensitive: false,
-        },
-      },
+          caseInsensitive: false
+        }
+      }
     ],
     // if文内のcontinueをokにする
+    'no-prototype-builtins': 'off',
     'no-continue': 'off',
+    'no-undef': 'off',
     // for (const a of A) を許可
     'no-restricted-syntax': 'off',
     // onClick={e => handleClick(e)} で引っかかるため無効化
@@ -100,8 +102,8 @@ module.exports = {
     // 順序の入れ替えがない場合はok
     'react/no-array-index-key': 'off',
     // component の props の destructuring を非必須にする
-    'react/destructuring-assignment': 'off',
+    'react/destructuring-assignment': 'off'
     // console.errorを許容する
-    'no-console': ['error', {allow: ['warn', 'error']}],
+    //'no-console': ['error', {allow: ['warn', 'error']}],
   }
 }

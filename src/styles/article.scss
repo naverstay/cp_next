@@ -1,0 +1,52 @@
+.article {
+  padding-top: 20px;
+  padding-bottom: 15px;
+  color: $main_gray;
+
+  &-title,
+  h1 {
+    font-weight: 700;
+    font-size: 36px;
+    margin: 0 0 15px;
+  }
+
+  &-subtitle,
+  h2 {
+    font-weight: 700;
+    font-size: 24px;
+    margin: 15px 0 8px;
+  }
+
+  > *:not(.catalogue-page__item) {
+    a {
+      text-decoration: underline;
+      color: inherit;
+
+      &:hover {
+        color: $main_blue_light;
+      }
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+
+    + p {
+      margin-top: 15px;
+    }
+  }
+
+  &.__lg {
+    min-height: 78%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.__catalogue {
+    padding-top: 7px;
+  }
+}
