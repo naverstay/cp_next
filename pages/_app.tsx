@@ -1,5 +1,6 @@
 import './../src/styles/app.scss'
 
+import { Provider } from 'jotai'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -10,12 +11,12 @@ import React from 'react'
 
 import Layout from '@/components/Layout/layout'
 
-import '!file-loader?name=[name].[ext]!./favicon.ico'
-import '!file-loader?name=[name].[ext]!./apple-touch-icon.png'
-
-import '!file-loader?name=[name].[ext]!./browserconfig.xml'
-import '!file-loader?name=[name].[ext]!./favicon-16x16.png'
-import '!file-loader?name=[name].[ext]!./favicon-32x32.png'
+// import '!file-loader?name=[name].[ext]!./favicon.ico'
+// import '!file-loader?name=[name].[ext]!./apple-touch-icon.png'
+//
+// import '!file-loader?name=[name].[ext]!./browserconfig.xml'
+// import '!file-loader?name=[name].[ext]!./favicon-16x16.png'
+// import '!file-loader?name=[name].[ext]!./favicon-32x32.png'
 // import '!file-loader?name=[name].[ext]!./safari-pinned-tab.svg'
 
 // import '!file-loader?name=[name].[ext]!./mstile-150x150.png'
@@ -37,7 +38,9 @@ import '!file-loader?name=[name].[ext]!./favicon-32x32.png'
 // import 'file-loader?name=.htaccess!./.htaccess'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter()
+  const { initialState } = pageProps
+
+  console.log('initialState', pageProps)
 
   return (
     <React.Fragment>
@@ -91,9 +94,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/*        }}*/}
       {/*      />*/}
 
-      <Layout history={router}>
-        <Component {...pageProps} />
-      </Layout>
+      <Provider initialValues={initialState}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
     </React.Fragment>
   )
 }

@@ -1,3 +1,5 @@
+import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDetectClickOutside } from 'react-detect-click-outside'
 import Ripples from 'react-ripples'
@@ -7,22 +9,19 @@ import apiPOST from '../../utils/upload'
 import FormInput from '../FormInput'
 
 import NextLink from '@/components/NextLink'
+import { cartCountJotai, openAuthPopupJotai, openCatalogueJotai, openMobMenuJotai, profileJotai } from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { validateEmail } from '@/utils/validateEmail'
 
-function Header({
-  history,
-  notificationFunc,
-  openAuthPopup,
-  setOpenAuthPopup,
-  openMobMenu,
-  openCatalogue,
-  cartCount,
-  profile,
-  setProfile,
-  setOpenMobMenu,
-  setOpenCatalogue,
-}) {
+function Header({ notificationFunc }) {
+  const history = useRouter()
+
+  const [cartCount, setCartCount] = useAtom(cartCountJotai)
+  const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
+  const [profile, setProfile] = useAtom(profileJotai)
+  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
+  const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
+
   const headerRef = useDetectClickOutside({
     onTriggered: () => {
       setOpenMobMenu(false)

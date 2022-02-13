@@ -3,6 +3,8 @@
  *
  */
 
+import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import React, { useEffect, memo, useState } from 'react'
 //import { connect } from 'react-redux'
@@ -21,6 +23,7 @@ import apiPOST from '../../utils/upload'
 //import { changeArtNumber } from './actions'
 //import { makeSelectArtNumber } from './selectors'
 
+import { searchDataJotai } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 // import reducer from './reducer';
 // import saga from './saga';
@@ -32,8 +35,6 @@ export function SearchForm({
   busy,
   busyOrder,
   setFormBusy,
-  history,
-  setSearchData,
   location,
   onSubmitForm,
   artNumber,
@@ -42,8 +43,9 @@ export function SearchForm({
   repos,
   onChangeUsername,
 }) {
-  // useInjectReducer({ key, reducer });
-  // useInjectSaga({ key, saga });
+  const history = useRouter()
+
+  const [searchData, setSearchData] = useAtom(searchDataJotai)
 
   const formRef = React.createRef()
   const formArtNumber = React.createRef()
@@ -161,7 +163,8 @@ export function SearchForm({
 
             <div className="form-tip">
               <span>Например, </span>
-              <button
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+              <span
                 className="form-tip__example"
                 onClick={() => {
                   formArtNumber.current.value = '15C01M'
@@ -169,7 +172,7 @@ export function SearchForm({
                 }}
               >
                 15C01M
-              </button>
+              </span>
             </div>
           </div>
 
@@ -198,7 +201,8 @@ export function SearchForm({
             />
 
             <div className="form-tip">
-              <button
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+              <span
                 className="form-tip__example"
                 onClick={() => {
                   formQuantity.current.value = '100'
@@ -206,8 +210,9 @@ export function SearchForm({
                 }}
               >
                 100
-              </button>
-              <button
+              </span>
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+              <span
                 className="form-tip__example"
                 onClick={() => {
                   formQuantity.current.value = '250'
@@ -215,8 +220,9 @@ export function SearchForm({
                 }}
               >
                 250
-              </button>
-              <button
+              </span>
+              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+              <span
                 className="form-tip__example"
                 onClick={() => {
                   formQuantity.current.value = '500'
@@ -224,7 +230,7 @@ export function SearchForm({
                 }}
               >
                 500
-              </button>
+              </span>
             </div>
           </div>
 

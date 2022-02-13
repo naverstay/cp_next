@@ -1,46 +1,90 @@
-import { useState } from 'react'
+import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
+import React from 'react'
+import { useState, useEffect } from 'react'
 import ReactNotification, { store } from 'react-notifications-component'
 
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import OrderDetails from '@/components/OrderDetails'
+import Profile from '@/components/Profile'
+import ProfileRequisites from '@/components/ProfileRequisites'
 import SearchForm from '@/components/SearchForm'
+import { LOUISYEN_PRICE_LIMIT } from '@/store/constants'
+import {
+  appDragJotai,
+  asideContentJotai,
+  asideOpenJotai,
+  busyOrderJotai,
+  cartCountJotai,
+  categorySlugLinksJotai,
+  currencyListJotai,
+  errorPageJotai,
+  formBusyJotai,
+  globalPageStatusJotai,
+  isAbove1500Jotai,
+  menuJsonJotai,
+  openAuthPopupJotai,
+  openCatalogueJotai,
+  openDetailsJotai,
+  openMobMenuJotai,
+  openProfileJotai,
+  openRequisitesJotai,
+  orderSentJotai,
+  pageYJotai,
+  profileCheckedJotai,
+  profileJotai,
+  profileRequisitesJotai,
+  searchCountJotai,
+  searchDataJotai,
+  tableHeadFixedJotai,
+  totalCartJotai,
+} from '@/store/store'
 import { findPriceIndex } from '@/utils/findPriceIndex'
+import { flatDeep } from '@/utils/flatDeep'
 import { getJsonData } from '@/utils/getJsonData'
 import apiGET from '@/utils/search'
+import { uniqArray } from '@/utils/uniqArray'
 import apiPOST from '@/utils/upload'
+import { validateJSON } from '@/utils/validateJSON'
 
-const LOUISYEN_PRICE_LIMIT = 1500
+export default function Layout({ children }) {
+  const history = useRouter()
 
-export default function Layout({ history, children }) {
-  const [tableHeadFixed, setTableHeadFixed] = useState(null)
-  const [appDrag, setAppDrag] = useState(false)
-  const [centeredForm, setCenteredForm] = useState(true)
-  const [openAuthPopup, setOpenAuthPopup] = useState(false)
-  const [searchData, setSearchData] = useState({})
-  const [openMobMenu, setOpenMobMenu] = useState(false)
-  const [openCatalogue, setOpenCatalogue] = useState(false)
-  const [profileChecked, setProfileChecked] = useState(false)
-  const [profile, setProfile] = useState({})
-  const [searchCount, setSearchCount] = useState(1)
-  const [cartCount, setCartCount] = useState(0)
-  const [totalCart, setTotalCart] = useState(0)
-  const [globalPageStatus, setGlobalPageStatus] = useState(200)
+  //const [openMobMenu, setOpenMobMenu] = useState(false)
+  const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
+  const [categorySlugLinks, setCategorySlugLinks] = useAtom(categorySlugLinksJotai)
+  const [menuJson, setMenuJson] = useAtom(menuJsonJotai)
+  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
+  const [searchData, setSearchData] = useAtom(searchDataJotai)
+  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
+  const [orderSent, setOrderSent] = useAtom(orderSentJotai)
 
-  const [isAbove1500, setIsAbove1500] = useState(false)
-  const [formBusy, setFormBusy] = useState(false)
-  const [searchResult, setSearchResult] = useState(false)
+  const [searchCount, setSearchCount] = useAtom(searchCountJotai)
+  const [cartCount, setCartCount] = useAtom(cartCountJotai)
+  const [totalCart, setTotalCart] = useAtom(totalCartJotai)
+  const [globalPageStatus, setGlobalPageStatus] = useAtom(globalPageStatusJotai)
+  const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
 
-  const [busyOrder, setBusyOrder] = useState(false)
-  const [errorPage, setErrorPage] = useState(false)
+  const [appDrag, setAppDrag] = useAtom(appDragJotai)
+
+  const [formBusy, setFormBusy] = useAtom(formBusyJotai)
+  const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
+
+  const [profileChecked, setProfileChecked] = useAtom(profileCheckedJotai)
+  const [profile, setProfile] = useAtom(profileJotai)
+  const [profileRequisites, setProfileRequisites] = useAtom(profileRequisitesJotai)
+  const [openProfile, setOpenProfile] = useAtom(openProfileJotai)
+  const [openRequisites, setOpenRequisites] = useAtom(openRequisitesJotai)
+  const [openDetails, setOpenDetails] = useAtom(openDetailsJotai)
+  const [asideOpen, setAsideOpen] = useAtom(asideOpenJotai)
+  const [asideContent, setAsideContent] = useAtom(asideContentJotai)
+  const [isAbove1500, setIsAbove1500] = useAtom(isAbove1500Jotai)
+  const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
 
   const getUSDExchange = () => {
     const USD = currencyList.find((f) => f.name === 'USD')
     return USD && USD.hasOwnProperty('exChange') ? USD.exChange : 1
-  }
-
-  const updateLocationParams = (loc) => {
-    // console.log("updateLocationParams", loc);
-    setCenteredForm(loc.pathname === '/')
   }
 
   const checkSupplierPrices = (store, supplier, done) => {
@@ -131,7 +175,7 @@ export default function Layout({ history, children }) {
 
   const sendSearchRequest = (options) => {
     const requestURL = '/search'
-    setSearchResult(true)
+
     setFormBusy(true)
 
     setSearchData({})
@@ -152,11 +196,15 @@ export default function Layout({ history, children }) {
     window.log && console.log('onSubmitSearchForm', art, quantity)
 
     if (art.length) {
-      history.replace({
-        pathname: '/search/',
-        search: `art=${encodeURIComponent(art)}&q=${encodeURIComponent(quantity || 1)}`,
-        state: { isActive: true },
-      })
+      history
+        .replace({
+          pathname: '/search/',
+          search: `art=${encodeURIComponent(art)}&q=${encodeURIComponent(quantity || 1)}`,
+          state: { isActive: true },
+        })
+        .then((rpls) => {
+          console.log('rpls', rpls)
+        })
 
       // history.push();
       sendSearchRequest({
@@ -177,7 +225,6 @@ export default function Layout({ history, children }) {
     setOpenMobMenu(false)
 
     document.body.classList[document.body.scrollTop > 0 ? 'add' : 'remove']('__show-gotop')
-    // setPageY(event.target.scrollTop);
   }
 
   const apiGETBridge = (requestURL, options, cb) => {
@@ -188,6 +235,12 @@ export default function Layout({ history, children }) {
         cb(data)
       }
     })
+  }
+
+  const updateAsideContent = (content) => {
+    if (content !== null) {
+      setAsideContent(content)
+    }
   }
 
   const createNotification = (type, title, text) => {
@@ -319,26 +372,190 @@ export default function Layout({ history, children }) {
     })
   }
 
+  const logOut = () => {
+    window.log && console.log('logOut')
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('catpart-profile')
+    history.push('/')
+    setProfile({})
+    setProfileChecked(true)
+  }
+
+  const needLogin = () => {
+    window.log && console.log('needLogin', profile)
+    logOut()
+    createNotification('success', `Требуется авторизация`, ' ')
+  }
+
+  useEffect(() => {
+    // TODO catalogue menu list
+    const requestURL = '/catalog/categories'
+
+    apiGET(requestURL, {}, (data) => {
+      if (data && data.length) {
+        let uniqueArray = uniqArray(flatDeep(data))
+        setCategorySlugLinks(uniqueArray)
+        setMenuJson(data)
+      }
+    })
+
+    const profileLS = localStorage.getItem('catpart-profile')
+
+    if (profileLS) {
+      if (validateJSON(profileLS)) {
+        setProfile(getJsonData(profileLS))
+      } else {
+        localStorage.removeItem('catpart-profile')
+      }
+    }
+
+    document.body.addEventListener('scroll', handleScroll)
+
+    window.addEventListener('resize', appHeight)
+
+    appHeight()
+
+    if ('ontouchstart' in document.documentElement) {
+      document.body.style.cursor = 'pointer'
+    }
+
+    const dropContainer = document.getElementById('__next')
+
+    dropContainer.ondragover = dropContainer.ondragenter = function (evt) {
+      evt.stopPropagation()
+      evt.preventDefault()
+      setAppDrag(true)
+    }
+
+    dropContainer.ondragleave = function (evt) {
+      evt.stopPropagation()
+      evt.preventDefault()
+      setAppDrag(false)
+    }
+
+    dropContainer.ondrop = function (evt) {
+      evt.stopPropagation()
+      evt.preventDefault()
+
+      const fileInput = document.getElementById('file')
+
+      setAppDrag(false)
+
+      const dT = new DataTransfer()
+
+      dT.items.add(evt.dataTransfer.files[0])
+
+      fileInput.files = dT.files
+
+      fileInput.dispatchEvent(new Event('change', { bubbles: true }))
+    }
+
+    setProfileChecked(true)
+
+    return () => {
+      document.body.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', appHeight)
+
+      dropContainer.ondragover = null
+
+      dropContainer.ondragleave = null
+
+      dropContainer.ondrop = null
+    }
+  }, [])
+
+  useEffect(() => {
+    if (openAuthPopup || openRequisites) {
+      setOpenCatalogue(false)
+    }
+  }, [openAuthPopup, openRequisites])
+
+  useEffect(() => {
+    document.body.classList[openCatalogue ? 'add' : 'remove']('__no-overflow')
+  }, [openCatalogue])
+
+  useEffect(() => {
+    document.body.classList[formBusy || busyOrder ? 'add' : 'remove']('__busy')
+  }, [formBusy, busyOrder])
+
+  useEffect(() => {
+    if (openMobMenu) {
+      setOpenCatalogue(false)
+    }
+  }, [openMobMenu])
+
+  useEffect(() => {
+    if (openCatalogue) {
+      setOpenMobMenu(false)
+    }
+  }, [openCatalogue])
+
+  useEffect(() => {
+    setAsideOpen(openProfile)
+    updateAsideContent(openProfile ? <Profile notificationFunc={createNotification} logOut={logOut} /> : null)
+  }, [openProfile])
+
+  useEffect(() => {
+    setAsideOpen(!!openRequisites)
+
+    updateAsideContent(
+      openRequisites ? (
+        <ProfileRequisites
+          notificationFunc={createNotification}
+          requisitesId={openRequisites ? openRequisites.id : null}
+          profile={profile}
+          requisites={openRequisites}
+        />
+      ) : null
+    )
+  }, [openRequisites])
+
+  useEffect(() => {
+    setAsideOpen(openDetails?.id)
+
+    updateAsideContent(
+      openDetails ? (
+        <OrderDetails
+          notificationFunc={createNotification}
+          detailsId={openDetails ? openDetails.id : null}
+          profile={profile}
+          order={openDetails}
+        />
+      ) : null
+    )
+  }, [openDetails])
+
+  useEffect(() => {
+    if (!profile.hasOwnProperty('id')) {
+      setOpenProfile(false)
+    }
+  }, [profile])
+
+  useEffect(() => {
+    if (!asideOpen) {
+      setOpenProfile(false)
+      setOpenRequisites(0)
+      setOpenDetails(0)
+    }
+  }, [asideOpen])
+
+  useEffect(() => {
+    console.log('prev', profile)
+    // if (profileChecked) {
+    updateCart(-1)
+    // }
+  }, [profile])
+
+  useEffect(() => {
+    window.log = ['localhost', 'html'].indexOf(location.hostname.split('.')[0]) > -1
+  }, [])
+
   return (
     <div className={`app-wrapper${appDrag ? ' __over' : ''}`}>
-      <Header
-        setOpenAuthPopup={setOpenAuthPopup}
-        openAuthPopup={openAuthPopup}
-        notificationFunc={createNotification}
-        setProfile={setProfile}
-        history={history}
-        profile={profile}
-        cartCount={cartCount}
-        openMobMenu={openMobMenu}
-        setOpenMobMenu={setOpenMobMenu}
-        setOpenCatalogue={setOpenCatalogue}
-        openCatalogue={openCatalogue}
-      />
+      <Header notificationFunc={createNotification} />
 
-      <main className={`main${centeredForm ? ' __center' : ''}`}>
+      <main className={`main${history.asPath === '/' ? ' __center' : ''}`}>
         <SearchForm
-          setFormBusy={setFormBusy}
-          history={history}
           setSearchData={setSearchData}
           setOpenCatalogue={setOpenCatalogue}
           setOpenMobMenu={setOpenMobMenu}
