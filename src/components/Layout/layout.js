@@ -3,6 +3,7 @@ import ReactNotification, { store } from 'react-notifications-component'
 
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import SearchForm from '@/components/SearchForm'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { getJsonData } from '@/utils/getJsonData'
 import apiGET from '@/utils/search'
@@ -11,6 +12,7 @@ import apiPOST from '@/utils/upload'
 const LOUISYEN_PRICE_LIMIT = 1500
 
 export default function Layout({ history, children }) {
+  const [tableHeadFixed, setTableHeadFixed] = useState(null)
   const [appDrag, setAppDrag] = useState(false)
   const [centeredForm, setCenteredForm] = useState(true)
   const [openAuthPopup, setOpenAuthPopup] = useState(false)
@@ -22,8 +24,14 @@ export default function Layout({ history, children }) {
   const [searchCount, setSearchCount] = useState(1)
   const [cartCount, setCartCount] = useState(0)
   const [totalCart, setTotalCart] = useState(0)
+  const [globalPageStatus, setGlobalPageStatus] = useState(200)
 
   const [isAbove1500, setIsAbove1500] = useState(false)
+  const [formBusy, setFormBusy] = useState(false)
+  const [searchResult, setSearchResult] = useState(false)
+
+  const [busyOrder, setBusyOrder] = useState(false)
+  const [errorPage, setErrorPage] = useState(false)
 
   const getUSDExchange = () => {
     const USD = currencyList.find((f) => f.name === 'USD')
@@ -119,6 +127,67 @@ export default function Layout({ history, children }) {
       },
       true
     )
+  }
+
+  const sendSearchRequest = (options) => {
+    const requestURL = '/search'
+    setSearchResult(true)
+    setFormBusy(true)
+
+    setSearchData({})
+
+    setSearchCount(options.c || 1)
+
+    if (typeof ym === 'function') {
+      ym(81774553, 'reachGoal', 'usedsearch')
+    }
+
+    apiGET(requestURL, options, (data) => {
+      setFormBusy(false)
+      setSearchData(data)
+    })
+  }
+
+  const onSubmitSearchForm = (art, quantity) => {
+    window.log && console.log('onSubmitSearchForm', art, quantity)
+
+    if (art.length) {
+      history.replace({
+        pathname: '/search/',
+        search: `art=${encodeURIComponent(art)}&q=${encodeURIComponent(quantity || 1)}`,
+        state: { isActive: true },
+      })
+
+      // history.push();
+      sendSearchRequest({
+        q: art,
+        c: quantity || 1,
+      })
+    }
+    return false
+  }
+
+  const appHeight = () => {
+    const doc = document.documentElement
+    const sab = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sab')) || 0
+    doc.style.setProperty('--app-height', `${Math.max(700, window.innerHeight - sab)}px`)
+  }
+
+  const handleScroll = (event) => {
+    setOpenMobMenu(false)
+
+    document.body.classList[document.body.scrollTop > 0 ? 'add' : 'remove']('__show-gotop')
+    // setPageY(event.target.scrollTop);
+  }
+
+  const apiGETBridge = (requestURL, options, cb) => {
+    apiGET(requestURL, options, (data) => {
+      setGlobalPageStatus(data.hasOwnProperty('error') ? 404 : 200)
+
+      if (typeof cb === 'function') {
+        cb(data)
+      }
+    })
   }
 
   const createNotification = (type, title, text) => {
@@ -266,7 +335,23 @@ export default function Layout({ history, children }) {
         openCatalogue={openCatalogue}
       />
 
-      <main className={`main${centeredForm ? ' __center' : ''}`}>{children}</main>
+      <main className={`main${centeredForm ? ' __center' : ''}`}>
+        <SearchForm
+          setFormBusy={setFormBusy}
+          history={history}
+          setSearchData={setSearchData}
+          setOpenCatalogue={setOpenCatalogue}
+          setOpenMobMenu={setOpenMobMenu}
+          busyOrder={busyOrder}
+          busy={formBusy}
+          onSubmitForm={onSubmitSearchForm}
+          notificationFunc={createNotification}
+        />
+
+        <div className="main-content">{children}</div>
+
+        {tableHeadFixed}
+      </main>
 
       <Footer />
     </div>

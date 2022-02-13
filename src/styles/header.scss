@@ -12,9 +12,7 @@
     position: relative;
 
     &__link {
-      transition: color .3s, background-color .3s;
-      background: none;
-      border: 0;
+      @extend %button_reset;
       cursor: pointer;
       color: $gray_link;
       font-size: 12px;

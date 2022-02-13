@@ -102,6 +102,7 @@
     color: $main_gray;
 
     &__example {
+      @extend %button_reset;
       display: inline-block;
       cursor: pointer;
       text-decoration: underline;

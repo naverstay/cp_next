@@ -1,4 +1,6 @@
-import Greeting from '@/components/Greeting'
+import React from 'react';
+
+import Greeting from '@/components/Greeting';
 
 export default function IndexPage() {
   return (
@@ -7,5 +9,5 @@ export default function IndexPage() {
         <Greeting target={'Next.js Starter Kit'} />
       </div>
     </div>
-  )
+  );
 }

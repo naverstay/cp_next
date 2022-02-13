@@ -63,6 +63,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     // next/linkのchildのaタグの空hrefを許容する
     'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
     // 未使用の変数がある場合エラーにする（デフォルトは warning）
     '@typescript-eslint/no-unused-vars': 'off',
     // named-exportを許可
