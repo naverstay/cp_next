@@ -1,21 +1,21 @@
-import './../src/styles/app.scss';
+import './../src/styles/app.scss'
 
-import { AppProps } from 'next/app';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import Script from 'next/script';
-import React from 'react';
+import { AppProps } from 'next/app'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import Script from 'next/script'
+import React from 'react'
 
 // import Manifest from './site.webmanifest.json'
 
-import Layout from '@/components/Layout/layout';
+import Layout from '@/components/Layout/layout'
 
-import '!file-loader?name=[name].[ext]!./favicon.ico';
-import '!file-loader?name=[name].[ext]!./apple-touch-icon.png';
+import '!file-loader?name=[name].[ext]!./favicon.ico'
+import '!file-loader?name=[name].[ext]!./apple-touch-icon.png'
 
-import '!file-loader?name=[name].[ext]!./browserconfig.xml';
-import '!file-loader?name=[name].[ext]!./favicon-16x16.png';
-import '!file-loader?name=[name].[ext]!./favicon-32x32.png';
+import '!file-loader?name=[name].[ext]!./browserconfig.xml'
+import '!file-loader?name=[name].[ext]!./favicon-16x16.png'
+import '!file-loader?name=[name].[ext]!./favicon-32x32.png'
 // import '!file-loader?name=[name].[ext]!./safari-pinned-tab.svg'
 
 // import '!file-loader?name=[name].[ext]!./mstile-150x150.png'
@@ -37,7 +37,7 @@ import '!file-loader?name=[name].[ext]!./favicon-32x32.png';
 // import 'file-loader?name=.htaccess!./.htaccess'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
     <React.Fragment>
@@ -51,10 +51,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#475df4" />
 
-        <link rel="icon" href=".//favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href=".//apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href=".//favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href=".//favicon-16x16.png" />
+        <link rel="icon" href="./favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
         {/*<Manifest rel="manifest" href="./site.webmanifest.json" crossOrigin="use-credentials" />*/}
 
         <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5" />
@@ -95,7 +95,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </Layout>
     </React.Fragment>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp
