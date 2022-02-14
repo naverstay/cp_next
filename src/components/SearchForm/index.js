@@ -23,7 +23,7 @@ import apiPOST from '../../utils/upload'
 //import { changeArtNumber } from './actions'
 //import { makeSelectArtNumber } from './selectors'
 
-import { formBusyJotai, searchDataJotai } from '@/store/store'
+import { formBusyJotai, searchDataJotai, simpleReducer } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 // import reducer from './reducer';
 // import saga from './saga';
@@ -33,8 +33,8 @@ import { setInputFilter } from '@/utils/inputFilter'
 export function SearchForm({ notificationFunc, onSubmitForm, loading, onChangeUsername }) {
   const history = useRouter()
 
-  const [searchData, setSearchData] = useAtom(searchDataJotai)
-  const [formBusy, setFormBusy] = useAtom(formBusyJotai)
+  const [searchData, setSearchData] = useState(searchDataJotai)
+  const [formBusy, setFormBusy] = useState(formBusyJotai)
 
   const formRef = React.createRef()
   const formArtNumber = React.createRef()

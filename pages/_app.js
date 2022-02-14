@@ -4,7 +4,7 @@ import { Provider, useAtom } from 'jotai'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactNotification, { Store } from 'react-notifications-component'
 
 import AsideContainer from '@/components/AsideContainer'
@@ -34,37 +34,62 @@ import {
   searchCountJotai,
   searchDataJotai,
   totalCartJotai,
+  simpleReducer,
+  categorySlugLinksJotai,
+  menuJsonJotai,
+  tableHeadFixedJotai,
+  appDragJotai,
+  openResetPasswordJotai,
+  errorPageJotai,
+  currencyJotai,
+  showTableHeadFixedJotai,
 } from '@/store/store'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { getJsonData } from '@/utils/getJsonData'
 import apiGET from '@/utils/search'
 import apiPOST from '@/utils/upload'
 
-function MyApp({ Component, pageProps }) {
+Number.prototype.toFixedCustom = function (decimals) {
+  const base = Math.pow(10, decimals)
+  // console.log('toFixedCustom', this, decimals, Math.round((this + Number.EPSILON) * base) / base);
+  return Math.round((this + Number.EPSILON) * base) / base
+}
+
+function NextCatpartApp({ Component, pageProps }) {
   const { initialState } = pageProps
   const history = useRouter()
 
-  const [asideOpen, setAsideOpen] = useAtom(asideOpenJotai)
-  const [asideContent, setAsideContent] = useAtom(asideContentJotai)
-  const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
-  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
-  const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
-  const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
-  const [searchData, setSearchData] = useAtom(searchDataJotai)
-  const [profileChecked, setProfileChecked] = useAtom(profileCheckedJotai)
-  const [profile, setProfile] = useAtom(profileJotai)
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
-  const [cartCount, setCartCount] = useAtom(cartCountJotai)
-  const [isAbove1500, setIsAbove1500] = useAtom(isAbove1500Jotai)
-  const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
-  const [totalCart, setTotalCart] = useAtom(totalCartJotai)
-  const [formBusy, setFormBusy] = useAtom(formBusyJotai)
-  const [searchCount, setSearchCount] = useAtom(searchCountJotai)
-  const [globalPageStatus, setGlobalPageStatus] = useAtom(globalPageStatusJotai)
+  const [categorySlugLinks, setCategorySlugLinks] = useState(categorySlugLinksJotai)
+  const [menuJson, setMenuJson] = useState(menuJsonJotai)
+  const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
+  const [appDrag, setAppDrag] = useState(appDragJotai)
+  const [errorPage, setErrorPage] = useState(errorPageJotai)
+  const [showTableHeadFixed, setShowTableHeadFixed] = useState(showTableHeadFixedJotai)
 
-  const [openProfile, setOpenProfile] = useAtom(openProfileJotai)
-  const [openRequisites, setOpenRequisites] = useAtom(openRequisitesJotai)
-  const [openDetails, setOpenDetails] = useAtom(openDetailsJotai)
+  const [asideOpen, setAsideOpen] = useState(asideOpenJotai)
+  const [asideContent, setAsideContent] = useState(asideContentJotai)
+  const [openResetPassword, setOpenResetPassword] = useState(openResetPasswordJotai)
+  const [openAuthPopup, setOpenAuthPopup] = useState(openAuthPopupJotai)
+  const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
+  const [openMobMenu, setOpenMobMenu] = useState(openMobMenuJotai)
+  const [busyOrder, setBusyOrder] = useState(busyOrderJotai)
+  const [searchData, setSearchData] = useState(searchDataJotai)
+  const [profileChecked, setProfileChecked] = useState(profileCheckedJotai)
+  const [profile, setProfile] = useState(profileJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
+  const [cartCount, setCartCount] = useState(cartCountJotai)
+  const [isAbove1500, setIsAbove1500] = useState(isAbove1500Jotai)
+  const [currency, setCurrency] = useState(currencyJotai)
+
+  const [currencyList, setCurrencyList] = useState(currencyListJotai)
+  const [totalCart, setTotalCart] = useState(totalCartJotai)
+  const [formBusy, setFormBusy] = useState(formBusyJotai)
+  const [searchCount, setSearchCount] = useState(searchCountJotai)
+  const [globalPageStatus, setGlobalPageStatus] = useState(globalPageStatusJotai)
+
+  const [openProfile, setOpenProfile] = useState(openProfileJotai)
+  const [openRequisites, setOpenRequisites] = useState(openRequisitesJotai)
+  const [openDetails, setOpenDetails] = useState(openDetailsJotai)
 
   const getUSDExchange = () => {
     const USD = currencyList.find((f) => f.name === 'USD')
@@ -74,30 +99,36 @@ function MyApp({ Component, pageProps }) {
   const createNotification = (type, title, text) => {
     devMode && console.log('createNotification', type, text)
 
-    switch (type) {
-      case 'info':
-        break
-      case 'success':
-        Store.addNotification({
-          title,
-          message: text,
-          type: 'default',
-          insert: 'top',
-          container: 'top-right',
-          animationIn: ['animate__animated', 'animate__bounceInRight'],
-          animationOut: ['animate__animated', 'animate__bounceOutRight'],
-          dismiss: {
-            duration: 2000,
-            waitForAnimation: true,
-            pauseOnHover: true,
-            onScreen: false,
-          },
-        })
-        break
-      case 'warning':
-        break
-      case 'error':
-        break
+    if (Store?.add) {
+      console.log('store', Store)
+
+      switch (type) {
+        case 'info':
+          break
+        case 'success':
+          Store.addNotification({
+            title,
+            message: text,
+            type: 'default',
+            insert: 'top',
+            container: 'top-right',
+            animationIn: ['animate__animated', 'animate__bounceInRight'],
+            animationOut: ['animate__animated', 'animate__bounceOutRight'],
+            dismiss: {
+              duration: 2000,
+              waitForAnimation: true,
+              pauseOnHover: true,
+              onScreen: false,
+            },
+          })
+          break
+        case 'warning':
+          break
+        case 'error':
+          break
+      }
+    } else {
+      console.log('no store', Store)
     }
   }
 
@@ -358,6 +389,7 @@ function MyApp({ Component, pageProps }) {
   }
 
   const updateAsideContent = (content) => {
+    console.log('updateAsideContent', content)
     if (content !== null) {
       setAsideContent(content)
     }
@@ -371,6 +403,76 @@ function MyApp({ Component, pageProps }) {
     )
   }
 
+  const appState = {
+    showTableHeadFixed: showTableHeadFixed,
+    setShowTableHeadFixed: setShowTableHeadFixed,
+    errorPage: errorPage,
+    setErrorPage: setErrorPage,
+    categorySlugLinks: categorySlugLinks,
+    setCategorySlugLinks: setCategorySlugLinks,
+    menuJson: menuJson,
+    setMenuJson: setMenuJson,
+    tableHeadFixed: tableHeadFixed,
+    setTableHeadFixed: setTableHeadFixed,
+    appDrag: appDrag,
+    setAppDrag: setAppDrag,
+    asideOpen: asideOpen,
+    setAsideOpen: setAsideOpen,
+    asideContent: asideContent,
+    setAsideContent: setAsideContent,
+    openResetPassword: openResetPassword,
+    setOpenResetPassword: setOpenResetPassword,
+    openAuthPopup: openAuthPopup,
+    setOpenAuthPopup: setOpenAuthPopup,
+    openCatalogue: openCatalogue,
+    setOpenCatalogue: setOpenCatalogue,
+    openMobMenu: openMobMenu,
+    setOpenMobMenu: setOpenMobMenu,
+    busyOrder: busyOrder,
+    setBusyOrder: setBusyOrder,
+    searchData: searchData,
+    setSearchData: setSearchData,
+    profileChecked: profileChecked,
+    setProfileChecked: setProfileChecked,
+    profile: profile,
+    setProfile: setProfile,
+    devMode: devMode,
+    setDevMode: setDevMode,
+    cartCount: cartCount,
+    setCartCount: setCartCount,
+    isAbove1500: isAbove1500,
+    setIsAbove1500: setIsAbove1500,
+    currencyList: currencyList,
+    setCurrencyList: setCurrencyList,
+    currency: currency,
+    setCurrency: setCurrency,
+    totalCart: totalCart,
+    setTotalCart: setTotalCart,
+    formBusy: formBusy,
+    setFormBusy: setFormBusy,
+    searchCount: searchCount,
+    setSearchCount: setSearchCount,
+    globalPageStatus: globalPageStatus,
+    setGlobalPageStatus: setGlobalPageStatus,
+    openProfile: openProfile,
+    setOpenProfile: setOpenProfile,
+    openRequisites: openRequisites,
+    setOpenRequisites: setOpenRequisites,
+    openDetails: openDetails,
+    setOpenDetails: setOpenDetails,
+  }
+
+  const appFunctions = {
+    onSubmitSearchForm: onSubmitSearchForm,
+    updateCart: updateCart,
+    checkSupplierPrices: checkSupplierPrices,
+    needLogin: needLogin,
+    logOut: logOut,
+    createNotification: createNotification,
+    apiGETBridge: apiGETBridge,
+    sendSearchRequest: sendSearchRequest,
+  }
+
   useEffect(() => {
     if (openAuthPopup || openRequisites) {
       setOpenCatalogue(false)
@@ -379,6 +481,11 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     document.body.classList[openCatalogue ? 'add' : 'remove']('__no-overflow')
+
+    if (openCatalogue) {
+      setOpenAuthPopup(false)
+      setOpenResetPassword(false)
+    }
   }, [openCatalogue])
 
   useEffect(() => {
@@ -398,11 +505,13 @@ function MyApp({ Component, pageProps }) {
   }, [openCatalogue])
 
   useEffect(() => {
+    console.log('openProfile', openProfile)
     setAsideOpen(openProfile)
-    updateAsideContent(openProfile ? <Profile notificationFunc={createNotification} logOut={logOut} /> : null)
+    updateAsideContent(openProfile ? <Profile {...appState} {...appFunctions} /> : null)
   }, [openProfile])
 
   useEffect(() => {
+    console.log('openRequisites', openRequisites)
     setAsideOpen(!!openRequisites)
 
     updateAsideContent(
@@ -418,7 +527,8 @@ function MyApp({ Component, pageProps }) {
   }, [openRequisites])
 
   useEffect(() => {
-    setAsideOpen(openDetails?.id)
+    console.log('openDetails', openDetails)
+    setAsideOpen(!!openDetails?.id)
 
     updateAsideContent(
       openDetails ? (
@@ -439,6 +549,7 @@ function MyApp({ Component, pageProps }) {
   }, [profile])
 
   useEffect(() => {
+    console.log('asideOpen', asideOpen)
     if (!asideOpen) {
       setOpenProfile(false)
       setOpenRequisites(0)
@@ -453,13 +564,15 @@ function MyApp({ Component, pageProps }) {
     // }
   }, [profile])
 
+  useEffect(() => {
+    setDevMode(process.env.NODE_ENV !== 'production')
+  }, [])
+
   return (
     <React.Fragment>
       <Head>
         <base href="/" />
-
         <meta charSet="utf-8" />
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <meta name="mobile-web-app-capable" content="yes" />
@@ -480,49 +593,38 @@ function MyApp({ Component, pageProps }) {
         <meta httpEquiv="Expires" content="0" />
       </Head>
 
-      {/*      <Script*/}
-      {/*        id="window_dl_script"*/}
-      {/*        dangerouslySetInnerHTML={{*/}
-      {/*          __html: `*/}
-      {/*window.dataLayer = window.dataLayer || [];*/}
-      {/*window.gTag = (dl) => {*/}
-      {/*  window.dataLayer.push(dl);*/}
-      {/*}*/}
-      {/*  `,*/}
-      {/*        }}*/}
-      {/*      />*/}
+      {process.env.NODE_ENV === 'production' ? (
+        <React.Fragment>
+          <Script
+            id="window_dl_script"
+            dangerouslySetInnerHTML={{
+              __html: `
+      window.dataLayer = window.dataLayer || [];
+      window.gTag = (dl) => {
+        window.dataLayer.push(dl);
+      }
+        `,
+            }}
+          />
 
-      {/*      <Script*/}
-      {/*        id="gtm_script"*/}
-      {/*        dangerouslySetInnerHTML={{*/}
-      {/*          __html: `*/}
-      {/*(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':*/}
-      {/*new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],*/}
-      {/*j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=*/}
-      {/*'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);*/}
-      {/*})(window,document,'script','dataLayer','GTM-WVWK2SW');              */}
-      {/*              `,*/}
-      {/*        }}*/}
-      {/*      />*/}
+          <Script
+            id="gtm_script"
+            dangerouslySetInnerHTML={{
+              __html: `
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-WVWK2SW');              
+                    `,
+            }}
+          />
+        </React.Fragment>
+      ) : null}
 
       <Provider initialValues={initialState}>
-        <Layout
-          onSubmitSearchForm={onSubmitSearchForm}
-          updateCart={updateCart}
-          checkSupplierPrices={checkSupplierPrices}
-          needLogin={needLogin}
-          logOut={logOut}
-          createNotification={createNotification}
-        >
-          <Component
-            apiGETBridge={apiGETBridge}
-            sendSearchRequest={sendSearchRequest}
-            updateCart={updateCart}
-            needLogin={needLogin}
-            logOut={logOut}
-            createNotification={createNotification}
-            {...pageProps}
-          />
+        <Layout {...appState} {...appFunctions}>
+          <Component {...appState} {...appFunctions} {...pageProps} />
         </Layout>
 
         <AsideContainer className={asideOpen ? ' __opened' : ''} setAsideOpen={setAsideOpen}>
@@ -533,4 +635,4 @@ function MyApp({ Component, pageProps }) {
   )
 }
 
-export default MyApp
+export default NextCatpartApp

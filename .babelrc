@@ -21,5 +21,17 @@
         "loose": true
       }
     ]
-  ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        "es2015",
+        "react"
+      ],
+      "plugins": [
+        "syntax-object-rest-spread",
+        "transform-es2015-modules-commonjs"
+      ]
+    }
+  }
 }

@@ -24,23 +24,43 @@ import {
   openRequisitesJotai,
   profileJotai,
   tableHeadFixedJotai,
+  simpleReducer,
 } from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function OrdersPage(props) {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
-
-  const { activeTab, needLogin, count, notificationFunc, updateCart } = props
+  const {
+    devMode,
+    setDevMode,
+    activeTab,
+    needLogin,
+    count,
+    notificationFunc,
+    updateCart,
+    tableHeadFixed,
+    setTableHeadFixed,
+    openRequisites,
+    setOpenRequisites,
+    openDetails,
+    setOpenDetails,
+    profile,
+    setProfile,
+    currencyList,
+    setCurrencyList,
+    currency,
+    setCurrency,
+  } = props
 
   const defaultCount = count
 
   const tableHead = useRef()
-  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-  const [openRequisites, setOpenRequisites] = useAtom(openRequisitesJotai)
-  const [openDetails, setOpenDetails] = useAtom(openDetailsJotai)
-  const [profile, setProfile] = useAtom(profileJotai)
-  const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
-  const [currency, setCurrency] = useAtom(currencyJotai)
+  //const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
+  //const [openRequisites, setOpenRequisites] = useState(openRequisitesJotai)
+  //const [openDetails, setOpenDetails] = useState(openDetailsJotai)
+  //const [profile, setProfile] = useState(profileJotai)
+  //const [currencyList, setCurrencyList] = useState(currencyListJotai)
+  //const [currency, setCurrency] = useState(currencyJotai)
+  //const [devMode, setDevMode] = useState(isDevModeJotai)
 
   const [ordersList, setOrdersList] = useState([])
   const [requisitesList, setRequisitesList] = useState([])
@@ -270,7 +290,7 @@ export function OrdersPage(props) {
 
   return (
     <div className="orders-results">
-      <CabinetTabs activeIndex={activeTab} />
+      <CabinetTabs activeIndex={activeTab} {...props} />
 
       {activeTab === 0 ? (
         <>

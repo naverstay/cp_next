@@ -4,10 +4,12 @@ import React from 'react'
 
 import { OrdersPage } from '@/components/OrdersPage'
 
-export default function SearchPage({ ...props }) {
+export default function SearchPage({ ...pageProps }) {
   const router = useRouter()
 
-  console.log('orders', props)
+  const { needLogin, createNotification } = pageProps
+
+  console.log('pageProps', router)
   return (
     <React.Fragment>
       <Head>
@@ -17,7 +19,7 @@ export default function SearchPage({ ...props }) {
         <link rel="canonical" href="https://catpart.ru/" />
       </Head>
 
-      <OrdersPage activeTab={0} {...props} />
+      <p>catalog here</p>
     </React.Fragment>
   )
 }

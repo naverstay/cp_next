@@ -7,10 +7,10 @@ import { findPriceIndex } from '../../utils/findPriceIndex'
 import { setInputFilter } from '../../utils/inputFilter'
 import priceFormatter from '../../utils/priceFormatter'
 
-import { isDevModeJotai } from '@/store/store'
+import { isDevModeJotai, simpleReducer } from '@/store/store'
 
 const DetailsRow = (props) => {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
 
   let { rowIndex, tableHeader, currency, row, notificationFunc } = props
 

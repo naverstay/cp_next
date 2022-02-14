@@ -11,7 +11,7 @@ import Collapsible from 'react-collapsible'
 
 import SearchRow from '../SearchRow'
 
-import { isDevModeJotai, tableHeadFixedJotai } from '@/store/store'
+import { isDevModeJotai, tableHeadFixedJotai, simpleReducer } from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function SearchResults(props) {
@@ -30,9 +30,9 @@ export function SearchResults(props) {
     updateCart,
   } = props
 
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
 
-  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
+  const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
 
   const tableHead = useRef()
 

@@ -1,16 +1,16 @@
-import { useAtom } from 'jotai'
+import { useAtom, atom } from 'jotai'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
 import apiGET from '../../utils/search'
 
-import { menuJsonJotai, openCatalogueJotai } from '@/store/store'
+import { menuJsonJotai, openCatalogueJotai, simpleReducer } from '@/store/store'
 
-function CatalogueMenu() {
+function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson }) {
   const history = useRouter()
 
-  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
-  const [menuJson, setMenuJson] = useAtom(menuJsonJotai)
+  //const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
+  //const [menuJson, setMenuJson] = useState(menuJsonJotai)
 
   let menuTimer
   const [menuPath, setMenuPath] = useState('0')

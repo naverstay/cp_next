@@ -53,6 +53,7 @@ import {
   showTableHeadFixedJotai,
   tableHeadFixedJotai,
   totalCartJotai,
+  simpleReducer,
 } from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { getButtonsMap } from '@/utils/getPaginationMap'
@@ -72,6 +73,40 @@ export function FilterForm({
   error,
   onChangeCurrency,
   onSubmitSearchForm,
+  profile,
+  setProfile,
+  errorPage,
+  setErrorPage,
+  categoryItems,
+  setCategoryItems,
+  totalCart,
+  setTotalCart,
+  searchData,
+  setSearchData,
+  tableHeadFixed,
+  setTableHeadFixed,
+  nestedCategories,
+  setNestedCategories,
+  currency,
+  setCurrency,
+  currencyList,
+  setCurrencyList,
+  orderSent,
+  setOrderSent,
+  openMobMenu,
+  setOpenMobMenu,
+  showTableHeadFixed,
+  setShowTableHeadFixed,
+  openAuthPopup,
+  setOpenAuthPopup,
+  busyOrder,
+  setBusyOrder,
+  formBusy,
+  setFormBusy,
+  devMode,
+  setDevMode,
+  openCatalogue,
+  setOpenCatalogue,
 }) {
   const history = useRouter()
   const query = history.query
@@ -79,25 +114,25 @@ export function FilterForm({
   const cart = history.pathname === '/order'
   const someCategoryUrl = !(history.pathname === '/search' || history.pathname === '/order')
 
-  const [profile, setProfile] = useAtom(profileJotai)
-  const [errorPage, setErrorPage] = useAtom(errorPageJotai)
-  const [categoryItems, setCategoryItems] = useAtom(categoryItemsJotai)
-
-  const [totalCart, setTotalCart] = useAtom(totalCartJotai)
-  const [searchData, setSearchData] = useAtom(searchDataJotai)
-  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-
-  const [nestedCategories, setNestedCategories] = useAtom(nestedCategoriesJotai)
-  const [currency, setCurrency] = useAtom(currencyJotai)
-  const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
-  const [orderSent, setOrderSent] = useAtom(orderSentJotai)
-  const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
-  const [showTableHeadFixed, setShowTableHeadFixed] = useAtom(showTableHeadFixedJotai)
-  const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
-  const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
-  const [formBusy, setFormBusy] = useAtom(formBusyJotai)
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
-  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
+  //const [profile, setProfile] = useAtom(profileJotai)
+  //const [errorPage, setErrorPage] = useAtom(errorPageJotai)
+  //const [categoryItems, setCategoryItems] = useAtom(categoryItemsJotai)
+  //
+  //const [totalCart, setTotalCart] = useAtom(totalCartJotai)
+  //const [searchData, setSearchData] = useAtom(searchDataJotai)
+  //const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
+  //
+  //const [nestedCategories, setNestedCategories] = useAtom(nestedCategoriesJotai)
+  //const [currency, setCurrency] = useAtom(currencyJotai)
+  //const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
+  //const [orderSent, setOrderSent] = useAtom(orderSentJotai)
+  //const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
+  //const [showTableHeadFixed, setShowTableHeadFixed] = useAtom(showTableHeadFixedJotai)
+  //const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
+  //const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
+  //const [formBusy, setFormBusy] = useAtom(formBusyJotai)
+  //const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  //const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
 
   let actualTimer
 
@@ -236,7 +271,7 @@ export function FilterForm({
     },
   }
 
-  console.log('paramsPage', paramsPage, history.pathname.split('/'))
+  console.log('FilterForm', params, paramsPage, history.pathname.split('/'))
 
   const isCatalogueRoot = () => {
     // todo match catalogue
@@ -256,7 +291,8 @@ export function FilterForm({
   })
 
   useEffect(() => {
-    setOpenMobMenu(false)
+    // todo fix
+    //setOpenMobMenu(false)
 
     const requestURL = '/currencies'
 
@@ -281,6 +317,8 @@ export function FilterForm({
   useEffect(() => {
     const user = localStorage.getItem('catpart-user')
     let userFields = {}
+
+    console.log('currencyList', currencyList)
 
     if (user) {
       userFields = getJsonData(user)
@@ -690,7 +728,7 @@ export function FilterForm({
       setCategoryPage(true)
       let url = ''
       let attrIds = []
-      let options = qs.parse(props.location.search.substring(1))
+      let options = qs.parse(history.asPath.split('?')[1])
 
       if (props.match.params.hasOwnProperty('catalogue') && props.match.params.catalogue !== 'catalog') {
         url = '/' + props.match.params.catalogue.replace(/\//g, '')
@@ -860,7 +898,7 @@ export function FilterForm({
                 filterItemsHTML={filterItemsHTML}
                 categoryItems={categoryItems}
                 catColumnsList={catColumnsList}
-                nestedCategories={nestedCategories.slice(0)}
+                nestedCategories={nestedCategories?.slice(0) || []}
                 categoryInfo={categoryInfo}
                 categorySortField={categorySortField}
                 setCategorySort={setCategorySortFunc}
@@ -871,7 +909,7 @@ export function FilterForm({
 
               {noDataText ? <div className="catalogue-page__nodata">{noDataText}</div> : null}
 
-              {categoryItems.length ? (
+              {categoryItems?.length ? (
                 <div className="catalogue-page__pagination">
                   {categoryItems.length > 10 || pagination.pages > 1 ? (
                     <ul className={'catalogue-page__pagination-list'}>
@@ -1058,7 +1096,7 @@ export function FilterForm({
 
                             actualInfoChecker(new Date())
                           }}
-                          className={'btn __blue' + (formBusy ? ' __loader' : '')}
+                          className={'btn ' + (updateTime ? '__blue' : '__gray')}
                           during={1000}
                         >
                           <span

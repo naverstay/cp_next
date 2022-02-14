@@ -15,6 +15,7 @@ import {
   profileCheckedJotai,
   profileJotai,
   tableHeadFixedJotai,
+  simpleReducer,
 } from '@/store/store'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { flatDeep } from '@/utils/flatDeep'
@@ -25,24 +26,39 @@ import { uniqArray } from '@/utils/uniqArray'
 import apiPOST from '@/utils/upload'
 import { validateJSON } from '@/utils/validateJSON'
 
-export default function Layout({
-  updateCart,
-  onSubmitSearchForm,
-  checkSupplierPrices,
-  needLogin,
-  logOut,
-  createNotification,
-  children,
-}) {
+export default function Layout(props) {
   const history = useRouter()
 
-  const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
-  const [categorySlugLinks, setCategorySlugLinks] = useAtom(categorySlugLinksJotai)
-  const [menuJson, setMenuJson] = useAtom(menuJsonJotai)
-  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-  const [appDrag, setAppDrag] = useAtom(appDragJotai)
-  const [profileChecked, setProfileChecked] = useAtom(profileCheckedJotai)
-  const [profile, setProfile] = useAtom(profileJotai)
+  const {
+    updateCart,
+    onSubmitSearchForm,
+    checkSupplierPrices,
+    needLogin,
+    logOut,
+    createNotification,
+    devMode,
+    children,
+    openMobMenu,
+    setOpenMobMenu,
+    categorySlugLinks,
+    setCategorySlugLinks,
+    menuJson,
+    setMenuJson,
+    tableHeadFixed,
+    setTableHeadFixed,
+    appDrag,
+    setAppDrag,
+    profileChecked,
+    setProfileChecked,
+    profile,
+    setProfile,
+    cartCount,
+    setCartCount,
+    openAuthPopup,
+    setOpenAuthPopup,
+    openCatalogue,
+    setOpenCatalogue,
+  } = props
 
   const appHeight = () => {
     const doc = document.documentElement
@@ -139,7 +155,7 @@ export default function Layout({
 
   return (
     <div className={`app-wrapper${appDrag ? ' __over' : ''}`}>
-      <Header notificationFunc={createNotification} />
+      <Header {...props} />
 
       <div
         aria-hidden="true"
@@ -149,7 +165,12 @@ export default function Layout({
         }}
       />
 
-      <CatalogueMenu />
+      <CatalogueMenu
+        menuJson={menuJson}
+        setMenuJson={setMenuJson}
+        setOpenCatalogue={setOpenCatalogue}
+        openCatalogue={openCatalogue}
+      />
 
       <main className={`main${history.asPath === '/' ? ' __center' : ''}`}>
         <SearchForm onSubmitForm={onSubmitSearchForm} notificationFunc={createNotification} />

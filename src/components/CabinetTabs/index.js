@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import NextLink from '@/components/NextLink'
-import { openProfileJotai } from '@/store/store'
+import { openProfileJotai, simpleReducer } from '@/store/store'
 
 const CabinetTabs = (props) => {
-  let { activeIndex, setActiveIndex } = props
-
   const history = useRouter()
-  const [openProfile, setOpenProfile] = useAtom(openProfileJotai)
+  let { activeIndex, setActiveIndex, openProfile, setOpenProfile } = props
+
+  //const [openProfile, setOpenProfile] = useState(openProfileJotai)
 
   return (
     <div className="form-filter">
@@ -55,9 +55,10 @@ const CabinetTabs = (props) => {
           </div>
           <div className="form-filter__control">
             <Ripples
+              aria-hidden="true"
               onClick={() => {
                 setOpenProfile(true)
-                //history.push('/requisites');
+                console.log('setOpenProfile', openProfile)
               }}
               className={'btn __gray'}
               during={1000}

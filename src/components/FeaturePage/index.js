@@ -10,15 +10,15 @@ import React, { useEffect, useState } from 'react'
 
 import apiGET from '../../utils/search'
 
-import { openCatalogueJotai, tableHeadFixedJotai } from '@/store/store'
+import { openCatalogueJotai, tableHeadFixedJotai, simpleReducer } from '@/store/store'
 
 export default function FeaturePage(props) {
   const history = useRouter()
 
   const [page, setPage] = useState(null)
 
-  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
+  const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
+  const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
 
   useEffect(() => {
     setTableHeadFixed(null)

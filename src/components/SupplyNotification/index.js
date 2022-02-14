@@ -4,11 +4,11 @@ import Ripples from 'react-ripples'
 
 import FormInput from '../../components/FormInput'
 
-import { isDevModeJotai } from '@/store/store'
+import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { validateEmail } from '@/utils/validateEmail'
 
 const SupplyNotification = (props) => {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
 
   const { itemData, notificationFunc } = props
   const emailInput = React.createRef()

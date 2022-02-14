@@ -10,13 +10,13 @@ import apiGET from '../../utils/search'
 import DetailsRow from '../DetailsRow'
 
 import { RUB } from '@/store/constants'
-import { isDevModeJotai } from '@/store/store'
+import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { API } from '@/utils/order'
 import { validateEmail } from '@/utils/validateEmail'
 import { xlsDownload } from '@/utils/xlsDownload'
 
 const OrderDetails = (props) => {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
 
   const { detailsId, setOrderDetails, profile, order, notificationFunc } = props
 

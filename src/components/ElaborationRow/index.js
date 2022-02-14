@@ -3,11 +3,11 @@ import React, { createRef, useEffect, useState } from 'react'
 
 import FormInput from '../../components/FormInput'
 
-import { isDevModeJotai } from '@/store/store'
+import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 
 const ElaborationRow = (props) => {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
 
   let { rowIndex, updateRow, row } = props
 

@@ -2,12 +2,11 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { OrdersPage } from '@/components/OrdersPage'
+import FilterForm from '@/components/FilterForm'
 
 export default function SearchPage({ ...props }) {
   const router = useRouter()
 
-  console.log('orders', props)
   return (
     <React.Fragment>
       <Head>
@@ -17,7 +16,9 @@ export default function SearchPage({ ...props }) {
         <link rel="canonical" href="https://catpart.ru/" />
       </Head>
 
-      <OrdersPage activeTab={0} {...props} />
+      <p>404 page</p>
+
+      {/*<FilterForm {...props} />*/}
     </React.Fragment>
   )
 }

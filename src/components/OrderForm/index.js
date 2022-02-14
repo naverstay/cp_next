@@ -18,7 +18,7 @@ import innValidation from '../../utils/innValidation'
 import apiORDER, { apiORDERDB } from '../../utils/order'
 import priceFormatter from '../../utils/priceFormatter'
 
-import { busyOrderJotai, isDevModeJotai, orderSentJotai } from '@/store/store'
+import { busyOrderJotai, isDevModeJotai, orderSentJotai, simpleReducer } from '@/store/store'
 import { counterEffect } from '@/utils/counterEffect'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { getJsonData } from '@/utils/getJsonData'
@@ -42,9 +42,9 @@ export function OrderForm({
   loading,
   onChangeUsername,
 }) {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
-  const [orderSent, setOrderSent] = useAtom(orderSentJotai)
-  const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
+  const [devMode, setDevMode] = useState(isDevModeJotai)
+  const [orderSent, setOrderSent] = useState(orderSentJotai)
+  const [busyOrder, setBusyOrder] = useState(busyOrderJotai)
 
   const emailInput = React.createRef()
   const nameInput = React.createRef()

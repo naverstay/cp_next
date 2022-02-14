@@ -4,10 +4,8 @@ import React from 'react'
 
 import FilterForm from '@/components/FilterForm'
 
-export default function SearchPage({ ...pageProps }) {
+export default function SearchPage({ ...props }) {
   const router = useRouter()
-
-  const { apiGETBridge, createNotification, onSubmitSearchForm, updateCart } = pageProps
 
   return (
     <React.Fragment>
@@ -18,12 +16,7 @@ export default function SearchPage({ ...pageProps }) {
         <link rel="canonical" href="https://catpart.ru/" />
       </Head>
 
-      <FilterForm
-        updateCart={updateCart}
-        apiGETBridge={apiGETBridge}
-        createNotification={createNotification}
-        onSubmitSearchForm={onSubmitSearchForm}
-      />
+      <FilterForm {...props} />
     </React.Fragment>
   )
 }

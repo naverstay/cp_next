@@ -223,7 +223,7 @@ export default function CataloguePage(props) {
   }, [nestedCategories])
 
   const catalogHTML = useMemo(() => {
-    return categoryItems.length ? (
+    return categoryItems?.length ? (
       <>
         <ReactTableFixedColumns
           key={categoryItems.length}

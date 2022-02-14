@@ -4,7 +4,7 @@ const AsideContainer = (props) => {
   let { setAsideOpen, children, className } = props
 
   return (
-    <div className={'aside-holder ' + className}>
+    <div className={'aside-holder' + className}>
       <div
         aria-hidden="true"
         className="aside-overlay"

@@ -16,19 +16,52 @@ import {
   openCatalogueJotai,
   openMobMenuJotai,
   profileJotai,
+  simpleReducer,
 } from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { validateEmail } from '@/utils/validateEmail'
 
-function Header({ notificationFunc }) {
+function Header({
+  updateCart,
+  onSubmitSearchForm,
+  checkSupplierPrices,
+  needLogin,
+  logOut,
+  createNotification,
+  children,
+  openMobMenu,
+  setOpenMobMenu,
+  categorySlugLinks,
+  setCategorySlugLinks,
+  menuJson,
+  setMenuJson,
+  tableHeadFixed,
+  setTableHeadFixed,
+  appDrag,
+  setAppDrag,
+  profileChecked,
+  setProfileChecked,
+  profile,
+  devMode,
+  setProfile,
+  notificationFunc,
+  openAuthPopup,
+  setOpenAuthPopup,
+  cartCount,
+  setCartCount,
+  openCatalogue,
+  setOpenCatalogue,
+  openResetPassword,
+  setOpenResetPassword,
+}) {
   const history = useRouter()
 
-  const [cartCount, setCartCount] = useAtom(cartCountJotai)
-  const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
-  const [profile, setProfile] = useAtom(profileJotai)
-  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
-  const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  //const [cartCount, setCartCount] = useState(cartCountJotai)
+  //const [openAuthPopup, setOpenAuthPopup] = useState(openAuthPopupJotai)
+  //const [profile, setProfile] = useState(profileJotai)
+  //const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
+  //const [openMobMenu, setOpenMobMenu] = useState(openMobMenuJotai)
+  //const [devMode, setDevMode] = useState(isDevModeJotai)
 
   const headerRef = useDetectClickOutside({
     onTriggered: () => {
@@ -59,7 +92,6 @@ function Header({ notificationFunc }) {
   const passwordInput = React.createRef()
 
   const [validForm, setValidForm] = useState(false)
-  const [openResetPassword, setOpenResetPassword] = useState(false)
 
   const [justRedraw, setJustRedraw] = useState(0)
   const [validResetForm, setValidResetForm] = useState(false)
@@ -255,6 +287,7 @@ function Header({ notificationFunc }) {
           during={1000}
           className={'btn __blue btn-catalogue' + (openCatalogue ? ' __active' : '')}
           onClick={() => {
+            console.log('openCatalogue', openCatalogue)
             setOpenCatalogue(!openCatalogue)
           }}
         >

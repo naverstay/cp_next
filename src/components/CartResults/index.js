@@ -6,30 +6,52 @@
 
 import { useAtom } from 'jotai'
 import PropTypes from 'prop-types'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import CartRow from '../CartRow'
 import SearchRow from '../SearchRow'
 
-import { formBusyJotai, showTableHeadFixedJotai, tableHeadFixedJotai } from '@/store/store'
+import { formBusyJotai, showTableHeadFixedJotai, tableHeadFixedJotai, simpleReducer } from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function CartResults(props) {
-  let { cart, currency, count, updateCart, notificationFunc } = props
+  let {
+    cart,
+    currency,
+    count,
+    updateCart,
+    notificationFunc,
+    showTableHeadFixed,
+    setShowTableHeadFixed,
+    tableHeadFixed,
+    setTableHeadFixed,
+    formBusy,
+    setFormBusy,
+  } = props
 
-  const [showTableHeadFixed, setShowTableHeadFixed] = useAtom(showTableHeadFixedJotai)
-  const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-  const [formBusy, setFormBusy] = useAtom(formBusyJotai)
+  //const [showTableHeadFixed, setShowTableHeadFixed] = useState(showTableHeadFixedJotai)
+  //const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
+  //const [formBusy, setFormBusy] = useState(formBusyJotai)
+
+  const [list, setList] = useState(showTableHeadFixedJotai)
 
   const tableHead = useRef()
 
-  let list = []
-  let store = localStorage.getItem('catpart')
-  if (store) {
-    list = [...getJsonData(store)]
-  }
+  //let list = []
+  // todo fix localStorage
+  //let store = localStorage.getItem('catpart')
+  //if (store) {
+  //  list = [...getJsonData(store)]
+  //}
+
+  useEffect(() => {
+    let store = localStorage.getItem('catpart')
+    if (store) {
+      setList([...getJsonData(store)])
+    }
+  }, [])
 
   let tableHeader = {
     name: 'Компонент',

@@ -102,7 +102,6 @@
     color: $main_gray;
 
     &__example {
-      @extend %button_reset;
       display: inline-block;
       cursor: pointer;
       text-decoration: underline;
@@ -181,8 +180,12 @@
 
         .form-control {
 
+          .btn {
+            padding: 0 5px;
+          }
+
           &.custom-input {
-            width: 250px;
+            width: 253px;
           }
 
           + .form-control {
@@ -345,7 +348,7 @@
       &_left {
         .form-filter__control > .btn {
           padding: 0 17px;
-          letter-spacing: -.025em;
+          //letter-spacing: -.025em;
         }
       }
 

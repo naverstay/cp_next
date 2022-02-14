@@ -8,14 +8,14 @@ import copyTextToClipboard from '../../utils/clipboard'
 import innValidation from '../../utils/innValidation'
 import apiPOST from '../../utils/upload'
 
-import { isDevModeJotai } from '@/store/store'
+import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 import { validateEmail } from '@/utils/validateEmail'
 
 const ProfileRequisites = (props) => {
-  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  //const [devMode, setDevMode] = useState(isDevModeJotai)
 
-  const { requisitesId, requisites, notificationFunc } = props
+  const { requisitesId, requisites, notificationFunc, devMode, setDevMode } = props
 
   const authRef = React.createRef()
   const requisitesRef = React.createRef()
