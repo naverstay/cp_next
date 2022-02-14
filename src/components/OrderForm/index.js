@@ -18,7 +18,7 @@ import innValidation from '../../utils/innValidation'
 import apiORDER, { apiORDERDB } from '../../utils/order'
 import priceFormatter from '../../utils/priceFormatter'
 
-import { busyOrderJotai, orderSentJotai } from '@/store/store'
+import { busyOrderJotai, isDevModeJotai, orderSentJotai } from '@/store/store'
 import { counterEffect } from '@/utils/counterEffect'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { getJsonData } from '@/utils/getJsonData'
@@ -42,6 +42,7 @@ export function OrderForm({
   loading,
   onChangeUsername,
 }) {
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
   const [orderSent, setOrderSent] = useAtom(orderSentJotai)
   const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
 
@@ -80,7 +81,7 @@ export function OrderForm({
   const formRef = React.createRef()
 
   const handleClear = (field) => {
-    window.log && console.log('handleClear', field)
+    devMode && console.log('handleClear', field)
     fields[field] = ''
   }
 
@@ -114,7 +115,7 @@ export function OrderForm({
 
   const handleChange = (field, e) => {
     let realEmail = ''
-    window.log && console.log('handleChange', field, e)
+    devMode && console.log('handleChange', field, e)
     fields[field] = e.target.value
     setFields(fields)
 
@@ -124,7 +125,7 @@ export function OrderForm({
           innValidation(
             e.target.value,
             (e) => {
-              window.log && console.log(fields[field], 'inn', e.hasOwnProperty('suggestions'), e.suggestions)
+              devMode && console.log(fields[field], 'inn', e.hasOwnProperty('suggestions'), e.suggestions)
               errors[field] = e.hasOwnProperty('suggestions') && e.suggestions.length ? '' : 'Проверьте ИНН'
               validate()
             },
@@ -164,7 +165,7 @@ export function OrderForm({
           checkEmailExist(
             fields[field],
             (e) => {
-              window.log && console.log(fields[field], 'exists', e.hasOwnProperty('exists'), e.exists)
+              devMode && console.log(fields[field], 'exists', e.hasOwnProperty('exists'), e.exists)
               emailExists = e.hasOwnProperty('exists') && e.exists
 
               errors[field] = emailExists ? 'Пользователь существует.' : ''
@@ -261,7 +262,7 @@ export function OrderForm({
       }
 
       apiORDERDB(url, orderDB, {}, (respData) => {
-        window.log && console.log('respData', respData)
+        devMode && console.log('respData', respData)
         if (respData && respData.hasOwnProperty('status') && respData.status === 200) {
           if (typeof ym === 'function') {
             ym(81774553, 'reachGoal', 'senttheorder')
@@ -314,7 +315,7 @@ export function OrderForm({
       // });
 
       apiORDERDB(url, orderDB, {}, (respData) => {
-        window.log && console.log('respData', respData)
+        devMode && console.log('respData', respData)
         if (respData && respData.hasOwnProperty('status') && respData.status === 200) {
           if (typeof ym === 'function') {
             ym(81774553, 'reachGoal', 'senttheorder')

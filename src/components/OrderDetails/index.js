@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
@@ -9,11 +10,14 @@ import apiGET from '../../utils/search'
 import DetailsRow from '../DetailsRow'
 
 import { RUB } from '@/store/constants'
+import { isDevModeJotai } from '@/store/store'
 import { API } from '@/utils/order'
 import { validateEmail } from '@/utils/validateEmail'
 import { xlsDownload } from '@/utils/xlsDownload'
 
 const OrderDetails = (props) => {
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+
   const { detailsId, setOrderDetails, profile, order, notificationFunc } = props
 
   const authRef = React.createRef()
@@ -49,7 +53,7 @@ const OrderDetails = (props) => {
   const changeSubmit = (e) => {
     e.preventDefault()
 
-    window.log && console.log('changeSubmit')
+    devMode && console.log('changeSubmit')
 
     // const url = '/set/deal';
     //
@@ -68,7 +72,7 @@ const OrderDetails = (props) => {
   }
 
   const handleChange = (field, e) => {
-    window.log && console.log('handleChange', field, e)
+    devMode && console.log('handleChange', field, e)
     fields[field] = e.target.value
     setFields(fields)
 
@@ -136,7 +140,7 @@ const OrderDetails = (props) => {
     const requestURL = `/orders/${detailsId}`
 
     apiGET(requestURL, {}, (data) => {
-      window.log && console.log('OrderDetails', detailsId, data)
+      devMode && console.log('OrderDetails', detailsId, data)
     })
 
     return () => {

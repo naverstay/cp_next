@@ -2,10 +2,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { OrdersPage } from '@/components/OrdersPage'
+import FilterForm from '@/components/FilterForm'
 
 export default function SearchPage({ ...pageProps }) {
   const router = useRouter()
+
+  const { apiGETBridge, createNotification, onSubmitSearchForm, updateCart } = pageProps
 
   return (
     <React.Fragment>
@@ -16,22 +18,12 @@ export default function SearchPage({ ...pageProps }) {
         <link rel="canonical" href="https://catpart.ru/" />
       </Head>
 
-      <p>OrdersPage 0</p>
-
-      {/*<OrdersPage*/}
-      {/*  activeTab={0}*/}
-      {/*  profile={profile}*/}
-      {/*  needLogin={needLogin}*/}
-      {/*  requisitesList={requisitesList}*/}
-      {/*  ordersList={ordersList}*/}
-      {/*  currency={currency}*/}
-      {/*  setOpenProfile={setOpenProfile}*/}
-      {/*  setOpenRequisites={setOpenRequisites}*/}
-      {/*  setOpenDetails={setOpenDetails}*/}
-      {/*  history={history}*/}
-      {/*  setTableHeadFixed={setTableHeadFixed}*/}
-      {/*  {...routeProps}*/}
-      {/*/>*/}
+      <FilterForm
+        updateCart={updateCart}
+        apiGETBridge={apiGETBridge}
+        createNotification={createNotification}
+        onSubmitSearchForm={onSubmitSearchForm}
+      />
     </React.Fragment>
   )
 }

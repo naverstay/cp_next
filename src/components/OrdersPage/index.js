@@ -16,27 +16,31 @@ import CabinetTabs from '../CabinetTabs'
 import OrderRow from '../OrderRow'
 import RequisitesRow from '../RequisitesRow'
 
-import { tableHeadFixedJotai } from '@/store/store'
+import {
+  currencyJotai,
+  currencyListJotai,
+  isDevModeJotai,
+  openDetailsJotai,
+  openRequisitesJotai,
+  profileJotai,
+  tableHeadFixedJotai,
+} from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function OrdersPage(props) {
-  const {
-    currency,
-    history,
-    activeTab,
-    setOpenRequisites,
-    needLogin,
-    setOpenDetails,
-    setOpenProfile,
-    count,
-    notificationFunc,
-    updateCart,
-  } = props
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+
+  const { activeTab, needLogin, count, notificationFunc, updateCart } = props
 
   const defaultCount = count
 
   const tableHead = useRef()
   const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
+  const [openRequisites, setOpenRequisites] = useAtom(openRequisitesJotai)
+  const [openDetails, setOpenDetails] = useAtom(openDetailsJotai)
+  const [profile, setProfile] = useAtom(profileJotai)
+  const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
+  const [currency, setCurrency] = useAtom(currencyJotai)
 
   const [ordersList, setOrdersList] = useState([])
   const [requisitesList, setRequisitesList] = useState([])
@@ -115,8 +119,8 @@ export function OrdersPage(props) {
   const tHeadOrders = (
     <div className="orders-results__row __even __head">
       {Object.keys(tableHeaderOrders).map((head, hi) => (
-        //eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
+          aria-hidden="true"
           onClick={() => {
             if (tableHeaderSort.indexOf(head) > -1) {
               setSortCol(head)
@@ -140,8 +144,8 @@ export function OrdersPage(props) {
   const tHeadRequisites = (
     <div className="requisites-results__row __even __head">
       {Object.keys(tableHeaderRequisites).map((head, hi) => (
-        //eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
+          aria-hidden="true"
           onClick={() => {
             if (tableHeaderSort.indexOf(head) > -1) {
               setSortCol(head)
@@ -185,7 +189,7 @@ export function OrdersPage(props) {
     const requestURL = '/orders'
 
     apiGET(requestURL, {}, (data) => {
-      window.log && console.log('getOrders', data)
+      devMode && console.log('getOrders', data)
 
       if (data.error) {
         needLogin()
@@ -194,7 +198,7 @@ export function OrdersPage(props) {
           (all, d) => all.concat(d.chronology.reduce((ret, p) => ret.concat(p.name), [])),
           []
         )
-        window.log && console.log('statuses', statuses, statuses.filter(onlyUnique))
+        devMode && console.log('statuses', statuses, statuses.filter(onlyUnique))
 
         setStatusOptions(statuses.filter(onlyUnique).map((u) => ({ value: u, label: u })))
 
@@ -207,7 +211,7 @@ export function OrdersPage(props) {
     const requestURL = '/requisites'
 
     apiGET(requestURL, {}, (data) => {
-      window.log && console.log('getRequisites', data)
+      devMode && console.log('getRequisites', data)
 
       if (data.error) {
         needLogin()
@@ -253,7 +257,7 @@ export function OrdersPage(props) {
   }, [])
 
   const handleChangeStatus = (field, e) => {
-    window.log && console.log('handleChangeStatus', field, e)
+    devMode && console.log('handleChangeStatus', field, e)
 
     const filter = e.target.map((f) => f.value)
 
@@ -261,12 +265,12 @@ export function OrdersPage(props) {
   }
 
   const handleChangeSort = (field, e) => {
-    window.log && console.log('handleChangeSort', field, e)
+    devMode && console.log('handleChangeSort', field, e)
   }
 
   return (
     <div className="orders-results">
-      <CabinetTabs history={history} setOpenProfile={setOpenProfile} activeIndex={activeTab} />
+      <CabinetTabs activeIndex={activeTab} />
 
       {activeTab === 0 ? (
         <>

@@ -5,7 +5,7 @@
  */
 
 import Head from 'next/head'
-import qs from 'qs'
+import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDetectClickOutside } from 'react-detect-click-outside'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
@@ -29,7 +29,6 @@ export default function CataloguePage(props) {
 
   const {
     categoryItems,
-    history,
     setCategorySort,
     categorySortField,
     catColumnsList,
@@ -41,6 +40,8 @@ export default function CataloguePage(props) {
     showCatPreloader,
     filterItemsHTML,
   } = props
+
+  const history = useRouter()
 
   const [openFilterDropdown, setOpenFilterDropdown] = useState(false)
   const [openMobFilterDropdown, setOpenMobFilterDropdown] = useState(false)
@@ -96,8 +97,8 @@ export default function CataloguePage(props) {
   const rtSortExtension = (col, id) => {
     return (
       <div className={'catalogue-page__table-sorter'}>
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
         <div
+          aria-hidden="true"
           className="sort-btn btn __gray"
           onClick={() => {
             if (id.indexOf('no_id') === 0) {
@@ -281,8 +282,8 @@ export default function CataloguePage(props) {
                 },
                 {
                   Header: (
-                    //eslint-disable-next-line jsx-a11y/click-events-have-key-events
                     <div
+                      aria-hidden="true"
                       onClick={(e) => {
                         if (!e.target.classList.contains('sort-btn')) {
                           setCategorySort('title')
@@ -303,8 +304,8 @@ export default function CataloguePage(props) {
                         >
                           {tableProps.row.catPartNum}
                         </NextLink>
-                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                         <div
+                          aria-hidden="true"
                           className={'catalogue-page__table-expander icon icon-chevron-up'}
                           onClick={(e) => {
                             e.target.closest('.rt-tr').classList.toggle('__opened')
@@ -324,8 +325,8 @@ export default function CataloguePage(props) {
                   accessor: 'catManufacturer',
                   Header: (tableProps) => {
                     return (
-                      //eslint-disable-next-line jsx-a11y/click-events-have-key-events
                       <div
+                        aria-hidden="true"
                         className={'catalogue-page__table-cell text-center'}
                         onClick={(e) => {
                           if (!e.target.classList.contains('sort-btn')) {
@@ -367,8 +368,8 @@ export default function CataloguePage(props) {
                   //eslint-disable-next-line react/display-name
                   c.Header = (tableProps) => {
                     return (
-                      //eslint-disable-next-line jsx-a11y/click-events-have-key-events
                       <div
+                        aria-hidden="true"
                         className={'catalogue-page__table-cell'}
                         onClick={(e) => {
                           if (!e.target.classList.contains('sort-btn')) {
@@ -428,7 +429,7 @@ export default function CataloguePage(props) {
         <title>{title}</title>
         <meta name="description" content={title} />
         <meta name="keywords" content={title} />
-        <link rel="canonical" href={`https://catpart.ru/${history.location.pathname.split('/')[1]}/`} />
+        <link rel="canonical" href={`https://catpart.ru/${history.pathname.split('/')[1]}/`} />
       </Head>
 
       {categoryInfo !== null ? (

@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server'
 
-export async function middleware(req: { nextUrl: { pathname: string } }, ev: any) {
+export async function middleware(req, ev) {
   const { pathname } = req.nextUrl
 
   // console.log('middleware', req.nextUrl)

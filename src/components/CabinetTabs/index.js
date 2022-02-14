@@ -1,10 +1,16 @@
+import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import NextLink from '@/components/NextLink'
+import { openProfileJotai } from '@/store/store'
 
 const CabinetTabs = (props) => {
-  let { activeIndex, setActiveIndex, setOpenProfile, history } = props
+  let { activeIndex, setActiveIndex } = props
+
+  const history = useRouter()
+  const [openProfile, setOpenProfile] = useAtom(openProfileJotai)
 
   return (
     <div className="form-filter">

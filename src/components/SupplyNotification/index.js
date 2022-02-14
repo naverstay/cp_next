@@ -1,11 +1,15 @@
+import { useAtom } from 'jotai'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import FormInput from '../../components/FormInput'
 
+import { isDevModeJotai } from '@/store/store'
 import { validateEmail } from '@/utils/validateEmail'
 
 const SupplyNotification = (props) => {
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+
   const { itemData, notificationFunc } = props
   const emailInput = React.createRef()
   const [errors, setErrors] = useState({
@@ -31,7 +35,7 @@ const SupplyNotification = (props) => {
   }
 
   const handleChange = (field, e) => {
-    window.log && console.log('handleChange', field, e)
+    devMode && console.log('handleChange', field, e)
     fields[field] = e.target.value
     setFields(fields)
 

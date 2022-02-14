@@ -30,8 +30,6 @@ const prepareJSON = (data, mode, currency) => {
     data = transformSearchData(data, mode === MODE_BOM)
   }
 
-  window.log && console.log('prepareJSON', data)
-
   return data.map((row) => {
     let price = ''
     let priceMatch = -1
@@ -70,8 +68,6 @@ const prepareJSON = (data, mode, currency) => {
 }
 
 export const xlsDownload = (data, currency, mode) => {
-  window.log && console.log('xlsDownload', mode)
-
   if (data && data.length) {
     let fileName = mode === MODE_CART ? 'cart' : 'search'
 

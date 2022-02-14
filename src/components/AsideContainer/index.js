@@ -5,8 +5,8 @@ const AsideContainer = (props) => {
 
   return (
     <div className={'aside-holder ' + className}>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <div
+        aria-hidden="true"
         className="aside-overlay"
         onClick={() => {
           setAsideOpen(false)
@@ -14,8 +14,9 @@ const AsideContainer = (props) => {
       />
       <div className="aside-container">
         <div className="aside-close" />
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+
         <div
+          aria-hidden="true"
           onClick={() => {
             setAsideOpen(false)
           }}

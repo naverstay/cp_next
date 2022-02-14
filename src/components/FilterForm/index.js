@@ -34,7 +34,7 @@ import SkeletonTab from '../SkeletonTab'
 import SkeletonWide from '../SkeletonWide'
 import SupplyNotification from '../SupplyNotification'
 
-import { RUB } from '@/store/constants'
+import { RUB, TRIGGER_DROPDOWN_LIMIT } from '@/store/constants'
 import {
   busyOrderJotai,
   categoryItemsJotai,
@@ -42,10 +42,13 @@ import {
   currencyListJotai,
   errorPageJotai,
   formBusyJotai,
+  isDevModeJotai,
   nestedCategoriesJotai,
   openAuthPopupJotai,
+  openCatalogueJotai,
   openMobMenuJotai,
   orderSentJotai,
+  profileJotai,
   searchDataJotai,
   showTableHeadFixedJotai,
   tableHeadFixedJotai,
@@ -59,14 +62,10 @@ import { xlsDownload } from '@/utils/xlsDownload'
 dayjs.extend(relativeTime)
 
 // const key = 'home';
-const TRIGGER_DROPDOWN_LIMIT = 11
 
 export function FilterForm({
-  props,
   apiGETBridge,
-  profile,
-  showResults,
-  notificationFunc,
+  createNotification,
   updateCart,
   sendSearchRequest,
   loading,
@@ -77,13 +76,17 @@ export function FilterForm({
   const history = useRouter()
   const query = history.query
 
-  const cart = history.path === '/order'
-  const someCategoryUrl = !(props.match.path === '/search' || props.match.path === '/order')
+  const cart = history.pathname === '/order'
+  const someCategoryUrl = !(history.pathname === '/search' || history.pathname === '/order')
+
+  const [profile, setProfile] = useAtom(profileJotai)
+  const [errorPage, setErrorPage] = useAtom(errorPageJotai)
+  const [categoryItems, setCategoryItems] = useAtom(categoryItemsJotai)
 
   const [totalCart, setTotalCart] = useAtom(totalCartJotai)
   const [searchData, setSearchData] = useAtom(searchDataJotai)
   const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-  const [categoryItems, setCategoryItems] = useAtom(categoryItemsJotai)
+
   const [nestedCategories, setNestedCategories] = useAtom(nestedCategoriesJotai)
   const [currency, setCurrency] = useAtom(currencyJotai)
   const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
@@ -93,17 +96,18 @@ export function FilterForm({
   const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
   const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
   const [formBusy, setFormBusy] = useAtom(formBusyJotai)
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+  const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
 
   let actualTimer
 
-  const params = qs.parse(props.location.search.substring(1))
+  const params = history.query
 
   const pageLimitList = [
     // 1, 2, 3,
     10, 25, 50,
   ]
 
-  const [errorPage, setErrorPage] = useAtom(errorPageJotai)
   const [categoryInfo, setCategoryInfo] = useState(null)
 
   let querySort =
@@ -211,8 +215,7 @@ export function FilterForm({
     !isNaN(paramsLimit) && pageLimitList.indexOf(paramsLimit) > -1 ? paramsLimit : 10
   )
   const [pageLimitTrigger, setPageLimitTrigger] = useState(0)
-
-  const paramsPage = parseInt(props.match.params.page)
+  const paramsPage = parseInt(history.pathname.split('/')[2])
   const [catPage, setCatPage] = useState(isNaN(paramsPage) ? 1 : paramsPage)
   const [categoryFilterTrigger, setCategoryFilterTrigger] = useState(0)
 
@@ -221,6 +224,25 @@ export function FilterForm({
   const [pagination, setPagination] = useState({ pages: 1 })
   const [itemData, setItemData] = useState(null)
   const [showCatPreloader, setShowCatPreloader] = useState(false)
+
+  // todo get props from history
+  const props = {
+    match: {
+      url: history.pathname,
+      params: {
+        catalogue: 'catalog',
+        page: '2',
+      },
+    },
+  }
+
+  console.log('paramsPage', paramsPage, history.pathname.split('/'))
+
+  const isCatalogueRoot = () => {
+    // todo match catalogue
+    // props.match.params.hasOwnProperty('catalogue') &&
+    return history.pathname.split('/')[1] !== 'catalog'
+  }
 
   const plural = (n, str1, str2, str5) =>
     `${n} ${
@@ -315,10 +337,10 @@ export function FilterForm({
   }
 
   useEffect(() => {
-    window.log && console.log('searchData', cart, !cart && searchData && searchData.hasOwnProperty('res'), searchData)
+    devMode && console.log('searchData', cart, !cart && searchData && searchData.hasOwnProperty('res'), searchData)
 
     if (!cart && searchData && searchData.hasOwnProperty('res')) {
-      window.log &&
+      devMode &&
         console.log(
           'setTotalData',
           searchData.res.reduce((total, c) => total + (c.hasOwnProperty('data') ? c.data.length : 0), 0)
@@ -331,7 +353,7 @@ export function FilterForm({
         (searchData.res.length > 1 ? 'По запросам' : 'По запросу') +
         searchData.res.reduce((total, c) => total + (c.hasOwnProperty('q') ? `«${c.q}», ` : ''), ' ')
 
-      window.log && console.log('searchQueries', searchQueries, searchData)
+      devMode && console.log('searchQueries', searchQueries, searchData)
 
       if (
         searchData.res.length &&
@@ -343,7 +365,7 @@ export function FilterForm({
       }
     }
 
-    window.log && console.log('totalData', totalData, searchData)
+    devMode && console.log('totalData', totalData, searchData)
 
     if (totalData === 0 && searchData && searchData.hasOwnProperty('res')) {
       let deep = searchData.res.map((item) => {
@@ -830,7 +852,7 @@ export function FilterForm({
           ) : null}
 
           {itemData ? (
-            <CatalogueItem profile={profile} history={history} itemData={itemData} props={{ ...props }} />
+            <CatalogueItem profile={profile} itemData={itemData} props={{ ...props }} />
           ) : categoryPage ? (
             <>
               <CataloguePage
@@ -840,7 +862,6 @@ export function FilterForm({
                 catColumnsList={catColumnsList}
                 nestedCategories={nestedCategories.slice(0)}
                 categoryInfo={categoryInfo}
-                history={history}
                 categorySortField={categorySortField}
                 setCategorySort={setCategorySortFunc}
                 categoryFilterNames={categoryFilterNames}
@@ -990,7 +1011,7 @@ export function FilterForm({
               </div>
             ) : null)}
 
-          {!cart && showResults && !categoryPage ? (
+          {!cart && !formBusy && !categoryPage ? (
             <h1 className="form-filter__stat">{searchInfo}</h1>
           ) : (
             <div className="form-filter__stat">&nbsp;</div>
@@ -1007,7 +1028,7 @@ export function FilterForm({
                         if (store) {
                           xlsDownload([...getJsonData(store)], currency, 0)
                         } else {
-                          notificationFunc('success', 'Корзина пуста.', 'Нечего скачивать.')
+                          createNotification('success', 'Корзина пуста.', 'Нечего скачивать.')
                         }
                       }}
                       className="btn __gray"
@@ -1083,7 +1104,7 @@ export function FilterForm({
                       <Share
                         shareUrl={encodeURIComponent(window.location.href)}
                         shareText={encodeURIComponent(searchInfo)}
-                        notificationFunc={notificationFunc}
+                        notificationFunc={createNotification}
                         setOpenFunc={setOpenShare}
                       />
                     )}
@@ -1127,8 +1148,8 @@ export function FilterForm({
               setShowTableHeadFixed={setShowTableHeadFixed}
               updateCart={updateCart}
               list={cartData}
-              notificationFunc={notificationFunc}
-              showResults={showResults}
+              notificationFunc={createNotification}
+              showResults={!formBusy}
               count={count}
               currency={currency}
             />
@@ -1138,7 +1159,7 @@ export function FilterForm({
               history={history}
               setOpenAuthPopup={setOpenAuthPopup}
               updateCart={updateCart}
-              notificationFunc={notificationFunc}
+              notificationFunc={createNotification}
               totalCart={totalCart}
               currency={currency}
               delivery
@@ -1155,9 +1176,9 @@ export function FilterForm({
                   setTableHeadFixed={setTableHeadFixed}
                   setShowTableHeadFixed={setShowTableHeadFixed}
                   updateCart={updateCart}
-                  notificationFunc={notificationFunc}
+                  notificationFunc={createNotification}
                   highlight={decodeURIComponent(query?.art || '')}
-                  showResults={showResults}
+                  showResults={!formBusy}
                   count={query?.q || ''}
                   currencyList={currencyList}
                   currency={currency}
@@ -1175,7 +1196,7 @@ export function FilterForm({
                   setOpenAuthPopup={setOpenAuthPopup}
                   setBusyOrder={setBusyOrder}
                   updateCart={updateCart}
-                  notificationFunc={notificationFunc}
+                  notificationFunc={createNotification}
                   totalCart={totalCart}
                   currency={currency}
                   setElaboration={setElaboration}
@@ -1186,7 +1207,9 @@ export function FilterForm({
 
             {!categoryPage && itemData !== null ? (
               <>
-                {totalData > 0 ? null : <SupplyNotification notificationFunc={notificationFunc} itemData={itemData} />}
+                {totalData > 0 ? null : (
+                  <SupplyNotification notificationFunc={createNotification} itemData={itemData} />
+                )}
                 <SimilarSlider searchData={searchData} itemData={itemData} />
               </>
             ) : null}
@@ -1198,13 +1221,12 @@ export function FilterForm({
 }
 
 FilterForm.propTypes = {
-  showResults: PropTypes.bool,
   searchData: PropTypes.object,
   someCategoryUrl: PropTypes.bool,
   cart: PropTypes.bool,
   loading: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  notificationFunc: PropTypes.func,
+  createNotification: PropTypes.func,
   sendSearchRequest: PropTypes.func,
   // currency: PropTypes.string,
   onChangeCurrency: PropTypes.func,

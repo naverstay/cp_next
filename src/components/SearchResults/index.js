@@ -11,7 +11,7 @@ import Collapsible from 'react-collapsible'
 
 import SearchRow from '../SearchRow'
 
-import { tableHeadFixedJotai } from '@/store/store'
+import { isDevModeJotai, tableHeadFixedJotai } from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function SearchResults(props) {
@@ -29,6 +29,8 @@ export function SearchResults(props) {
     notificationFunc,
     updateCart,
   } = props
+
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
 
   const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
 
@@ -92,7 +94,7 @@ export function SearchResults(props) {
 
     document.body.addEventListener('scroll', handleScroll)
 
-    window.log && console.log('search mount')
+    devMode && console.log('search mount')
 
     if (window.innerWidth < 1200 && tableHead.current) {
       setTimeout(() => {
@@ -106,7 +108,7 @@ export function SearchResults(props) {
   }, [])
 
   const getMoreData = (newList, step) => {
-    window.log && console.log('newList', newList)
+    devMode && console.log('newList', newList)
 
     setRowCount((prevState) => {
       if (!newList) {
@@ -117,7 +119,7 @@ export function SearchResults(props) {
 
       let rowCounter = newRows.length
 
-      window.log && console.log('prevState', prevState, rowCounter, newList, newRows)
+      devMode && console.log('prevState', prevState, rowCounter, newList, newRows)
 
       if (rowCounter === newList[listCounter].data.length) {
         listCounter++
@@ -156,7 +158,7 @@ export function SearchResults(props) {
   //  }
   // }, [list]);
 
-  window.log && console.log('list', list, list && list.length ? list[0].data : '0')
+  devMode && console.log('list', list, list && list.length ? list[0].data : '0')
 
   return (
     <div className="search-results">

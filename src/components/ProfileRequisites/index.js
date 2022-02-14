@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
@@ -7,10 +8,13 @@ import copyTextToClipboard from '../../utils/clipboard'
 import innValidation from '../../utils/innValidation'
 import apiPOST from '../../utils/upload'
 
+import { isDevModeJotai } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 import { validateEmail } from '@/utils/validateEmail'
 
 const ProfileRequisites = (props) => {
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+
   const { requisitesId, requisites, notificationFunc } = props
 
   const authRef = React.createRef()
@@ -63,7 +67,7 @@ const ProfileRequisites = (props) => {
     formData.append('contact_phone', phoneInput.current.value)
     formData.append('notes', commentInput.current.value)
 
-    window.log && console.log('requisitesSubmit')
+    devMode && console.log('requisitesSubmit')
 
     if (requisitesId) {
       // address: "274 O'Keefe Camp Apt. 171"
@@ -129,7 +133,7 @@ const ProfileRequisites = (props) => {
   }
 
   const handleChange = (field, e) => {
-    window.log && console.log('handleChange', field, e)
+    devMode && console.log('handleChange', field, e)
     fields[field] = e.target.value
     setFields(fields)
 
@@ -147,7 +151,7 @@ const ProfileRequisites = (props) => {
           innValidation(
             e.target.value,
             (e) => {
-              window.log && console.log(e.hasOwnProperty('suggestions'), e.suggestions)
+              devMode && console.log(e.hasOwnProperty('suggestions'), e.suggestions)
               errors[field] = e.hasOwnProperty('suggestions') && e.suggestions.length ? '' : 'Проверьте ИНН'
               validate()
             },
@@ -192,15 +196,15 @@ const ProfileRequisites = (props) => {
     }
   }, [])
 
-  window.log && console.log('requisites', requisites, requisitesId)
+  devMode && console.log('requisites', requisites, requisitesId)
 
   return (
     <div className="profile __requisites">
       <div className="aside-title">{requisitesId ? 'Редактируем реквизиты' : 'Добавляем новые реквизиты'}</div>
 
       {requisitesId ? (
-        //eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
+          aria-hidden="true"
           ref={requisitesRef}
           onClick={(e) => {
             copyRequisites()

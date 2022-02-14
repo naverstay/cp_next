@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai'
 import React, { createRef, useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
@@ -6,10 +7,14 @@ import { findPriceIndex } from '../../utils/findPriceIndex'
 import { setInputFilter } from '../../utils/inputFilter'
 import priceFormatter from '../../utils/priceFormatter'
 
+import { isDevModeJotai } from '@/store/store'
+
 const DetailsRow = (props) => {
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+
   let { rowIndex, tableHeader, currency, row, notificationFunc } = props
 
-  window.log && console.log('DetailsRow', row)
+  devMode && console.log('DetailsRow', row)
 
   const buildChronology = (row) => {
     // let products = row.products.map((p, pi) => {

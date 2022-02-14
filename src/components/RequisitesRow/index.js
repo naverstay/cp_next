@@ -7,8 +7,8 @@ const RequisitesRow = (props) => {
   const { rowIndex, tableHeader, rowClick, row, updateCart, notificationFunc } = props
 
   return (
-    //eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
+      aria-hidden="true"
       onClick={() => {
         rowClick(row)
       }}

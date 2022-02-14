@@ -13,8 +13,6 @@ let cancel
  * @return {object}          The parsed JSON from the request
  */
 function parseJSON(response) {
-  window.log && console.log('parseJSON', response)
-
   if (response.status === 204 || response.status === 205) {
     return null
   }
@@ -29,8 +27,6 @@ function parseJSON(response) {
  * @return {object|undefined} Returns either the response, or throws an error
  */
 function checkStatus(response) {
-  window.log && console.log('checkStatus', response)
-
   if (response.status >= 200 && response.status < 300) {
     return response
   }
@@ -60,10 +56,8 @@ export default function apiORDER(url, data, options, cb) {
   //    cb([]);
   //  }
   //
-  // window.log &&   console.log('canceled', cancel);
-  // }
 
-  window.log && console.log('apiORDER', data)
+  // }
 
   return axios({
     method: 'post',
@@ -103,10 +97,8 @@ export function apiORDERDB(url, data, options, cb) {
   //    cb([]);
   //  }
   //
-  // window.log &&   console.log('canceled', cancel);
-  // }
 
-  window.log && console.log('apiORDERDB', data)
+  // }
 
   return axios({
     method: 'post',

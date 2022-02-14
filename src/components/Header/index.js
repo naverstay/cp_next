@@ -9,7 +9,14 @@ import apiPOST from '../../utils/upload'
 import FormInput from '../FormInput'
 
 import NextLink from '@/components/NextLink'
-import { cartCountJotai, openAuthPopupJotai, openCatalogueJotai, openMobMenuJotai, profileJotai } from '@/store/store'
+import {
+  cartCountJotai,
+  isDevModeJotai,
+  openAuthPopupJotai,
+  openCatalogueJotai,
+  openMobMenuJotai,
+  profileJotai,
+} from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { validateEmail } from '@/utils/validateEmail'
 
@@ -21,6 +28,7 @@ function Header({ notificationFunc }) {
   const [profile, setProfile] = useAtom(profileJotai)
   const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
   const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
 
   const headerRef = useDetectClickOutside({
     onTriggered: () => {
@@ -87,7 +95,7 @@ function Header({ notificationFunc }) {
   }
 
   const handleChange = (field, e) => {
-    window.log && console.log('handleChange', field, e)
+    devMode && console.log('handleChange', field, e)
     fields[field] = e.target.value
     setFields(fields)
 
@@ -110,7 +118,7 @@ function Header({ notificationFunc }) {
   }
 
   const handleResetChange = (field, e) => {
-    window.log && console.log('handleResetChange', field, e)
+    devMode && console.log('handleResetChange', field, e)
     resetFields[field] = e.target.value
     setResetFields(resetFields)
 
@@ -130,7 +138,7 @@ function Header({ notificationFunc }) {
   const authSubmit = (e) => {
     e.preventDefault()
 
-    window.log && console.log('authSubmit')
+    devMode && console.log('authSubmit')
 
     const requestURL = '/auth/login'
 
@@ -141,7 +149,7 @@ function Header({ notificationFunc }) {
     formData.append('password', passwordInput.current.value)
 
     apiPOST(requestURL, formData, options, (data) => {
-      window.log && console.log('access_token', data)
+      devMode && console.log('access_token', data)
 
       if (data.error) {
         notificationFunc('success', `Авторизация не удалась. `, 'Проверьте логин/пароль.')
@@ -172,7 +180,7 @@ function Header({ notificationFunc }) {
   const resetSubmit = (e) => {
     e.preventDefault()
 
-    window.log && console.log('resetSubmit')
+    devMode && console.log('resetSubmit')
 
     setOpenResetPassword(false)
 
@@ -184,7 +192,7 @@ function Header({ notificationFunc }) {
     formData.append('email', emailInput.current.value)
 
     apiPOST(requestURL, formData, options, (data) => {
-      window.log && console.log('data', data)
+      devMode && console.log('data', data)
 
       if (data.error) {
         notificationFunc('success', `Письмо не отправлено. `, 'Такого аккаунта не существует.')
@@ -302,7 +310,7 @@ function Header({ notificationFunc }) {
             <Ripples
               onClick={() => {
                 setOpenAuthPopup(!openAuthPopup)
-                window.log && console.log('open', openAuthPopup)
+                devMode && console.log('open', openAuthPopup)
               }}
               during={1000}
               className={'btn __blue' + (openAuthPopup ? ' __active' : '')}

@@ -132,8 +132,8 @@ const OrderRow = (props) => {
   }
 
   return (
-    //eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
+      aria-hidden="true"
       onClick={(e) => {
         if (e.target.tagName !== 'A') {
           rowClick(row)

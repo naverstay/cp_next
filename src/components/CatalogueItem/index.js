@@ -8,10 +8,10 @@ import Head from 'next/head'
 import Image from 'next/image'
 import qs from 'qs'
 import React, { useEffect, useState } from 'react'
-import Swiper from 'react-id-swiper'
+//import Swiper from 'react-id-swiper'
 import Ripples from 'react-ripples'
 import { SlideDown } from 'react-slidedown'
-import { Navigation, Manipulation } from 'swiper'
+//import { Navigation, Manipulation } from 'swiper'
 
 import FormCheck from '../../components/FormCheck'
 import NoImage from '../../images/no-image.png'
@@ -19,7 +19,7 @@ import NoImage from '../../images/no-image.png'
 import NextLink from '@/components/NextLink'
 
 export default function CatalogueItem(props) {
-  const { itemData, history } = props
+  const { itemData } = props
 
   const snippetCheckData =
     itemData && itemData.hasOwnProperty('snippet') && itemData.snippet.specs && itemData.snippet.specs.length

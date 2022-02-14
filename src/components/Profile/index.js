@@ -5,9 +5,11 @@ import Ripples from 'react-ripples'
 import FormInput from '../../components/FormInput'
 import apiPATCH from '../../utils/change'
 
-import { profileJotai } from '@/store/store'
+import { isDevModeJotai, profileJotai } from '@/store/store'
 
 const Profile = (props) => {
+  const [devMode, setDevMode] = useAtom(isDevModeJotai)
+
   let { notificationFunc, logOut } = props
 
   const [profile, setProfile] = useAtom(profileJotai)
@@ -32,7 +34,7 @@ const Profile = (props) => {
   const profileSubmit = (e) => {
     e.preventDefault()
 
-    window.log && console.log('profileSubmit')
+    devMode && console.log('profileSubmit')
 
     const requestURL = '/profiles/' + profile.id
     const password = passwordInput.current.value
@@ -67,7 +69,7 @@ const Profile = (props) => {
   }
 
   const handleChange = (field, e) => {
-    window.log && console.log('handleChange', field, e)
+    devMode && console.log('handleChange', field, e)
     fields[field] = e.target.value
     setFields(fields)
 

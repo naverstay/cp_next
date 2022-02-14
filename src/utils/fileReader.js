@@ -5,8 +5,6 @@ export const readFile = (file, cb) => {
   const txtReader = new FileReader()
   const xlsFile = file && file.name.match(/\.(xls[x]?)$/)
 
-  window.log && console.log('file', file)
-
   const response = (obj) => {
     if (typeof cb === 'function') {
       obj.name = file.name
@@ -16,13 +14,9 @@ export const readFile = (file, cb) => {
   }
 
   txtReader.onload = function () {
-    window.log && console.log('readFile', txtReader, txtReader.result)
-
     if (xlsFile) {
       const data = new Uint8Array(txtReader.result)
       const workbook = XLSX.read(data, { type: 'array' })
-
-      window.log && console.log('workbook', workbook)
 
       if (workbook.SheetNames.length) {
         const sheet = workbook.Sheets[workbook.SheetNames[0]]
@@ -36,7 +30,6 @@ export const readFile = (file, cb) => {
       let ret = txtReader.result
 
       if (file.name.match(/\.tsv$/)) {
-        window.log && console.log('TSV')
         ret = tsv2json(ret)
       }
 
@@ -45,8 +38,6 @@ export const readFile = (file, cb) => {
   }
 
   txtReader.onerror = function () {
-    window.log && console.log('readFile', txtReader.error)
-
     response({ success: false, text: '' })
   }
 

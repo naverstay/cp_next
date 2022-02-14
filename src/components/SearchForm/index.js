@@ -23,29 +23,18 @@ import apiPOST from '../../utils/upload'
 //import { changeArtNumber } from './actions'
 //import { makeSelectArtNumber } from './selectors'
 
-import { searchDataJotai } from '@/store/store'
+import { formBusyJotai, searchDataJotai } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 // import reducer from './reducer';
 // import saga from './saga';
 
 // const key = 'home';
 
-export function SearchForm({
-  notificationFunc,
-  busy,
-  busyOrder,
-  setFormBusy,
-  location,
-  onSubmitForm,
-  artNumber,
-  loading,
-  error,
-  repos,
-  onChangeUsername,
-}) {
+export function SearchForm({ notificationFunc, onSubmitForm, loading, onChangeUsername }) {
   const history = useRouter()
 
   const [searchData, setSearchData] = useAtom(searchDataJotai)
+  const [formBusy, setFormBusy] = useAtom(formBusyJotai)
 
   const formRef = React.createRef()
   const formArtNumber = React.createRef()
@@ -94,11 +83,11 @@ export function SearchForm({
   }, [])
 
   useEffect(() => {
-    if (busy) {
+    if (formBusy) {
       formArtNumber.current.value = decodeURIComponent(query?.art || '')
       formQuantity.current.value = (decodeURIComponent(query?.q) || '1').replace(/\D/g, '')
     }
-  }, [busy])
+  }, [formBusy])
 
   const handleSubmit = (evt) => {
     handleChange('art-number', { target: formArtNumber.current })
@@ -153,7 +142,7 @@ export function SearchForm({
               itemprop="query-input"
               name="art-number"
               //
-              disabled={busy}
+              disabled={formBusy}
               defaultValue={searchArt}
               className={`__lg${errors['art-number'] === null ? '' : errors['art-number'] ? ' __error' : ''}`}
               error={null}
@@ -163,8 +152,8 @@ export function SearchForm({
 
             <div className="form-tip">
               <span>Например, </span>
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
+                aria-hidden="true"
                 className="form-tip__example"
                 onClick={() => {
                   formArtNumber.current.value = '15C01M'
@@ -192,7 +181,7 @@ export function SearchForm({
               itemprop="query-input"
               name="quantity"
               //
-              disabled={busy}
+              disabled={formBusy}
               defaultValue={searchQ}
               className={`__lg${errors.quantity === null ? '' : errors.quantity ? ' __error' : ''}`}
               error={null}
@@ -201,8 +190,8 @@ export function SearchForm({
             />
 
             <div className="form-tip">
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
+                aria-hidden="true"
                 className="form-tip__example"
                 onClick={() => {
                   formQuantity.current.value = '100'
@@ -211,8 +200,8 @@ export function SearchForm({
               >
                 100
               </span>
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
+                aria-hidden="true"
                 className="form-tip__example"
                 onClick={() => {
                   formQuantity.current.value = '250'
@@ -221,8 +210,8 @@ export function SearchForm({
               >
                 250
               </span>
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
               <span
+                aria-hidden="true"
                 className="form-tip__example"
                 onClick={() => {
                   formQuantity.current.value = '500'
@@ -237,8 +226,8 @@ export function SearchForm({
           <div className="form-cell form-cell__search column sm-col-12 md-col-4 lg-col-2_5 xl-col-2">
             <span className="form-label">&nbsp;</span>
             <div className="form-control">
-              <Ripples className={'__w-100p btn __blue __lg' + (busy ? ' __loader' : '')} during={1000}>
-                <button name="search-submit" disabled={busy} className={'btn-inner __abs'}>
+              <Ripples className={'__w-100p btn __blue __lg' + (formBusy ? ' __loader' : '')} during={1000}>
+                <button name="search-submit" disabled={formBusy} className={'btn-inner __abs'}>
                   <span>{searchBtnText}</span>
                 </button>
               </Ripples>
@@ -289,7 +278,7 @@ export function SearchForm({
                       }
 
                       // readFile(formFile.current.files[0], ret => {
-                      // window.log &&   console.log('readFile', ret);
+                      // devMode &&    console.log('readFile', ret);
                       //
                       //  if (ret.success) {
                       //    notificationFunc('success', `Файл: ${ret.name}`, `Размер: ${ret.size}`);
@@ -315,13 +304,9 @@ export function SearchForm({
 }
 
 SearchForm.propTypes = {
-  busy: PropTypes.bool,
   loading: PropTypes.bool,
-  error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   notificationFunc: PropTypes.func,
   onSubmitForm: PropTypes.func,
-  artNumber: PropTypes.string,
   onChangeUsername: PropTypes.func,
 }
 
