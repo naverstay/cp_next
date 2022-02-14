@@ -4,11 +4,6 @@ import { atomWithReducer } from 'jotai/utils'
 
 import { RUB } from '@/store/constants'
 
-export const simpleReducer = (prev, next) => {
-  console.log('simpleReducer', prev, next)
-  return next
-}
-
 export const currencyJotai = RUB
 export const currencyListJotai = [RUB]
 export const categoryItemsJotai = []

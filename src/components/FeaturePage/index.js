@@ -13,14 +13,17 @@ import apiGET from '../../utils/search'
 import { openCatalogueJotai, tableHeadFixedJotai, simpleReducer } from '@/store/store'
 
 export default function FeaturePage(props) {
+  const { tableHeadFixed, setTableHeadFixed, openCatalogue, setOpenCatalogue, setOpenMobMenu } = props
+
   const history = useRouter()
 
   const [page, setPage] = useState(null)
 
-  const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
-  const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
+  //const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
+  //const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
 
   useEffect(() => {
+    setOpenMobMenu(false)
     setTableHeadFixed(null)
 
     if (!page || page.url !== history.pathname) {

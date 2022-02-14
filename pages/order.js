@@ -17,8 +17,6 @@ export default function SearchPage({ ...props }) {
         <link rel="canonical" href="https://catpart.ru/" />
       </Head>
 
-      <p>OrdersPage 0</p>
-
       <FilterForm {...props} />
     </React.Fragment>
   )

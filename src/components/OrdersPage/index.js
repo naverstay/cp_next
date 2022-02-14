@@ -24,7 +24,6 @@ import {
   openRequisitesJotai,
   profileJotai,
   tableHeadFixedJotai,
-  simpleReducer,
 } from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 

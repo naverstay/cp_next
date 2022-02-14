@@ -34,7 +34,6 @@ import {
   searchCountJotai,
   searchDataJotai,
   totalCartJotai,
-  simpleReducer,
   categorySlugLinksJotai,
   menuJsonJotai,
   tableHeadFixedJotai,
@@ -505,13 +504,11 @@ function NextCatpartApp({ Component, pageProps }) {
   }, [openCatalogue])
 
   useEffect(() => {
-    console.log('openProfile', openProfile)
     setAsideOpen(openProfile)
     updateAsideContent(openProfile ? <Profile {...appState} {...appFunctions} /> : null)
   }, [openProfile])
 
   useEffect(() => {
-    console.log('openRequisites', openRequisites)
     setAsideOpen(!!openRequisites)
 
     updateAsideContent(
@@ -527,7 +524,6 @@ function NextCatpartApp({ Component, pageProps }) {
   }, [openRequisites])
 
   useEffect(() => {
-    console.log('openDetails', openDetails)
     setAsideOpen(!!openDetails?.id)
 
     updateAsideContent(
@@ -549,7 +545,6 @@ function NextCatpartApp({ Component, pageProps }) {
   }, [profile])
 
   useEffect(() => {
-    console.log('asideOpen', asideOpen)
     if (!asideOpen) {
       setOpenProfile(false)
       setOpenRequisites(0)
@@ -558,10 +553,7 @@ function NextCatpartApp({ Component, pageProps }) {
   }, [asideOpen])
 
   useEffect(() => {
-    console.log('prev', profile)
-    // if (profileChecked) {
     updateCart(-1)
-    // }
   }, [profile])
 
   useEffect(() => {

@@ -18,7 +18,7 @@ export default function SearchPage({ ...props }) {
 
       <p>404 page</p>
 
-      {/*<FilterForm {...props} />*/}
+      <FilterForm {...props} />
     </React.Fragment>
   )
 }

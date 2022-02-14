@@ -53,7 +53,6 @@ import {
   showTableHeadFixedJotai,
   tableHeadFixedJotai,
   totalCartJotai,
-  simpleReducer,
 } from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { getButtonsMap } from '@/utils/getPaginationMap'

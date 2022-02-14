@@ -15,7 +15,6 @@ import {
   profileCheckedJotai,
   profileJotai,
   tableHeadFixedJotai,
-  simpleReducer,
 } from '@/store/store'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { flatDeep } from '@/utils/flatDeep'

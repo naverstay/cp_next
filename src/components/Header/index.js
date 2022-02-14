@@ -16,7 +16,6 @@ import {
   openCatalogueJotai,
   openMobMenuJotai,
   profileJotai,
-  simpleReducer,
 } from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { validateEmail } from '@/utils/validateEmail'
