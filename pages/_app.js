@@ -72,6 +72,7 @@ function NextCatpartApp({ Component, pageProps }) {
   const [openMobMenu, setOpenMobMenu] = useState(openMobMenuJotai)
   const [busyOrder, setBusyOrder] = useState(busyOrderJotai)
   const [searchData, setSearchData] = useState(searchDataJotai)
+  const [cartData, setCartData] = useState([])
   const [profileChecked, setProfileChecked] = useState(profileCheckedJotai)
   const [profile, setProfile] = useState(profileJotai)
   const [devMode, setDevMode] = useState(isDevModeJotai)
@@ -126,7 +127,7 @@ function NextCatpartApp({ Component, pageProps }) {
           break
       }
     } else {
-      console.log('no store', Store)
+      console.log('no store', Store, type, title, text)
     }
   }
 
@@ -370,6 +371,8 @@ function NextCatpartApp({ Component, pageProps }) {
     }).then((store) => {
       localStorage.setItem('catpart', JSON.stringify(store))
 
+      setCartData(store)
+
       if (profileChecked) {
         localStorage.setItem('catpart-mode', profile.hasOwnProperty('id') ? 'auth' : '')
       }
@@ -404,6 +407,8 @@ function NextCatpartApp({ Component, pageProps }) {
   }
 
   const appState = {
+    cartData: cartData,
+    setCartData: setCartData,
     showTableHeadFixed: showTableHeadFixed,
     setShowTableHeadFixed: setShowTableHeadFixed,
     errorPage: errorPage,

@@ -56,7 +56,6 @@ const CabinetTabs = (props) => {
               aria-hidden="true"
               onClick={() => {
                 setOpenProfile(true)
-                console.log('setOpenProfile', openProfile)
               }}
               className={'btn __gray'}
               during={1000}

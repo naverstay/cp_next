@@ -33,9 +33,7 @@ export function OrderForm({
   notificationFunc,
   currency,
   totalCart,
-  busyOrder,
   setBusyOrder,
-  orderSent,
   setOrderSent,
   devMode,
 }) {
@@ -371,6 +369,14 @@ export function OrderForm({
   }, [elaboration])
 
   useEffect(() => {
+    // todo fix check
+    if (!elaboration?.length && !totalCart) {
+      console.log('totalCart', elaboration, totalCart)
+      //history.push('/')
+    }
+  }, [totalCart])
+
+  useEffect(() => {
     setInputFilter(phoneInput.current, function (value) {
       return /^\+?\d*$/.test(value) // Allow digits and '+' on beginning only, using a RegExp
     })
@@ -437,12 +443,6 @@ export function OrderForm({
           }
         })
       }
-    }
-
-    // todo fix check
-    if (!elaboration?.length && !totalCart) {
-      console.log('elaboration', elaboration, totalCart)
-      //history.push('/')
     }
 
     setDeliveryOptions([...deliveryList])
@@ -631,7 +631,7 @@ OrderForm.propTypes = {
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   repos: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   notificationFunc: PropTypes.func,
-  onSubmitForm: PropTypes.func,
+  onSubmitSearchForm: PropTypes.func,
   artNumber: PropTypes.string,
   onChangeUsername: PropTypes.func,
 }

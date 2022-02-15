@@ -13,7 +13,7 @@ import apiPOST from '../../utils/upload'
 
 import { setInputFilter } from '@/utils/inputFilter'
 
-export function SearchForm({ notificationFunc, onSubmitForm, setSearchData, formBusy, setFormBusy }) {
+export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData, formBusy, setFormBusy }) {
   const history = useRouter()
 
   const formRef = React.createRef()
@@ -51,7 +51,7 @@ export function SearchForm({ notificationFunc, onSubmitForm, setSearchData, form
       const art = form.querySelector('#art-number')
       const quantity = form.querySelector('#quantity')
 
-      onSubmitForm(art.value, quantity.value)
+      onSubmitSearchForm(art.value, quantity.value)
     }
 
     return () => {
@@ -78,7 +78,7 @@ export function SearchForm({ notificationFunc, onSubmitForm, setSearchData, form
     const art = form.querySelector('#art-number')
     const quantity = form.querySelector('#quantity')
 
-    onSubmitForm(art.value, quantity.value)
+    onSubmitSearchForm(art.value, quantity.value)
   }
 
   const handleChange = (field, e) => {
@@ -286,7 +286,7 @@ export function SearchForm({ notificationFunc, onSubmitForm, setSearchData, form
 SearchForm.propTypes = {
   loading: PropTypes.bool,
   notificationFunc: PropTypes.func,
-  onSubmitForm: PropTypes.func,
+  onSubmitSearchForm: PropTypes.func,
   onChangeUsername: PropTypes.func,
 }
 

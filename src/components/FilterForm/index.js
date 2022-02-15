@@ -41,8 +41,6 @@ import { xlsDownload } from '@/utils/xlsDownload'
 
 dayjs.extend(relativeTime)
 
-// const key = 'home';
-
 export function FilterForm({
   apiGETBridge,
   notificationFunc,
@@ -69,6 +67,8 @@ export function FilterForm({
   setBusyOrder,
   formBusy,
   devMode,
+  cartData,
+  setCartData,
 }) {
   const history = useRouter()
   const query = history.query
@@ -179,7 +179,6 @@ export function FilterForm({
   const [categoryPage, setCategoryPage] = useState(false)
 
   const [totalData, setTotalData] = useState(-1)
-  const [cartData, setCartData] = useState([])
   const [scrollTriggers, setScrollTriggers] = useState([])
   const [elaboration, setElaboration] = useState([])
   const [openShare, setOpenShare] = useState(false)
@@ -233,8 +232,7 @@ export function FilterForm({
   })
 
   useEffect(() => {
-    // todo fix
-    //setOpenMobMenu(false)
+    setOpenMobMenu(false)
 
     const requestURL = '/currencies'
 
@@ -1122,7 +1120,7 @@ export function FilterForm({
         </div>
 
         {cart ? (
-          <>
+          <React.Fragment>
             <CartResults
               setTableHeadFixed={setTableHeadFixed}
               setShowTableHeadFixed={setShowTableHeadFixed}
@@ -1143,7 +1141,7 @@ export function FilterForm({
               currency={currency}
               delivery
             />
-          </>
+          </React.Fragment>
         ) : (
           <>
             {formBusy || categoryPage ? null : totalData > 0 && !categoryPage ? (

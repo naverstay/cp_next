@@ -13,18 +13,20 @@ import { getJsonData } from '@/utils/getJsonData'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function CartResults(props) {
-  let { currency, updateCart, notificationFunc, setTableHeadFixed } = props
+  let { currency, updateCart, notificationFunc, setTableHeadFixed, list } = props
 
-  const [list, setList] = useState([])
+  //const [list, setList] = useState([])
+
+  console.log('list', list)
 
   const tableHead = useRef()
 
-  useEffect(() => {
-    let store = localStorage.getItem('catpart')
-    if (store) {
-      setList([...getJsonData(store)])
-    }
-  }, [])
+  //useEffect(() => {
+  //  let store = localStorage.getItem('catpart')
+  //  if (store) {
+  //    setList([...getJsonData(store)])
+  //  }
+  //}, [])
 
   let tableHeader = {
     name: 'Компонент',

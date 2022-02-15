@@ -5,7 +5,7 @@ import FormInput from '../../components/FormInput'
 import apiPATCH from '../../utils/change'
 
 const Profile = (props) => {
-  let { notificationFunc, logOut, devMode, profile } = props
+  let { notificationFunc, logOut, devMode, profile, openProfile } = props
 
   const authRef = React.createRef()
   const resetRef = React.createRef()
@@ -80,6 +80,23 @@ const Profile = (props) => {
 
     setJustRedraw(justRedraw + 1)
   }
+
+  useEffect(() => {
+    console.log('openProfile', openProfile)
+
+    return () => {
+      setFields({
+        'profile-login': '',
+        'profile-password': '',
+      })
+
+      setErrors({
+        'profile-password': null,
+      })
+    }
+  }, [])
+
+  console.log('openProfile', openProfile)
 
   return (
     <div className="profile">
