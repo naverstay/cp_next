@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import React from 'react'
 
-export default function IndexPage() {
+export default function IndexPage(props) {
   return (
     <Head>
       <title>Поиск электронных компонентов - CATPART.RU</title>

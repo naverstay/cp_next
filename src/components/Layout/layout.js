@@ -1,4 +1,3 @@
-import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useState, useEffect } from 'react'
@@ -7,54 +6,29 @@ import CatalogueMenu from '@/components/CatalogueMenu'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SearchForm from '@/components/SearchForm'
-import {
-  appDragJotai,
-  categorySlugLinksJotai,
-  menuJsonJotai,
-  openMobMenuJotai,
-  profileCheckedJotai,
-  profileJotai,
-  tableHeadFixedJotai,
-} from '@/store/store'
-import { findPriceIndex } from '@/utils/findPriceIndex'
 import { flatDeep } from '@/utils/flatDeep'
 import { getJsonData } from '@/utils/getJsonData'
 import apiGET from '@/utils/search'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 import { uniqArray } from '@/utils/uniqArray'
-import apiPOST from '@/utils/upload'
 import { validateJSON } from '@/utils/validateJSON'
 
 export default function Layout(props) {
   const history = useRouter()
 
   const {
-    updateCart,
-    onSubmitSearchForm,
-    checkSupplierPrices,
-    needLogin,
-    logOut,
-    createNotification,
     devMode,
     children,
-    openMobMenu,
     setOpenMobMenu,
-    categorySlugLinks,
     setCategorySlugLinks,
     menuJson,
     setMenuJson,
     tableHeadFixed,
-    setTableHeadFixed,
     appDrag,
     setAppDrag,
-    profileChecked,
     setProfileChecked,
     profile,
     setProfile,
-    cartCount,
-    setCartCount,
-    openAuthPopup,
-    setOpenAuthPopup,
     openCatalogue,
     setOpenCatalogue,
   } = props
@@ -172,7 +146,7 @@ export default function Layout(props) {
       />
 
       <main className={`main${history.asPath === '/' ? ' __center' : ''}`}>
-        <SearchForm onSubmitForm={onSubmitSearchForm} notificationFunc={createNotification} />
+        <SearchForm {...props} />
 
         <div className="main-content">{children}</div>
 

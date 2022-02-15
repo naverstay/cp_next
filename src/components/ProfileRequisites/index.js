@@ -1,4 +1,3 @@
-import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
@@ -8,14 +7,11 @@ import copyTextToClipboard from '../../utils/clipboard'
 import innValidation from '../../utils/innValidation'
 import apiPOST from '../../utils/upload'
 
-import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 import { validateEmail } from '@/utils/validateEmail'
 
 const ProfileRequisites = (props) => {
-  //const [devMode, setDevMode] = useState(isDevModeJotai)
-
-  const { requisitesId, requisites, notificationFunc, devMode, setDevMode } = props
+  const { requisitesId, requisites, notificationFunc, devMode } = props
 
   const authRef = React.createRef()
   const requisitesRef = React.createRef()

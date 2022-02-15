@@ -3,38 +3,18 @@
  *
  */
 
-import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import React, { useEffect, memo, useState } from 'react'
-//import { connect } from 'react-redux'
 import Ripples from 'react-ripples'
 
-//import { compose } from 'redux'
-//import { createStructuredSelector } from 'reselect'
-//import { useInjectReducer } from 'utils/injectReducer'
-//import { useInjectSaga } from 'utils/injectSaga'
-//import { makeSelectRepos, makeSelectLoading, makeSelectError } from "containers/App/selectors";
-
 import FormInput from '../../components/FormInput'
-//import { readFile } from '../../utils/fileReader'
 import apiPOST from '../../utils/upload'
 
-//import { changeArtNumber } from './actions'
-//import { makeSelectArtNumber } from './selectors'
-
-import { formBusyJotai, searchDataJotai, simpleReducer } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
-// import reducer from './reducer';
-// import saga from './saga';
 
-// const key = 'home';
-
-export function SearchForm({ notificationFunc, onSubmitForm, loading, onChangeUsername }) {
+export function SearchForm({ notificationFunc, onSubmitForm, setSearchData, formBusy, setFormBusy }) {
   const history = useRouter()
-
-  const [searchData, setSearchData] = useState(searchDataJotai)
-  const [formBusy, setFormBusy] = useState(formBusyJotai)
 
   const formRef = React.createRef()
   const formArtNumber = React.createRef()

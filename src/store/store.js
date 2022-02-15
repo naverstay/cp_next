@@ -1,7 +1,3 @@
-import { atom } from 'jotai'
-import { Provider, useAtom } from 'jotai'
-import { atomWithReducer } from 'jotai/utils'
-
 import { RUB } from '@/store/constants'
 
 export const currencyJotai = RUB

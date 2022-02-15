@@ -4,7 +4,6 @@
  * Lists the name and the issue count of a repository
  */
 
-import { useAtom } from 'jotai'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDetectClickOutside } from 'react-detect-click-outside'
@@ -16,50 +15,25 @@ import CabinetTabs from '../CabinetTabs'
 import OrderRow from '../OrderRow'
 import RequisitesRow from '../RequisitesRow'
 
-import {
-  currencyJotai,
-  currencyListJotai,
-  isDevModeJotai,
-  openDetailsJotai,
-  openRequisitesJotai,
-  profileJotai,
-  tableHeadFixedJotai,
-} from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function OrdersPage(props) {
   const {
     devMode,
-    setDevMode,
     activeTab,
     needLogin,
     count,
     notificationFunc,
     updateCart,
-    tableHeadFixed,
     setTableHeadFixed,
-    openRequisites,
     setOpenRequisites,
-    openDetails,
     setOpenDetails,
-    profile,
-    setProfile,
-    currencyList,
-    setCurrencyList,
     currency,
-    setCurrency,
   } = props
 
   const defaultCount = count
 
   const tableHead = useRef()
-  //const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
-  //const [openRequisites, setOpenRequisites] = useState(openRequisitesJotai)
-  //const [openDetails, setOpenDetails] = useState(openDetailsJotai)
-  //const [profile, setProfile] = useState(profileJotai)
-  //const [currencyList, setCurrencyList] = useState(currencyListJotai)
-  //const [currency, setCurrency] = useState(currencyJotai)
-  //const [devMode, setDevMode] = useState(isDevModeJotai)
 
   const [ordersList, setOrdersList] = useState([])
   const [requisitesList, setRequisitesList] = useState([])

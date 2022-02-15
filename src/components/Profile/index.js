@@ -1,17 +1,11 @@
-import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import FormInput from '../../components/FormInput'
 import apiPATCH from '../../utils/change'
 
-import { isDevModeJotai, profileJotai, simpleReducer } from '@/store/store'
-
 const Profile = (props) => {
-  let { notificationFunc, logOut, devMode, setDevMode, profile, setProfile } = props
-
-  //const [devMode, setDevMode] = useState(isDevModeJotai)
-  //const [profile, setProfile] = useState(profileJotai)
+  let { notificationFunc, logOut, devMode, profile } = props
 
   const authRef = React.createRef()
   const resetRef = React.createRef()

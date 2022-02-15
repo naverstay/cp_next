@@ -1,6 +1,5 @@
 import './../src/styles/app.scss'
 
-import { Provider, useAtom } from 'jotai'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
@@ -47,6 +46,28 @@ import { findPriceIndex } from '@/utils/findPriceIndex'
 import { getJsonData } from '@/utils/getJsonData'
 import apiGET from '@/utils/search'
 import apiPOST from '@/utils/upload'
+
+import '!file-loader?name=[name].[ext]!../src/public/favicon.ico'
+import '!file-loader?name=[name].[ext]!../src/public/browserconfig.xml'
+import '!file-loader?name=[name].[ext]!../src/public/favicon-16x16.png'
+import '!file-loader?name=[name].[ext]!../src/public/favicon-32x32.png'
+import '!file-loader?name=[name].[ext]!../src/public/safari-pinned-tab.svg'
+//import '!file-loader?name=[name].[ext]!../src/public/site.webmanifest'
+import '!file-loader?name=[name].[ext]!../src/public/mstile-150x150.png'
+
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-152x152.png'
+import '!file-loader?name=[name].[ext]!../src/public/android-chrome-192x192.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-60x60.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-144x144.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-120x120.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-precomposed.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-76x76.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-72x72.png'
+import '!file-loader?name=[name].[ext]!../src/public/android-chrome-256x256.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-57x57.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-180x180.png'
+import '!file-loader?name=[name].[ext]!../src/public/apple-touch-icon-114x114.png'
 
 Number.prototype.toFixedCustom = function (decimals) {
   const base = Math.pow(10, decimals)
@@ -363,7 +384,7 @@ function NextCatpartApp({ Component, pageProps }) {
         } else {
           res(store)
         }
-      } else if (window.location.pathname === '/order') {
+      } else if (history.pathname === '/order') {
         checkSupplierPrices(store, 'Louisyen', res)
       } else {
         res(store)
@@ -374,6 +395,8 @@ function NextCatpartApp({ Component, pageProps }) {
       if (profileChecked) {
         localStorage.setItem('catpart-mode', profile.hasOwnProperty('id') ? 'auth' : '')
       }
+
+      console.log('store', store)
 
       setCartCount(store?.length || 0)
 
@@ -467,10 +490,17 @@ function NextCatpartApp({ Component, pageProps }) {
     checkSupplierPrices: checkSupplierPrices,
     needLogin: needLogin,
     logOut: logOut,
-    createNotification: createNotification,
+    notificationFunc: createNotification,
     apiGETBridge: apiGETBridge,
     sendSearchRequest: sendSearchRequest,
   }
+
+  useEffect(() => {
+    setOpenCatalogue(false)
+    setOpenMobMenu(false)
+    setOpenAuthPopup(false)
+    setTableHeadFixed(null)
+  }, [history.asPath])
 
   useEffect(() => {
     if (openAuthPopup || openRequisites) {
@@ -532,6 +562,7 @@ function NextCatpartApp({ Component, pageProps }) {
           notificationFunc={createNotification}
           detailsId={openDetails ? openDetails.id : null}
           profile={profile}
+          devMode={devMode}
           order={openDetails}
         />
       ) : null
@@ -570,13 +601,13 @@ function NextCatpartApp({ Component, pageProps }) {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#475df4" />
 
-        <link rel="icon" href="./favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
-        <link rel="manifest" href="./site.webmanifest" crossOrigin="use-credentials" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        {/*<link rel="manifest" href="/site.webmanifest" crossOrigin="use-credentials" />*/}
 
-        <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
 
@@ -614,15 +645,13 @@ function NextCatpartApp({ Component, pageProps }) {
         </React.Fragment>
       ) : null}
 
-      <Provider initialValues={initialState}>
-        <Layout {...appState} {...appFunctions}>
-          <Component {...appState} {...appFunctions} {...pageProps} />
-        </Layout>
+      <Layout {...appState} {...appFunctions}>
+        <Component {...appState} {...appFunctions} {...pageProps} />
+      </Layout>
 
-        <AsideContainer className={asideOpen ? ' __opened' : ''} setAsideOpen={setAsideOpen}>
-          {asideContent}
-        </AsideContainer>
-      </Provider>
+      <AsideContainer className={asideOpen ? ' __opened' : ''} setAsideOpen={setAsideOpen}>
+        {asideContent}
+      </AsideContainer>
     </React.Fragment>
   )
 }

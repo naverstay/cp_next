@@ -3,7 +3,7 @@
  *
  */
 
-import { useAtom } from 'jotai'
+import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import React, { useEffect, memo, useState } from 'react'
 import Ripples from 'react-ripples'
@@ -18,33 +18,28 @@ import innValidation from '../../utils/innValidation'
 import apiORDER, { apiORDERDB } from '../../utils/order'
 import priceFormatter from '../../utils/priceFormatter'
 
-import { busyOrderJotai, isDevModeJotai, orderSentJotai, simpleReducer } from '@/store/store'
 import { counterEffect } from '@/utils/counterEffect'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { getJsonData } from '@/utils/getJsonData'
 import { setInputFilter } from '@/utils/inputFilter'
 import { validateEmail } from '@/utils/validateEmail'
 
-const key = 'home'
-
 export function OrderForm({
   elaboration,
-  setElaboration,
   delivery,
   updateCart,
-  history,
   profile,
   setOpenAuthPopup,
   notificationFunc,
   currency,
   totalCart,
-  onSubmitForm,
-  loading,
-  onChangeUsername,
+  busyOrder,
+  setBusyOrder,
+  orderSent,
+  setOrderSent,
+  devMode,
 }) {
-  const [devMode, setDevMode] = useState(isDevModeJotai)
-  const [orderSent, setOrderSent] = useState(orderSentJotai)
-  const [busyOrder, setBusyOrder] = useState(busyOrderJotai)
+  const history = useRouter()
 
   const emailInput = React.createRef()
   const nameInput = React.createRef()
@@ -444,8 +439,10 @@ export function OrderForm({
       }
     }
 
-    if (!(elaboration && elaboration.length) && !totalCart) {
-      history.push('/')
+    // todo fix check
+    if (!elaboration?.length && !totalCart) {
+      console.log('elaboration', elaboration, totalCart)
+      //history.push('/')
     }
 
     setDeliveryOptions([...deliveryList])

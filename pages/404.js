@@ -4,7 +4,7 @@ import React from 'react'
 
 import FilterForm from '@/components/FilterForm'
 
-export default function SearchPage({ ...props }) {
+export default function Page404({ ...props }) {
   const router = useRouter()
 
   return (

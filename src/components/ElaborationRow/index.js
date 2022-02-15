@@ -1,14 +1,10 @@
-import { useAtom } from 'jotai'
 import React, { createRef, useEffect, useState } from 'react'
 
 import FormInput from '../../components/FormInput'
 
-import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { setInputFilter } from '@/utils/inputFilter'
 
 const ElaborationRow = (props) => {
-  const [devMode, setDevMode] = useState(isDevModeJotai)
-
   let { rowIndex, updateRow, row } = props
 
   const inputQuantityRef = createRef()
@@ -41,7 +37,6 @@ const ElaborationRow = (props) => {
 
   const handleChange = (field, e) => {
     e.persist()
-    devMode && console.log('handleChange', field, e.target.value)
     fields[field] = e.target.value
     setFields(fields)
 

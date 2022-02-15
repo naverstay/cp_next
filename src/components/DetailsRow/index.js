@@ -1,18 +1,11 @@
-import { useAtom } from 'jotai'
 import React, { createRef, useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import dateFormatter from '../../utils/dateFormatter'
-import { findPriceIndex } from '../../utils/findPriceIndex'
-import { setInputFilter } from '../../utils/inputFilter'
 import priceFormatter from '../../utils/priceFormatter'
 
-import { isDevModeJotai, simpleReducer } from '@/store/store'
-
 const DetailsRow = (props) => {
-  const [devMode, setDevMode] = useState(isDevModeJotai)
-
-  let { rowIndex, tableHeader, currency, row, notificationFunc } = props
+  let { rowIndex, tableHeader, devMode, row, notificationFunc } = props
 
   devMode && console.log('DetailsRow', row)
 

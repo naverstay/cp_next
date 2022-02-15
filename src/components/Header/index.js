@@ -1,4 +1,3 @@
-import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDetectClickOutside } from 'react-detect-click-outside'
@@ -9,58 +8,27 @@ import apiPOST from '../../utils/upload'
 import FormInput from '../FormInput'
 
 import NextLink from '@/components/NextLink'
-import {
-  cartCountJotai,
-  isDevModeJotai,
-  openAuthPopupJotai,
-  openCatalogueJotai,
-  openMobMenuJotai,
-  profileJotai,
-} from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { validateEmail } from '@/utils/validateEmail'
 
-function Header({
-  updateCart,
-  onSubmitSearchForm,
-  checkSupplierPrices,
-  needLogin,
-  logOut,
-  createNotification,
-  children,
-  openMobMenu,
-  setOpenMobMenu,
-  categorySlugLinks,
-  setCategorySlugLinks,
-  menuJson,
-  setMenuJson,
-  tableHeadFixed,
-  setTableHeadFixed,
-  appDrag,
-  setAppDrag,
-  profileChecked,
-  setProfileChecked,
-  profile,
-  devMode,
-  setProfile,
-  notificationFunc,
-  openAuthPopup,
-  setOpenAuthPopup,
-  cartCount,
-  setCartCount,
-  openCatalogue,
-  setOpenCatalogue,
-  openResetPassword,
-  setOpenResetPassword,
-}) {
-  const history = useRouter()
+function Header(props) {
+  const {
+    openMobMenu,
+    setOpenMobMenu,
+    profile,
+    devMode,
+    setProfile,
+    notificationFunc,
+    openAuthPopup,
+    setOpenAuthPopup,
+    cartCount,
+    openCatalogue,
+    setOpenCatalogue,
+    openResetPassword,
+    setOpenResetPassword,
+  } = props
 
-  //const [cartCount, setCartCount] = useState(cartCountJotai)
-  //const [openAuthPopup, setOpenAuthPopup] = useState(openAuthPopupJotai)
-  //const [profile, setProfile] = useState(profileJotai)
-  //const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
-  //const [openMobMenu, setOpenMobMenu] = useState(openMobMenuJotai)
-  //const [devMode, setDevMode] = useState(isDevModeJotai)
+  const history = useRouter()
 
   const headerRef = useDetectClickOutside({
     onTriggered: () => {

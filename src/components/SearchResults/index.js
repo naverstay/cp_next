@@ -4,35 +4,27 @@
  * Lists the name and the issue count of a repository
  */
 
-import { useAtom } from 'jotai'
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import Collapsible from 'react-collapsible'
 
 import SearchRow from '../SearchRow'
 
-import { isDevModeJotai, tableHeadFixedJotai, simpleReducer } from '@/store/store'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function SearchResults(props) {
   const {
     bom,
     list,
-    cart,
     updateTime,
     relativeTime,
-    scrollTriggers,
-    setScrollTriggers,
     currency,
     currencyList,
-    highlight,
     notificationFunc,
     updateCart,
+    devMode,
+    setTableHeadFixed,
   } = props
-
-  const [devMode, setDevMode] = useState(isDevModeJotai)
-
-  const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
 
   const tableHead = useRef()
 
@@ -140,25 +132,6 @@ export function SearchResults(props) {
       getMoreData(newList, step + 1)
     }, 200)
   }
-
-  // useEffect(() => {
-  //  clearInterval(loaderInterval);
-  //
-  //  if (list && list[listCounter].data.length) {
-  // setRowCount(list[listCounter].data.slice(0, INF_STEP));
-
-  // console.log('setRowCount', list);
-  // getMoreData(list, 0);
-
-  // return () => {
-  //  loaderInterval = setInterval(() => {
-  //
-  //  }, 1000);
-  // };
-  //  }
-  // }, [list]);
-
-  devMode && console.log('list', list, list && list.length ? list[0].data : '0')
 
   return (
     <div className="search-results">

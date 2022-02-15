@@ -2,6 +2,6 @@ import React from 'react'
 
 import FeaturePage from '@/components/FeaturePage'
 
-export default function SearchPage({ ...props }) {
+export default function Page({ ...props }) {
   return <FeaturePage {...props} />
 }

@@ -4,7 +4,7 @@ import React from 'react'
 
 import OrdersPage from '@/components/OrdersPage'
 
-export default function SearchPage({ ...props }) {
+export default function BankPage({ ...props }) {
   const router = useRouter()
 
   console.log('pageProps', props)

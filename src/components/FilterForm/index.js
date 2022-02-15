@@ -5,7 +5,6 @@
 
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { useAtom } from 'jotai'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
@@ -35,25 +34,6 @@ import SkeletonWide from '../SkeletonWide'
 import SupplyNotification from '../SupplyNotification'
 
 import { RUB, TRIGGER_DROPDOWN_LIMIT } from '@/store/constants'
-import {
-  busyOrderJotai,
-  categoryItemsJotai,
-  currencyJotai,
-  currencyListJotai,
-  errorPageJotai,
-  formBusyJotai,
-  isDevModeJotai,
-  nestedCategoriesJotai,
-  openAuthPopupJotai,
-  openCatalogueJotai,
-  openMobMenuJotai,
-  orderSentJotai,
-  profileJotai,
-  searchDataJotai,
-  showTableHeadFixedJotai,
-  tableHeadFixedJotai,
-  totalCartJotai,
-} from '@/store/store'
 import { getJsonData } from '@/utils/getJsonData'
 import { getButtonsMap } from '@/utils/getPaginationMap'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
@@ -65,24 +45,17 @@ dayjs.extend(relativeTime)
 
 export function FilterForm({
   apiGETBridge,
-  createNotification,
+  notificationFunc,
   updateCart,
   sendSearchRequest,
-  loading,
-  error,
-  onChangeCurrency,
-  onSubmitSearchForm,
   profile,
-  setProfile,
   errorPage,
   setErrorPage,
   categoryItems,
   setCategoryItems,
   totalCart,
-  setTotalCart,
   searchData,
   setSearchData,
-  tableHeadFixed,
   setTableHeadFixed,
   nestedCategories,
   setNestedCategories,
@@ -90,48 +63,18 @@ export function FilterForm({
   setCurrency,
   currencyList,
   setCurrencyList,
-  orderSent,
-  setOrderSent,
-  openMobMenu,
   setOpenMobMenu,
-  showTableHeadFixed,
   setShowTableHeadFixed,
-  openAuthPopup,
   setOpenAuthPopup,
-  busyOrder,
   setBusyOrder,
   formBusy,
-  setFormBusy,
   devMode,
-  setDevMode,
-  openCatalogue,
-  setOpenCatalogue,
 }) {
   const history = useRouter()
   const query = history.query
 
   const cart = history.pathname === '/order'
   const someCategoryUrl = !(history.pathname === '/search' || history.pathname === '/order')
-
-  //const [profile, setProfile] = useAtom(profileJotai)
-  //const [errorPage, setErrorPage] = useAtom(errorPageJotai)
-  //const [categoryItems, setCategoryItems] = useAtom(categoryItemsJotai)
-  //
-  //const [totalCart, setTotalCart] = useAtom(totalCartJotai)
-  //const [searchData, setSearchData] = useAtom(searchDataJotai)
-  //const [tableHeadFixed, setTableHeadFixed] = useAtom(tableHeadFixedJotai)
-  //
-  //const [nestedCategories, setNestedCategories] = useAtom(nestedCategoriesJotai)
-  //const [currency, setCurrency] = useAtom(currencyJotai)
-  //const [currencyList, setCurrencyList] = useAtom(currencyListJotai)
-  //const [orderSent, setOrderSent] = useAtom(orderSentJotai)
-  //const [openMobMenu, setOpenMobMenu] = useAtom(openMobMenuJotai)
-  //const [showTableHeadFixed, setShowTableHeadFixed] = useAtom(showTableHeadFixedJotai)
-  //const [openAuthPopup, setOpenAuthPopup] = useAtom(openAuthPopupJotai)
-  //const [busyOrder, setBusyOrder] = useAtom(busyOrderJotai)
-  //const [formBusy, setFormBusy] = useAtom(formBusyJotai)
-  //const [devMode, setDevMode] = useAtom(isDevModeJotai)
-  //const [openCatalogue, setOpenCatalogue] = useAtom(openCatalogueJotai)
 
   let actualTimer
 
@@ -1065,7 +1008,7 @@ export function FilterForm({
                         if (store) {
                           xlsDownload([...getJsonData(store)], currency, 0)
                         } else {
-                          createNotification('success', 'Корзина пуста.', 'Нечего скачивать.')
+                          notificationFunc('success', 'Корзина пуста.', 'Нечего скачивать.')
                         }
                       }}
                       className="btn __gray"
@@ -1141,7 +1084,7 @@ export function FilterForm({
                       <Share
                         shareUrl={encodeURIComponent(window.location.href)}
                         shareText={encodeURIComponent(searchInfo)}
-                        notificationFunc={createNotification}
+                        notificationFunc={notificationFunc}
                         setOpenFunc={setOpenShare}
                       />
                     )}
@@ -1185,7 +1128,7 @@ export function FilterForm({
               setShowTableHeadFixed={setShowTableHeadFixed}
               updateCart={updateCart}
               list={cartData}
-              notificationFunc={createNotification}
+              notificationFunc={notificationFunc}
               showResults={!formBusy}
               count={count}
               currency={currency}
@@ -1193,10 +1136,9 @@ export function FilterForm({
 
             <OrderForm
               profile={profile}
-              history={history}
               setOpenAuthPopup={setOpenAuthPopup}
               updateCart={updateCart}
-              notificationFunc={createNotification}
+              notificationFunc={notificationFunc}
               totalCart={totalCart}
               currency={currency}
               delivery
@@ -1213,7 +1155,7 @@ export function FilterForm({
                   setTableHeadFixed={setTableHeadFixed}
                   setShowTableHeadFixed={setShowTableHeadFixed}
                   updateCart={updateCart}
-                  notificationFunc={createNotification}
+                  notificationFunc={notificationFunc}
                   highlight={decodeURIComponent(query?.art || '')}
                   showResults={!formBusy}
                   count={query?.q || ''}
@@ -1224,19 +1166,17 @@ export function FilterForm({
                   relativeTime={itemData !== null}
                 />
               </>
-            ) : someCategoryUrl ? null : elaboration.length > 0 ? (
+            ) : someCategoryUrl ? null : elaboration?.length > 0 ? (
               <>
-                <DeepElaboration data={elaboration} setElaboration={setElaboration} elaboration={elaboration} />
+                <DeepElaboration data={elaboration} setElaboration={setElaboration} />
                 <OrderForm
                   profile={profile}
-                  history={history}
                   setOpenAuthPopup={setOpenAuthPopup}
                   setBusyOrder={setBusyOrder}
                   updateCart={updateCart}
-                  notificationFunc={createNotification}
+                  notificationFunc={notificationFunc}
                   totalCart={totalCart}
                   currency={currency}
-                  setElaboration={setElaboration}
                   elaboration={elaboration}
                 />
               </>
@@ -1244,9 +1184,7 @@ export function FilterForm({
 
             {!categoryPage && itemData !== null ? (
               <>
-                {totalData > 0 ? null : (
-                  <SupplyNotification notificationFunc={createNotification} itemData={itemData} />
-                )}
+                {totalData > 0 ? null : <SupplyNotification notificationFunc={notificationFunc} itemData={itemData} />}
                 <SimilarSlider searchData={searchData} itemData={itemData} />
               </>
             ) : null}
@@ -1263,7 +1201,7 @@ FilterForm.propTypes = {
   cart: PropTypes.bool,
   loading: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  createNotification: PropTypes.func,
+  notificationFunc: PropTypes.func,
   sendSearchRequest: PropTypes.func,
   // currency: PropTypes.string,
   onChangeCurrency: PropTypes.func,

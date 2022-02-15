@@ -1,10 +1,8 @@
-import { useAtom } from 'jotai'
 import React, { createRef, useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
 import priceFormatter from '../../utils/priceFormatter'
 
-import { cartCountJotai, simpleReducer } from '@/store/store'
 import { findPriceIndex } from '@/utils/findPriceIndex'
 import { setInputFilter } from '@/utils/inputFilter'
 
@@ -13,9 +11,7 @@ const CartRow = (props) => {
 
   const inputRef = createRef()
 
-  const [cartCount, setCartCount] = useState(cartCountJotai)
-
-  //const [cartCount, setCartCount] = useState(parseFloat(row.cart))
+  const [cartCount, setCartCount] = useState(parseFloat(row.cart))
 
   let priceMatch = 0 // defaultCount ? row.pricebreaks.length - 1 : -1
 

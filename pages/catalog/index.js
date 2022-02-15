@@ -4,12 +4,11 @@ import React from 'react'
 
 import { OrdersPage } from '@/components/OrdersPage'
 
-export default function SearchPage({ ...pageProps }) {
+export default function SearchPage({ ...props }) {
   const router = useRouter()
 
-  const { needLogin, createNotification } = pageProps
-
   console.log('pageProps', router)
+
   return (
     <React.Fragment>
       <Head>

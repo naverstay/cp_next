@@ -3,32 +3,24 @@
  *
  * List all the features
  */
-import { useAtom } from 'jotai'
+
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 import apiGET from '../../utils/search'
 
-import { openCatalogueJotai, tableHeadFixedJotai, simpleReducer } from '@/store/store'
-
 export default function FeaturePage(props) {
-  const { tableHeadFixed, setTableHeadFixed, openCatalogue, setOpenCatalogue, setOpenMobMenu } = props
+  const { setTableHeadFixed, setOpenCatalogue, setOpenMobMenu } = props
 
   const history = useRouter()
 
   const [page, setPage] = useState(null)
 
-  //const [tableHeadFixed, setTableHeadFixed] = useState(tableHeadFixedJotai)
-  //const [openCatalogue, setOpenCatalogue] = useState(openCatalogueJotai)
-
   useEffect(() => {
-    setOpenMobMenu(false)
-    setTableHeadFixed(null)
-
     if (!page || page.url !== history.pathname) {
       const requestURL = '/pages?url=' + history.pathname
-      setOpenCatalogue(false)
+      //setOpenCatalogue(false)
 
       apiGET(requestURL, {}, (data) => {
         if (data.error) {

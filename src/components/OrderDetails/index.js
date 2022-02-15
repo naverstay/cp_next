@@ -1,24 +1,18 @@
-import { useAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import Ripples from 'react-ripples'
 
-import FormInput from '../../components/FormInput'
 import dateFormatter from '../../utils/dateFormatter'
-import { setInputFilter } from '../../utils/inputFilter'
 import priceFormatter from '../../utils/priceFormatter'
 import apiGET from '../../utils/search'
 import DetailsRow from '../DetailsRow'
 
 import { RUB } from '@/store/constants'
-import { isDevModeJotai, simpleReducer } from '@/store/store'
 import { API } from '@/utils/order'
 import { validateEmail } from '@/utils/validateEmail'
 import { xlsDownload } from '@/utils/xlsDownload'
 
 const OrderDetails = (props) => {
-  const [devMode, setDevMode] = useState(isDevModeJotai)
-
-  const { detailsId, setOrderDetails, profile, order, notificationFunc } = props
+  const { detailsId, devMode, profile, order, notificationFunc } = props
 
   const authRef = React.createRef()
   const phoneInput = React.createRef()
@@ -332,6 +326,7 @@ const OrderDetails = (props) => {
               ? order.products.map((row, ri) => (
                   <DetailsRow
                     key={ri}
+                    devMode={devMode}
                     tableHeader={tableHeader}
                     currency={RUB}
                     notificationFunc={notificationFunc}
