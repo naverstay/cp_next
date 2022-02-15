@@ -482,7 +482,6 @@ function NextCatpartApp({ Component, pageProps }) {
     setOpenCatalogue(false)
     setOpenMobMenu(false)
     setOpenAuthPopup(false)
-    setTableHeadFixed(null)
   }, [history.asPath])
 
   useEffect(() => {

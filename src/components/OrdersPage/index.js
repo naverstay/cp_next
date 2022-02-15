@@ -232,10 +232,6 @@ export function OrdersPage(props) {
   }, [sortCol, sortAsc])
 
   useEffect(() => {
-    updateTableHeader()
-
-    getData()
-
     document.body.addEventListener('scroll', handleScroll)
 
     if (window.innerWidth < 1200 && tableHead.current) {

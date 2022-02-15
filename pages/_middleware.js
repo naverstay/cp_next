@@ -3,7 +3,7 @@ import { NextResponse, NextRequest } from 'next/server'
 export async function middleware(req, ev) {
   const { pathname } = req.nextUrl
 
-  // console.log('middleware', req.nextUrl)
+  console.log('middleware', req.nextUrl)
 
   // if (pathname === '/') {
   //   return NextResponse.redirect('/hello-nextjs')

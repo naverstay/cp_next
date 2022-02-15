@@ -18,6 +18,8 @@ export default function FeaturePage(props) {
   const [page, setPage] = useState(null)
 
   useEffect(() => {
+    setTableHeadFixed(null)
+
     if (!page || page.url !== history.pathname) {
       const requestURL = '/pages?url=' + history.pathname
       //setOpenCatalogue(false)
