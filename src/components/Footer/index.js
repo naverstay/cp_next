@@ -24,7 +24,7 @@ function Footer() {
           <div className="footer-copyright">
             2012-2021 © ООО «Катпарт», ИНН&nbsp;5406814289 <br />
             Для повышения удобства сайт использует cookies. Оставаясь на сайте, вы соглашаетесь с{' '}
-            <NextLink className="footer-link" href="/privacy-policy/">
+            <NextLink className="footer-link" to="/privacy-policy/">
               политикой конфиденциальности
             </NextLink>
             .

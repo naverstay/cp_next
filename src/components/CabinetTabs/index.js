@@ -28,7 +28,7 @@ const CabinetTabs = (props) => {
               className={'btn __gray' + (activeIndex === 0 ? ' active' : '')}
               during={1000}
             >
-              <NextLink href={'/orders'} className="btn-inner">
+              <NextLink to={'/orders'} className="btn-inner">
                 <span>Список заказов</span>
               </NextLink>
             </Ripples>
@@ -46,7 +46,7 @@ const CabinetTabs = (props) => {
               className={'btn __gray' + (activeIndex === 1 ? ' active' : '')}
               during={1000}
             >
-              <NextLink href={'/bankinformation'} className="btn-inner">
+              <NextLink to={'/bankinformation'} className="btn-inner">
                 <span>Реквизиты</span>
               </NextLink>
             </Ripples>

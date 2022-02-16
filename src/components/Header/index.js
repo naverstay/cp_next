@@ -247,7 +247,7 @@ function Header(props) {
           <span />
           <span />
         </button>
-        <NextLink href="/" className="header-logo">
+        <NextLink to="/" className="header-logo">
           catpart.ru
         </NextLink>
         <Ripples
@@ -275,17 +275,17 @@ function Header(props) {
       <div className="header-navbar">
         <ul className="header-navbar__list">
           <li>
-            <NextLink className="header-navbar__link" href="/about/">
+            <NextLink className="header-navbar__link" to="/about/">
               О компании
             </NextLink>
           </li>
           <li>
-            <NextLink className="header-navbar__link" href="/delivery/">
+            <NextLink className="header-navbar__link" to="/delivery/">
               Доставка
             </NextLink>
           </li>
           <li>
-            <NextLink className="header-navbar__link" href="/contacts/">
+            <NextLink className="header-navbar__link" to="/contacts/">
               Контакты
             </NextLink>
           </li>
@@ -300,7 +300,7 @@ function Header(props) {
                 <span className="__dotted">{profile?.contact_name || 'name'}</span>
               </span>
             ) : (
-              <NextLink href="/orders/" className="btn-inner">
+              <NextLink to="/orders/" className="btn-inner">
                 <span className="__dotted">{profile?.contact_name || 'name'}</span>
               </NextLink>
             )}
@@ -400,7 +400,7 @@ function Header(props) {
 
         <div className="header-order">
           <Ripples during={1000} className={`btn __blue${cartCount ? '' : ' __disabled'}`}>
-            <NextLink href="/order/" className="btn-inner">
+            <NextLink to="/order/" className="btn-inner">
               <React.Fragment>
                 <span className="header-order__label">Заказ</span>
                 <span className="header-order__count">{cartCount || 0}</span>

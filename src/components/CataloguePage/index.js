@@ -213,7 +213,7 @@ export default function CataloguePage(props) {
 
     nestedCategories.forEach((s, si) => {
       ret[si % 4].push(
-        <NextLink href={'/' + s.slug + '/'} key={si} className={'catalogue__list-link'}>
+        <NextLink to={'/' + s.slug + '/'} key={si} className={'catalogue__list-link'}>
           {s.name}
         </NextLink>
       )
@@ -300,7 +300,7 @@ export default function CataloguePage(props) {
                       <div className={'catalogue-page__table-name'}>
                         <NextLink
                           className={'catalogue-page__table-link'}
-                          href={'/' + tableProps.row._original.catPartLink + '/'}
+                          to={'/' + tableProps.row._original.catPartLink + '/'}
                         >
                           {tableProps.row.catPartNum}
                         </NextLink>

@@ -7,8 +7,6 @@ import OrdersPage from '@/components/OrdersPage'
 export default function BankPage({ ...props }) {
   const router = useRouter()
 
-  console.log('pageProps', props)
-
   return (
     <React.Fragment>
       <Head>

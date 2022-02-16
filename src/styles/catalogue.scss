@@ -39,6 +39,7 @@
   }
 
   &__inner {
+    user-select: none;
     overflow-y: hidden;
     overflow-x: auto;
     display: flex;

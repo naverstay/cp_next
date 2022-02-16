@@ -1,6 +1,10 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState, useCallback } from 'react'
 
+import { Router as Router } from '../../../../nextjs-starter-kit/routes'
+
+import NextLink from '@/components/NextLink'
+
 function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson }) {
   const history = useRouter()
 
@@ -22,25 +26,28 @@ function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson 
             }, 300)
           }}
         >
-          <span
+          <NextLink
             aria-hidden="true"
+            route={'/' + (m.slug || '#') + '/'}
+            as={'/catalog'}
             className={
               'catalogue__list-link' +
               (JSON.stringify(menuPath.split('-').slice(0, level + 2)) === JSON.stringify(`${parent}-${mi}`.split('-'))
                 ? ' __active'
                 : '')
             }
-            onClick={(e) => {
-              if (e.target.classList.contains('__active')) {
-                setOpenCatalogue(false)
-                history.push('/' + (m.slug || '#'))
-              }
-              return false
-            }}
+            //onClick={(e) => {
+            //  e.preventDefault()
+            //  if (e.target.classList.contains('__active')) {
+            //    setOpenCatalogue(false)
+            //    Router.push('/' + (m.slug || '#'))
+            //  }
+            //  return false
+            //}}
           >
             {/*{parent}*/}
             {m.name}
-          </span>
+          </NextLink>
         </div>
       )
 

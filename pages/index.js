@@ -1,7 +1,12 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 export default function IndexPage(props) {
+  const history = useRouter()
+
+  console.log('IndexPage', props, history)
+
   return (
     <Head>
       <title>Поиск электронных компонентов - CATPART.RU</title>

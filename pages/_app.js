@@ -392,7 +392,6 @@ function NextCatpartApp({ Component, pageProps }) {
   }
 
   const updateAsideContent = (content) => {
-    console.log('updateAsideContent', content)
     if (content !== null) {
       setAsideContent(content)
     }

@@ -56,7 +56,7 @@ const SimilarSlider = (props) => {
     return similarSlides.length
       ? similarSlides.map((s, si) => {
           return (
-            <NextLink className={'catalogue__similar-link'} key={si} href={'/' + s.slug}>
+            <NextLink className={'catalogue__similar-link'} key={si} to={'/' + s.slug}>
               {s.part_no}
             </NextLink>
           )
