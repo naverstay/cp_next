@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState, useCallback } from 'react'
 
-import { Router as Router } from '../../../../nextjs-starter-kit/routes'
+import { Router as Router } from '../../routes'
 
 import NextLink from '@/components/NextLink'
 

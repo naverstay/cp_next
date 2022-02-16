@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React, { FC } from 'react'
 
-import { Link as RouterLink } from '../../../../nextjs-starter-kit/routes'
+import { Link as RouterLink } from '../../routes'
 
 /**
  * Standard way of using the Next's `Link` tag together with the `a` tag
