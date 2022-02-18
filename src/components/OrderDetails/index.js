@@ -131,11 +131,11 @@ const OrderDetails = (props) => {
     //  return /^\+?\d*$/.test(value); // Allow digits and '+' on beginning only, using a RegExp
     // });
 
-    const requestURL = `/orders/${detailsId}`
-
-    apiGET(requestURL, {}, (data) => {
-      devMode && console.log('OrderDetails', detailsId, data)
-    })
+    //const requestURL = `/orders/${detailsId}`
+    //
+    //apiGET(requestURL, {}, (data) => {
+    //  devMode && console.log('OrderDetails', detailsId, data)
+    //})
 
     return () => {
       phoneInput.current = false
@@ -159,9 +159,7 @@ const OrderDetails = (props) => {
     )
   }
 
-  console.log('order', order)
-
-  return order.hasOwnProperty('id') ? (
+  return order?.id ? (
     <div className="profile __details">
       <div className="aside-title">{`${order.title || <span data-empty="title" />} от ${
         order.created_at ? dateFormatter(order.created_at) : ''

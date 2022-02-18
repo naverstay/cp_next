@@ -3,11 +3,13 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import FilterForm from '@/components/FilterForm'
+import { getCategoryMenu, getCurrencyAndMenu, getCurrencyList } from '@/hooks/useCatalogMenu'
 
-export default function Page({ ...props }) {
+function Page({ ...props }) {
   const router = useRouter()
 
   console.log('order', props)
+
   return (
     <React.Fragment>
       <Head>
@@ -17,7 +19,20 @@ export default function Page({ ...props }) {
         <link rel="canonical" href="https://catpart.ru/" />
       </Head>
 
-      <FilterForm {...props} />
+      <FilterForm {...props} orderPage={true} />
     </React.Fragment>
   )
 }
+
+export async function getServerSideProps({ query, res }) {
+  const { catalogMenu, currencyList } = await getCurrencyAndMenu()
+
+  return {
+    props: {
+      currencyList: currencyList,
+      catalogMenu: catalogMenu,
+    },
+  }
+}
+
+export default Page

@@ -4,17 +4,20 @@
  * Lists the name and the issue count of a repository
  */
 
-import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDetectClickOutside } from 'react-detect-click-outside'
+import { useDispatch } from 'react-redux'
 import Ripples from 'react-ripples'
 
+import { setOpenDetails, setOpenRequisites } from '../../../store/menus/action'
+import { setTableHeadFixed } from '../../../store/search/action'
 import FormSelect from '../../components/FormSelect'
 import apiGET from '../../utils/search'
 import CabinetTabs from '../CabinetTabs'
 import OrderRow from '../OrderRow'
 import RequisitesRow from '../RequisitesRow'
 
+import LoadingIndicator from '@/components/LoadingIndicator'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function OrdersPage(props) {
@@ -25,15 +28,17 @@ export function OrdersPage(props) {
     count,
     notificationFunc,
     updateCart,
-    setTableHeadFixed,
-    setOpenRequisites,
-    setOpenDetails,
+    //catalogData,
+    //setTableHeadFixed,
+    //setOpenRequisites,
+    //setOpenDetails,
     currency,
   } = props
 
   const defaultCount = count
 
   const tableHead = useRef()
+  const dispatch = useDispatch()
 
   const [ordersList, setOrdersList] = useState([])
   const [requisitesList, setRequisitesList] = useState([])
@@ -161,8 +166,10 @@ export function OrdersPage(props) {
   )
 
   const updateTableHeader = () => {
-    setTableHeadFixed(
-      <div className="search-results__table __sticky">{activeTab === 0 ? tHeadOrders : tHeadRequisites}</div>
+    dispatch(
+      setTableHeadFixed(
+        <div className="search-results__table __sticky">{activeTab === 0 ? tHeadOrders : tHeadRequisites}</div>
+      )
     )
   }
 
@@ -191,7 +198,7 @@ export function OrdersPage(props) {
           (all, d) => all.concat(d.chronology.reduce((ret, p) => ret.concat(p.name), [])),
           []
         )
-        devMode && console.log('statuses', statuses, statuses.filter(onlyUnique))
+        //devMode && console.log('statuses', statuses, statuses.filter(onlyUnique))
 
         setStatusOptions(statuses.filter(onlyUnique).map((u) => ({ value: u, label: u })))
 
@@ -353,7 +360,7 @@ export function OrdersPage(props) {
                       <OrderRow
                         key={ri}
                         rowClick={(e) => {
-                          setOpenDetails(e)
+                          dispatch(setOpenDetails(e))
                         }}
                         updateCart={updateCart}
                         tableHeader={tableHeaderOrders}
@@ -393,7 +400,9 @@ export function OrdersPage(props) {
                     return ret
                   })}
               </>
-            ) : null}
+            ) : (
+              <LoadingIndicator page={'orders'} />
+            )}
           </div>
         </>
       ) : (
@@ -417,7 +426,7 @@ export function OrdersPage(props) {
                 <div className="form-filter__control">
                   <Ripples
                     onClick={() => {
-                      setOpenRequisites(-1)
+                      dispatch(setOpenRequisites(-1))
                     }}
                     className="btn __blue"
                     during={1000}
@@ -441,7 +450,8 @@ export function OrdersPage(props) {
                     <RequisitesRow
                       key={ri}
                       rowClick={(e) => {
-                        setOpenRequisites(e)
+                        console.log('rowClick', e)
+                        dispatch(setOpenRequisites(e))
                       }}
                       updateCart={updateCart}
                       tableHeader={tableHeaderRequisites}
@@ -467,7 +477,9 @@ export function OrdersPage(props) {
                   return ret
                 })}
               </>
-            ) : null}
+            ) : (
+              <LoadingIndicator page={'bankinformation'} />
+            )}
           </div>
         </>
       )}

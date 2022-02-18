@@ -24,7 +24,7 @@ import LoadingIndicator from '../LoadingIndicator'
 import NextLink from '@/components/NextLink'
 
 export default function CataloguePage(props) {
-  const rtCellSizer = document.getElementById('rtCellSizer')
+  const rtCellSizer = typeof window === 'undefined' ? null : document.getElementById('rtCellSizer')
   const tableHolder = React.createRef()
 
   const {
@@ -40,6 +40,8 @@ export default function CataloguePage(props) {
     showCatPreloader,
     filterItemsHTML,
   } = props
+
+  console.log('CataloguePage', props)
 
   const history = useRouter()
 
@@ -122,6 +124,10 @@ export default function CataloguePage(props) {
   }
 
   const getColumnWidth = (accessor, headerText, bold) => {
+    if (!rtCellSizer) {
+      return 200
+    }
+
     const maxWidth = 600
     const padding = 23
     const cellLength = Math.max(
@@ -169,8 +175,6 @@ export default function CataloguePage(props) {
 
   useEffect(() => {
     if (openFilterDropdown) {
-      console.log('openFilterDropdown', filterColumn)
-
       let requestURL = ''
       if (filterColumn === 'catManufacturer') {
         requestURL = '/catalog/manufacturers'
@@ -221,6 +225,8 @@ export default function CataloguePage(props) {
 
     return ret
   }, [nestedCategories])
+
+  console.log('categoryItems', categoryItems)
 
   const catalogHTML = useMemo(() => {
     return categoryItems?.length ? (

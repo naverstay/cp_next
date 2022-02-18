@@ -7,7 +7,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import qs from 'qs'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 //import Swiper from 'react-id-swiper'
 import Ripples from 'react-ripples'
 import { SlideDown } from 'react-slidedown'
@@ -74,6 +74,35 @@ export default function CatalogueItem(props) {
     }
   }, [snippetCheckValue])
 
+  const watchSpecs = itemData?.snippet?.specs || []
+
+  const specsHTML = useMemo(() => {
+    const specsLimit = openMoreSpecs || typeof window === 'undefined' ? itemData.snippet.specs.length : 10
+
+    return (
+      <div className="catalogue-page__specs-wrapper">
+        {itemData.snippet.specs.slice(0, specsLimit).map((s, si) => {
+          return (
+            <div key={si} className={'catalogue-page__analogue-param ' + (si % 2 === 0 ? '__odd' : '__even')}>
+              <FormCheck
+                onChange={handleChange.bind(this, s.attribute.id)}
+                checked={snippetCheckValue.indexOf(s.attribute.id) > -1}
+                id={s.attribute.id}
+                name={s.attribute.id}
+                value={s.display_value}
+                error={null}
+                label={''}
+                inputRef={null}
+              />
+              <span>{s.hasOwnProperty('attribute') && (s.attribute.name || s.attribute.id || '')}</span>
+              <span>{s.display_value}</span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }, [watchSpecs])
+
   return (
     <>
       <Head>
@@ -92,7 +121,7 @@ export default function CatalogueItem(props) {
 
             <div className={'catalogue-page__item'}>
               <div className="catalogue-page__item-image">
-                <Image itemProp="image" src={itemData.image || NoImage} alt="" />
+                <img itemProp="image" src={itemData.image || NoImage} alt="" />
               </div>
               {itemData.snippet && itemData.snippet.hasOwnProperty('id') ? (
                 <dl className="catalogue-page__item-info">
@@ -157,36 +186,10 @@ export default function CatalogueItem(props) {
                   <p>Технические спецификации</p>
                 </article>
                 <div className={'catalogue-page__specs'}>
-                  <SlideDown transitionOnAppear={false}>
-                    <div className="catalogue-page__specs-wrapper">
-                      {itemData.snippet.specs
-                        .slice(0, openMoreSpecs ? itemData.snippet.specs.length : 10)
-                        .map((s, si) => {
-                          return (
-                            <div
-                              key={si}
-                              className={'catalogue-page__analogue-param ' + (si % 2 === 0 ? '__odd' : '__even')}
-                            >
-                              <FormCheck
-                                onChange={handleChange.bind(this, s.attribute.id)}
-                                checked={snippetCheckValue.indexOf(s.attribute.id) > -1}
-                                id={s.attribute.id}
-                                name={s.attribute.id}
-                                value={s.display_value}
-                                error={null}
-                                label={''}
-                                inputRef={null}
-                              />
-                              <span>{s.hasOwnProperty('attribute') && (s.attribute.name || s.attribute.id || '')}</span>
-                              <span>{s.display_value}</span>
-                            </div>
-                          )
-                        })}
-                    </div>
-                  </SlideDown>
+                  <SlideDown transitionOnAppear={false}>{specsHTML}</SlideDown>
 
                   <div className="catalogue-page__controls">
-                    {itemData.snippet.specs.length > 10 ? (
+                    {itemData.snippet.specs.length > 10 && typeof window !== 'undefined' ? (
                       <Ripples
                         onClick={() => {
                           setOpenMoreSpecs(!openMoreSpecs)

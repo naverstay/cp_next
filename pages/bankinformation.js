@@ -3,8 +3,9 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import OrdersPage from '@/components/OrdersPage'
+import { getCategoryMenu, getCurrencyAndMenu, getCurrencyList } from '@/hooks/useCatalogMenu'
 
-export default function BankPage({ ...props }) {
+function BankPage({ ...props }) {
   const router = useRouter()
 
   return (
@@ -20,3 +21,16 @@ export default function BankPage({ ...props }) {
     </React.Fragment>
   )
 }
+
+export async function getServerSideProps({ query, res }) {
+  const { catalogMenu, currencyList } = await getCurrencyAndMenu()
+
+  return {
+    props: {
+      currencyList: currencyList,
+      catalogMenu: catalogMenu,
+    },
+  }
+}
+
+export default BankPage

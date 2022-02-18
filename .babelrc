@@ -4,6 +4,12 @@
   ],
   "plugins": [
     [
+      "styled-components",
+      {
+        "ssr": true
+      }
+    ],
+    [
       "@babel/plugin-proposal-class-properties",
       {
         "loose": true

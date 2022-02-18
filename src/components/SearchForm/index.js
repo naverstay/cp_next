@@ -6,15 +6,25 @@
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import React, { useEffect, memo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Ripples from 'react-ripples'
 
+import { setFormBusy } from '../../../store/search/action'
 import FormInput from '../../components/FormInput'
 import apiPOST from '../../utils/upload'
 
 import { setInputFilter } from '@/utils/inputFilter'
 
-export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData, formBusy, setFormBusy }) {
+export function SearchForm({
+  notificationFunc,
+  onSubmitSearchForm,
+  setSearchData,
+  //, formBusy, setFormBusy
+}) {
   const history = useRouter()
+  const dispatch = useDispatch()
+
+  const { formBusy } = useSelector((state) => state.search)
 
   const formRef = React.createRef()
   const formArtNumber = React.createRef()
@@ -23,8 +33,15 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
 
   const query = history.query
 
-  const searchArt = decodeURIComponent(query?.art || '')
-  const searchQ = (decodeURIComponent(query?.q) || '1').replace(/\D/g, '')
+  console.log('SearchForm', query)
+
+  const searchArt = { [typeof window === 'undefined' ? 'value' : 'defaultValue']: decodeURIComponent(query?.art || '') }
+  const searchQ = {
+    [typeof window === 'undefined' ? 'value' : 'defaultValue']: (decodeURIComponent(query?.q) || '1').replace(
+      /\D/g,
+      ''
+    ),
+  }
 
   const [fields, setFields] = useState({
     quantity: '',
@@ -63,11 +80,9 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
   }, [])
 
   useEffect(() => {
-    if (formBusy) {
-      formArtNumber.current.value = decodeURIComponent(query?.art || '')
-      formQuantity.current.value = (decodeURIComponent(query?.q) || '1').replace(/\D/g, '')
-    }
-  }, [formBusy])
+    formArtNumber.current.value = decodeURIComponent((query?.art || '').toUpperCase()).toUpperCase()
+    formQuantity.current.value = (decodeURIComponent(query?.q) || '1').replace(/\D/g, '')
+  }, [query])
 
   const handleSubmit = (evt) => {
     handleChange('art-number', { target: formArtNumber.current })
@@ -96,8 +111,10 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
 
     setValidForm(errors['art-number'] !== null && !errors['art-number'])
 
-    setJustRedraw(justRedraw + 1)
+    //setJustRedraw(justRedraw + 1)
   }
+
+  console.log('render SearchForm')
 
   return (
     <div className="form-search" itemScope itemType="https://schema.org/WebSite">
@@ -123,11 +140,11 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
               name="art-number"
               //
               disabled={formBusy}
-              defaultValue={searchArt}
               className={`__lg${errors['art-number'] === null ? '' : errors['art-number'] ? ' __error' : ''}`}
               error={null}
               id="art-number"
               inputRef={formArtNumber}
+              {...searchArt}
             />
 
             <div className="form-tip">
@@ -162,11 +179,11 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
               name="quantity"
               //
               disabled={formBusy}
-              defaultValue={searchQ}
               className={`__lg${errors.quantity === null ? '' : errors.quantity ? ' __error' : ''}`}
               error={null}
               id="quantity"
               inputRef={formQuantity}
+              {...searchQ}
             />
 
             <div className="form-tip">
@@ -207,7 +224,7 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
             <span className="form-label">&nbsp;</span>
             <div className="form-control">
               <Ripples className={'__w-100p btn __blue __lg' + (formBusy ? ' __loader' : '')} during={1000}>
-                <button name="search-submit" disabled={formBusy} className={'btn-inner __abs'}>
+                <button disabled={formBusy} className={'btn-inner __abs'}>
                   <span>{searchBtnText}</span>
                 </button>
               </Ripples>
@@ -234,19 +251,19 @@ export function SearchForm({ notificationFunc, onSubmitSearchForm, setSearchData
                         const options = {}
 
                         setSearchData({})
-                        setFormBusy(true)
+                        dispatch(setFormBusy(true))
 
                         formData.append('file', file)
 
-                        history.push('/search')
+                        history.push('/search/', undefined, { shallow: true })
 
                         apiPOST(requestURL, formData, options, (data) => {
                           if (data.error) {
-                            setFormBusy(false)
+                            dispatch(setFormBusy(false))
                             notificationFunc('success', `Файл: ${file.name}`, 'ошибка обработки')
-                            history.push('/')
+                            history.push('/', undefined, { shallow: true })
                           } else {
-                            setFormBusy(false)
+                            dispatch(setFormBusy(false))
                             setSearchData(data)
                           }
                         })

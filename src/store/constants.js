@@ -14,3 +14,5 @@ export const APP_ROUTES = [
   'search',
   'test',
 ]
+
+export const STATIC_PAGES = ['about', 'privacy-policy', 'contacts', 'delivery']

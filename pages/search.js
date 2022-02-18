@@ -3,9 +3,13 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import FilterForm from '@/components/FilterForm'
+import { getCategoryMenu, getCurrencyAndMenu, getCurrencyList } from '@/hooks/useCatalogMenu'
+import { getSearchList } from '@/hooks/useCatalogSearch'
 
-export default function SearchPage({ ...props }) {
+function SearchPage({ ...props }) {
   const router = useRouter()
+
+  console.log('SearchPage', props)
 
   return (
     <React.Fragment>
@@ -20,3 +24,32 @@ export default function SearchPage({ ...props }) {
     </React.Fragment>
   )
 }
+
+export async function getServerSideProps({ query, res }) {
+  const { q, art } = query
+  let searchData = {}
+  let errorCode = false
+
+  if (art?.length) {
+    searchData = await new Promise((resolve, reject) => {
+      resolve(getSearchList(art, q || 1))
+    })
+    if (searchData.error) {
+      errorCode = 404
+    }
+  }
+
+  const { catalogMenu, currencyList } = await getCurrencyAndMenu()
+
+  return {
+    notFound: !!errorCode,
+    props: {
+      errorCode: errorCode,
+      currencyList: currencyList,
+      searchData: searchData,
+      catalogMenu: catalogMenu,
+    },
+  }
+}
+
+export default SearchPage

@@ -1,12 +1,17 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useState, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { Router as Router } from '../../routes'
+import { setCloseAllMenus, setOpenCatalogue } from '../../../store/menus/action'
 
 import NextLink from '@/components/NextLink'
 
-function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson }) {
-  const history = useRouter()
+function CatalogueMenu(props) {
+  const dispatch = useDispatch()
+  const router = useRouter()
+
+  const { openCatalogue } = useSelector((state) => state.menus)
+  const { catalogMenu } = props
 
   let menuTimer
   const [menuPath, setMenuPath] = useState('0')
@@ -14,7 +19,7 @@ function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson 
   const menuTreeBuilder = (menu, level = 0, parent = '0', ret = []) => {
     let sub = []
 
-    menu.forEach((m, mi) => {
+    menu?.forEach((m, mi) => {
       ret.push(
         <div
           className={'catalogue__list-item'}
@@ -28,8 +33,8 @@ function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson 
         >
           <NextLink
             aria-hidden="true"
-            route={'/' + (m.slug || '#') + '/'}
-            as={'/catalog'}
+            to={'/' + (m.slug || '#') + '/'}
+            //as={'/catalog'}
             className={
               'catalogue__list-link' +
               (JSON.stringify(menuPath.split('-').slice(0, level + 2)) === JSON.stringify(`${parent}-${mi}`.split('-'))
@@ -37,15 +42,17 @@ function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson 
                 : '')
             }
             //onClick={(e) => {
-            //  e.preventDefault()
+            //  console.log('onClick', e)
+            //  //e.preventDefault()
+            //  dispatch(setCloseAllMenus())
             //  if (e.target.classList.contains('__active')) {
-            //    setOpenCatalogue(false)
-            //    Router.push('/' + (m.slug || '#'))
+            //    router.push('/' + (m.slug || '#')).then(() => {
+            //      console.log('catalog click')
+            //    })
             //  }
-            //  return false
+            //  //return false
             //}}
           >
-            {/*{parent}*/}
             {m.name}
           </NextLink>
         </div>
@@ -74,9 +81,13 @@ function CatalogueMenu({ setOpenCatalogue, openCatalogue, menuJson, setMenuJson 
     )
   }
 
-  return menuJson.length ? (
+  const catalogHTML = useMemo(() => {
+    return menuTreeBuilder(catalogMenu)
+  }, [catalogMenu])
+
+  return catalogMenu?.length ? (
     <div className={'catalogue' + (openCatalogue ? ' __open' : '')}>
-      <div className="catalogue__inner">{menuTreeBuilder(menuJson)}</div>
+      <div className="catalogue__inner">{catalogHTML}</div>
     </div>
   ) : null
 }

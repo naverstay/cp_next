@@ -1,37 +1,26 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { setOpenMobMenu } from '../../../store/menus/action'
 
 import CatalogueMenu from '@/components/CatalogueMenu'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import LoadingIndicator from '@/components/LoadingIndicator'
 import SearchForm from '@/components/SearchForm'
-import { flatDeep } from '@/utils/flatDeep'
 import { getJsonData } from '@/utils/getJsonData'
-import apiGET from '@/utils/search'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
-import { uniqArray } from '@/utils/uniqArray'
 import { validateJSON } from '@/utils/validateJSON'
 
-export default function Layout(props) {
+function Layout(pageProps) {
   const history = useRouter()
+  const dispatch = useDispatch()
 
-  const {
-    devMode,
-    children,
-    setOpenMobMenu,
-    setCategorySlugLinks,
-    menuJson,
-    setMenuJson,
-    tableHeadFixed,
-    appDrag,
-    setAppDrag,
-    setProfileChecked,
-    profile,
-    setProfile,
-    openCatalogue,
-    setOpenCatalogue,
-  } = props
+  const { children, appDrag, setAppDrag, setProfileChecked, setProfile, catalogMenu } = pageProps
+  const { openMobMenu } = useSelector((state) => state.menus)
+  const { tableHeadFixed, fetchingDataInProgress } = useSelector((state) => state.search)
 
   const appHeight = () => {
     const doc = document.documentElement
@@ -40,22 +29,15 @@ export default function Layout(props) {
   }
 
   const handleScroll = (event) => {
-    setOpenMobMenu(false)
+    if (openMobMenu) {
+      dispatch(setOpenMobMenu(false))
+    }
 
     document.body.classList[document.body.scrollTop > 0 ? 'add' : 'remove']('__show-gotop')
   }
 
   useEffect(() => {
     // TODO catalogue menu list
-    const requestURL = '/catalog/categories'
-
-    apiGET(requestURL, {}, (data) => {
-      if (data && data.length) {
-        let uniqueArray = uniqArray(flatDeep(data))
-        setCategorySlugLinks(uniqueArray)
-        setMenuJson(data)
-      }
-    })
 
     const profileLS = localStorage.getItem('catpart-profile')
 
@@ -126,9 +108,13 @@ export default function Layout(props) {
     window.log = ['localhost', 'html'].indexOf(location.hostname.split('.')[0]) > -1
   }, [])
 
+  console.log('render Layout', tableHeadFixed)
+
   return (
     <div className={`app-wrapper${appDrag ? ' __over' : ''}`}>
-      <Header {...props} />
+      <Header {...pageProps} />
+
+      {/*<Clock lastUpdate={tick.lastUpdate} light={tick.light} />*/}
 
       <div
         aria-hidden="true"
@@ -138,17 +124,16 @@ export default function Layout(props) {
         }}
       />
 
-      <CatalogueMenu
-        menuJson={menuJson}
-        setMenuJson={setMenuJson}
-        setOpenCatalogue={setOpenCatalogue}
-        openCatalogue={openCatalogue}
-      />
+      <CatalogueMenu catalogMenu={catalogMenu} />
 
       <main className={`main${history.asPath === '/' ? ' __center' : ''}`}>
-        <SearchForm {...props} />
+        <SearchForm {...pageProps} />
 
-        <div className="main-content">{children}</div>
+        {fetchingDataInProgress && fetchingDataInProgress !== 'search' ? (
+          <LoadingIndicator page={fetchingDataInProgress} />
+        ) : (
+          <div className="main-content">{children}</div>
+        )}
 
         {tableHeadFixed}
       </main>
@@ -157,3 +142,5 @@ export default function Layout(props) {
     </div>
   )
 }
+
+export default Layout

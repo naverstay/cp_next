@@ -48,13 +48,17 @@ function checkStatus(response) {
  */
 
 export default function apiPOST(url, data, options, cb, json = false) {
+  let headers = {
+    'Content-Type': json ? 'application/json' : 'multipart/form-data',
+  }
+
+  if (typeof window !== 'undefined') {
+    headers.Authorization = `Bearer ${localStorage.getItem('access_token') || ''}`
+  }
+
   return axios
     .post(API + url, data, {
-      headers: {
-        //'Content-Type': 'application/json',
-        'Content-Type': json ? 'application/json' : 'multipart/form-data',
-        Authorization: `Bearer ${localStorage.getItem('access_token') || ''}`,
-      },
+      headers: headers,
       data: data,
       params: options,
       cancelToken: new CancelToken(function executor(c) {

@@ -312,7 +312,7 @@
   }
 }
 
-.notification {
+.rnc__notification {
   pointer-events: all;
   //height: auto !important;
 
@@ -321,9 +321,16 @@
   }
 }
 
-.notification__item {
+.rnc__base {
+  > * {
+    pointer-events: none !important;
+  }
+}
 
-  &.notification__item--default {
+.rnc__notification {
+  pointer-events: all;
+
+  .rnc__notification-item {
     border: 0;
     padding: 20px;
     color: #fff;
@@ -337,7 +344,7 @@
     display: flex;
     align-items: center;
 
-    .notification__content {
+    .rnc__notification-content {
       padding: 0;
       display: block;
     }

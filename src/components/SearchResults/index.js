@@ -7,35 +7,24 @@
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
 import Collapsible from 'react-collapsible'
+import { useDispatch } from 'react-redux'
 
+import { setTableHeadFixed } from '../../../store/search/action'
 import SearchRow from '../SearchRow'
 
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function SearchResults(props) {
-  const {
-    bom,
-    list,
-    updateTime,
-    relativeTime,
-    currency,
-    currencyList,
-    notificationFunc,
-    updateCart,
-    devMode,
-    setTableHeadFixed,
-  } = props
+  const { bom, list, updateTime, relativeTime, currency, currencyList, notificationFunc, updateCart, devMode } = props
 
   const tableHead = useRef()
+  const dispatch = useDispatch()
 
   let loaderInterval
-  const stepCounter = 0
   let listCounter = 0
-  const rowCounter = 0
   const INF_STEP = 30
 
   const [rowCount, setRowCount] = useState([])
-  const [hasMore, setHasMore] = useState(true)
 
   let tableHeader = {
     supplier: 'Поставщик',
@@ -71,6 +60,8 @@ export function SearchResults(props) {
     </div>
   )
 
+  console.log('tableHeader', tableHeader, tHead)
+
   const handleScroll = (event) => {
     if (tableHead.current && !relativeTime) {
       tableHead.current
@@ -82,7 +73,9 @@ export function SearchResults(props) {
   }
 
   useEffect(() => {
-    setTableHeadFixed(<div className="search-results__table __sticky">{tHead}</div>)
+    dispatch(setTableHeadFixed(<div className="search-results__table __sticky">{tHead}</div>))
+
+    console.log('tHead', tHead)
 
     document.body.addEventListener('scroll', handleScroll)
 

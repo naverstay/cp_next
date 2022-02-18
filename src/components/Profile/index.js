@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import Ripples from 'react-ripples'
 
 import FormInput from '../../components/FormInput'
 import apiPATCH from '../../utils/change'
 
 const Profile = (props) => {
-  let { notificationFunc, logOut, devMode, profile, openProfile } = props
+  const { asideOpen, openProfile } = useSelector((state) => state.menus)
+
+  let { notificationFunc, logOut, devMode, profile } = props
 
   const authRef = React.createRef()
   const resetRef = React.createRef()
@@ -82,8 +85,6 @@ const Profile = (props) => {
   }
 
   useEffect(() => {
-    console.log('openProfile', openProfile)
-
     return () => {
       setFields({
         'profile-login': '',
@@ -95,8 +96,6 @@ const Profile = (props) => {
       })
     }
   }, [])
-
-  console.log('openProfile', openProfile)
 
   return (
     <div className="profile">

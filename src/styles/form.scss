@@ -553,17 +553,21 @@
     }
 
     // todo fix extend
-    //&.__lg .select__control {
-    //  @extend .input.__lg;
-    //}
-    //
-    //&.__success .select__control {
-    //  @extend .input.__success;
-    //}
-    //
-    //&.__error .select__control {
-    //  @extend .input.__error;
-    //}
+    &.__lg .select__control {
+      //@extend .input.__lg;
+      padding: 15px 20px;
+      height: 50px;
+    }
+
+    &.__success .select__control {
+      //@extend .input.__success;
+      border-color: $main_blue !important;
+    }
+
+    &.__error .select__control {
+      //@extend .input.__error;
+      border-color: #f00 !important;
+    }
 
     &__menu {
 

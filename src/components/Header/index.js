@@ -1,8 +1,16 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useDetectClickOutside } from 'react-detect-click-outside'
+import { useSelector, useDispatch } from 'react-redux'
 import Ripples from 'react-ripples'
 
+import {
+  setOpenMobMenu,
+  setOpenCatalogue,
+  setCloseAllMenus,
+  setOpenResetPassword,
+  setOpenAuthPopup,
+} from '../../../store/menus/action'
 import apiGET from '../../utils/search'
 import apiPOST from '../../utils/upload'
 import FormInput from '../FormInput'
@@ -13,26 +21,31 @@ import { validateEmail } from '@/utils/validateEmail'
 
 function Header(props) {
   const {
-    openMobMenu,
-    setOpenMobMenu,
+    //openMobMenu,
+    //setOpenMobMenu,
     profile,
     devMode,
     setProfile,
     notificationFunc,
-    openAuthPopup,
-    setOpenAuthPopup,
+    //openAuthPopup,
+    //setOpenAuthPopup,
     cartCount,
-    openCatalogue,
-    setOpenCatalogue,
-    openResetPassword,
-    setOpenResetPassword,
+    //openCatalogue,
+    //setOpenCatalogue,
+    //openResetPassword,
+    //setOpenResetPassword,
   } = props
 
   const history = useRouter()
+  const dispatch = useDispatch()
+
+  const { openMobMenu, openCatalogue, openAuthPopup, openResetPassword } = useSelector((state) => state.menus)
 
   const headerRef = useDetectClickOutside({
     onTriggered: () => {
-      setOpenMobMenu(false)
+      if (openMobMenu) {
+        dispatch(setOpenMobMenu(false))
+      }
     },
   })
 
@@ -65,8 +78,13 @@ function Header(props) {
 
   const popupRef = useDetectClickOutside({
     onTriggered: () => {
-      setOpenResetPassword(false)
-      setOpenAuthPopup(false)
+      if (openResetPassword) {
+        dispatch(setOpenResetPassword(false))
+      }
+
+      if (openAuthPopup) {
+        dispatch(setOpenAuthPopup(false))
+      }
     },
   })
 
@@ -89,7 +107,7 @@ function Header(props) {
       localStorage.setItem('catpart-profile', JSON.stringify(data))
 
       setProfile(data)
-      history.push('/orders')
+      history.push('/orders', undefined, { shallow: true })
     })
   }
 
@@ -158,7 +176,7 @@ function Header(props) {
       }
     })
 
-    setOpenAuthPopup(false)
+    dispatch(setOpenAuthPopup(false))
 
     // const url = '/set/deal';
     //
@@ -181,7 +199,7 @@ function Header(props) {
 
     devMode && console.log('resetSubmit')
 
-    setOpenResetPassword(false)
+    dispatch(setOpenResetPassword(false))
 
     const requestURL = '/auth/restore'
 
@@ -201,12 +219,24 @@ function Header(props) {
     })
   }
 
-  // useEffect(() => {
+  //useEffect(() => {
   //  if (openAuthPopup) {
-  //    handleChange('auth-login', { target: loginInput.current });
-  //    handleChange('auth-password', { target: passwordInput.current });
+  //    handleChange('auth-login', { target: loginInput.current })
+  //    handleChange('auth-password', { target: passwordInput.current })
   //  }
-  // }, [openAuthPopup]);
+  //}, [openAuthPopup])
+
+  useEffect(() => {
+    //dispatch(setCloseAllMenus())
+  }, [history.asPath])
+
+  useEffect(() => {
+    console.log('openMobMenu', openMobMenu)
+  }, [openMobMenu])
+
+  useEffect(() => {
+    document.body.classList[openCatalogue ? 'add' : 'remove']('__no-overflow')
+  }, [openCatalogue])
 
   useEffect(() => {
     let userFields = {}
@@ -234,12 +264,14 @@ function Header(props) {
     }
   }, [openAuthPopup])
 
+  console.log('render Header', openMobMenu)
+
   return (
     <header ref={headerRef} className={`header${openMobMenu ? ' __open-mob-menu' : ''}`}>
       <div className="header-left">
         <button
           onClick={() => {
-            setOpenMobMenu(!openMobMenu)
+            dispatch(setOpenMobMenu(!openMobMenu))
           }}
           className="header-menu btn __blue"
         >
@@ -255,7 +287,7 @@ function Header(props) {
           className={'btn __blue btn-catalogue' + (openCatalogue ? ' __active' : '')}
           onClick={() => {
             console.log('openCatalogue', openCatalogue)
-            setOpenCatalogue(!openCatalogue)
+            dispatch(setOpenCatalogue(!openCatalogue))
           }}
         >
           <span className="btn-inner">
@@ -309,7 +341,7 @@ function Header(props) {
           <div ref={popupRef} className="header-popup__holder">
             <Ripples
               onClick={() => {
-                setOpenAuthPopup(!openAuthPopup)
+                dispatch(setOpenAuthPopup(!openAuthPopup))
                 devMode && console.log('open', openAuthPopup)
               }}
               during={1000}
@@ -386,8 +418,8 @@ function Header(props) {
               <p>
                 <button
                   onClick={() => {
-                    setOpenResetPassword(!openResetPassword)
-                    setOpenAuthPopup(!openAuthPopup)
+                    dispatch(setOpenResetPassword(!openResetPassword))
+                    dispatch(setOpenAuthPopup(!openAuthPopup))
                   }}
                   className="header-navbar__link"
                 >

@@ -5,9 +5,7 @@
  */
 
 import Head from 'next/head'
-import React, { useEffect } from 'react'
-
-// import messages from './messages';
+import React from 'react'
 
 export default function NotFound(props) {
   return (

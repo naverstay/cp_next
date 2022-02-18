@@ -6,9 +6,12 @@
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import React, { useEffect, memo, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Ripples from 'react-ripples'
 import { SlideDown } from 'react-slidedown'
 
+import { setBusyOrder } from '../../../store/cart/action'
+import { setOpenAuthPopup } from '../../../store/menus/action'
 import FormCheck from '../../components/FormCheck'
 import FormInput from '../../components/FormInput'
 import FormSelect from '../../components/FormSelect'
@@ -29,15 +32,16 @@ export function OrderForm({
   delivery,
   updateCart,
   profile,
-  setOpenAuthPopup,
+  //setOpenAuthPopup,
   notificationFunc,
   currency,
   totalCart,
-  setBusyOrder,
+  //setBusyOrder,
   setOrderSent,
   devMode,
 }) {
   const history = useRouter()
+  const dispatch = useDispatch()
 
   const emailInput = React.createRef()
   const nameInput = React.createRef()
@@ -97,7 +101,7 @@ export function OrderForm({
     setJustRedraw(justRedraw + 1)
 
     if (emailExists) {
-      setOpenAuthPopup(true)
+      dispatch(setOpenAuthPopup(true))
       notificationFunc(
         'success',
         'Пользователь существует.',
@@ -189,7 +193,7 @@ export function OrderForm({
     }
 
     setBusy(true)
-    setBusyOrder(true)
+    dispatch(setBusyOrder(true))
 
     //if (!store.hasOwnProperty('order')) {
     //  store.order = [];
@@ -276,13 +280,13 @@ export function OrderForm({
           })
 
           notificationFunc('success', 'Запрос на проработку отправлен!', 'И уже обрабатывается ;)')
-          history.push('/')
+          history.push('/', undefined, { shallow: true })
         } else {
           notificationFunc('success', 'Ошибка обработки запроса.', 'Повторите позже.')
         }
 
         setBusy(false)
-        setBusyOrder(false)
+        dispatch(setBusyOrder(false))
       })
     } else if (products.length) {
       let orderDB = {
@@ -336,12 +340,12 @@ export function OrderForm({
         }
 
         setBusy(false)
-        setBusyOrder(false)
+        dispatch(setBusyOrder(false))
       })
     } else {
       notificationFunc('success', 'В заказе нет товаров.', `Заказ не отправлен.`)
       setBusy(false)
-      setBusyOrder(false)
+      dispatch(setBusyOrder(false))
     }
   }
 

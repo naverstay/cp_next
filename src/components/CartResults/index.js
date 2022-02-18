@@ -6,20 +6,18 @@
 
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
+import { setTableHeadFixed } from '../../../store/search/action'
 import CartRow from '../CartRow'
 
-import { getJsonData } from '@/utils/getJsonData'
 import { smoothScrollTo } from '@/utils/smoothScrollTo'
 
 export function CartResults(props) {
-  let { currency, updateCart, notificationFunc, setTableHeadFixed, list } = props
-
-  //const [list, setList] = useState([])
-
-  console.log('list', list)
+  let { currency, updateCart, notificationFunc, list } = props
 
   const tableHead = useRef()
+  const dispatch = useDispatch()
 
   //useEffect(() => {
   //  let store = localStorage.getItem('catpart')
@@ -61,7 +59,7 @@ export function CartResults(props) {
   }
 
   useEffect(() => {
-    setTableHeadFixed(<div className={'search-results__table __sticky __cart'}>{tHead}</div>)
+    dispatch(setTableHeadFixed(<div className={'search-results__table __sticky __cart'}>{tHead}</div>))
 
     document.body.addEventListener('scroll', handleScroll)
 

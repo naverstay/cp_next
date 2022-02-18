@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { setAsideOpen } from '../../../store/menus/action'
 
 const AsideContainer = (props) => {
-  let { setAsideOpen, children, className } = props
+  const dispatch = useDispatch()
+
+  let { children, className } = props
 
   return (
     <div className={'aside-holder' + className}>
@@ -9,7 +14,7 @@ const AsideContainer = (props) => {
         aria-hidden="true"
         className="aside-overlay"
         onClick={() => {
-          setAsideOpen(false)
+          dispatch(setAsideOpen(false))
         }}
       />
       <div className="aside-container">
@@ -18,7 +23,7 @@ const AsideContainer = (props) => {
         <div
           aria-hidden="true"
           onClick={() => {
-            setAsideOpen(false)
+            dispatch(setAsideOpen(false))
           }}
           className="aside-close btn __blue"
         >

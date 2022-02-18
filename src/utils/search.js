@@ -47,12 +47,17 @@ function checkStatus(response) {
  */
 
 export default function apiGET(url, options, cb, attr = '') {
+  let headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  }
+
+  if (typeof window !== 'undefined') {
+    headers.Authorization = `Bearer ${localStorage.getItem('access_token') || ''}`
+  }
+
   return axios(API + url + attr, {
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('access_token') || ''}`,
-    },
+    headers: headers,
     data: {},
     params: options,
     paramsSerializer: (params) => {

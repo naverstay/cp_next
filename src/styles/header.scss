@@ -52,7 +52,7 @@
       padding-left: 35px;
     }
 
-    @include respond-to-max($wide) {
+    @include respond-to-max($wide + 1) {
       transition: transform .3s, box-shadow .3s;
       z-index: 9;
       padding-top: 115px;
@@ -170,7 +170,6 @@
           display: none;
         }
       }
-
     }
   }
 

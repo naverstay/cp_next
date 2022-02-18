@@ -1,12 +1,18 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Ripples from 'react-ripples'
+
+import { setOpenProfile } from '../../../store/menus/action'
 
 import NextLink from '@/components/NextLink'
 
 const CabinetTabs = (props) => {
   const history = useRouter()
-  let { activeIndex, setActiveIndex, openProfile, setOpenProfile } = props
+  const dispatch = useDispatch()
+  const { asideOpen, openProfile } = useSelector((state) => state.menus)
+
+  let { activeIndex, setActiveIndex } = props
 
   //const [openProfile, setOpenProfile] = useState(openProfileJotai)
 
@@ -28,7 +34,7 @@ const CabinetTabs = (props) => {
               className={'btn __gray' + (activeIndex === 0 ? ' active' : '')}
               during={1000}
             >
-              <NextLink to={'/orders'} className="btn-inner">
+              <NextLink to={'/orders/'} className="btn-inner">
                 <span>Список заказов</span>
               </NextLink>
             </Ripples>
@@ -46,7 +52,7 @@ const CabinetTabs = (props) => {
               className={'btn __gray' + (activeIndex === 1 ? ' active' : '')}
               during={1000}
             >
-              <NextLink to={'/bankinformation'} className="btn-inner">
+              <NextLink to={'/bankinformation/'} className="btn-inner">
                 <span>Реквизиты</span>
               </NextLink>
             </Ripples>
@@ -55,7 +61,7 @@ const CabinetTabs = (props) => {
             <Ripples
               aria-hidden="true"
               onClick={() => {
-                setOpenProfile(true)
+                dispatch(setOpenProfile(true))
               }}
               className={'btn __gray'}
               during={1000}

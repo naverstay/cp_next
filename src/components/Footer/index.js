@@ -17,6 +17,8 @@ function Footer() {
     })
   }, [])
 
+  console.log('render Footer')
+
   return (
     <footer className="footer row">
       <div className="column lg-col-10">

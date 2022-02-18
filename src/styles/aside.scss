@@ -74,10 +74,11 @@
     z-index: 10;
 
     span {
+      will-change: transform;
       position: relative;
       z-index: 1;
       background: #fff;
-      border-radius: 10px;
+      border-radius: 1px;
       height: 2px;
       margin: 1px auto;
       width: 50%;

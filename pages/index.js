@@ -2,7 +2,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-export default function IndexPage(props) {
+import { getCategoryList } from '@/hooks/useCatalogData'
+import { getCategoryMenu, getCurrencyAndMenu, getCurrencyList } from '@/hooks/useCatalogMenu'
+import { STATIC_PAGES } from '@/store/constants'
+import apiGET from '@/utils/search'
+
+function IndexPage(props) {
   const history = useRouter()
 
   console.log('IndexPage', props, history)
@@ -16,3 +21,16 @@ export default function IndexPage(props) {
     </Head>
   )
 }
+
+export async function getServerSideProps({ query, res }) {
+  const { catalogMenu, currencyList } = await getCurrencyAndMenu()
+
+  return {
+    props: {
+      currencyList: currencyList,
+      catalogMenu: catalogMenu,
+    },
+  }
+}
+
+export default IndexPage
