@@ -54,7 +54,7 @@ export function SearchForm({
   })
   const [validForm, setValidForm] = useState(false)
 
-  const searchBtnText = history.pathname === '/' ? 'Искать' : 'Продолжить искать'
+  const searchBtnText = history.asPath === '/' ? 'Искать' : 'Продолжить искать'
 
   useEffect(() => {
     setInputFilter(formQuantity.current, function (value) {

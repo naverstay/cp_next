@@ -5,12 +5,12 @@
 
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
-import React, { useEffect, memo, useState } from 'react'
+import React, { useEffect, memo, useState, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import Ripples from 'react-ripples'
 import { SlideDown } from 'react-slidedown'
 
-import { setBusyOrder } from '../../../store/cart/action'
+import { setBusyOrder, setOrderSent } from '../../../store/cart/action'
 import { setOpenAuthPopup } from '../../../store/menus/action'
 import FormCheck from '../../components/FormCheck'
 import FormInput from '../../components/FormInput'
@@ -37,7 +37,7 @@ export function OrderForm({
   currency,
   totalCart,
   //setBusyOrder,
-  setOrderSent,
+  //setOrderSent,
   devMode,
 }) {
   const history = useRouter()
@@ -62,15 +62,16 @@ export function OrderForm({
   const [justRedraw, setJustRedraw] = useState(0)
   const [totalPrice, setTotalPrice] = useState(0)
   const [errors, setErrors] = useState({
-    'order-email': null,
-    'order-name': null,
-    'order-phone': null,
+    'order-email': profile?.['email'] ? '' : null,
+    'order-name': profile?.['contact_name'] ? '' : null,
+    'order-phone': profile?.['contact_phone'] ? '' : null,
     'order-inn': null,
     'order-delivery': null,
     'order-agreement': null,
   })
 
   const [busy, setBusy] = useState(false)
+  const [emailExists, setEmailExists] = useState(false)
   const [validForm, setValidForm] = useState(false)
   const [deliveryOptions, setDeliveryOptions] = useState([])
   const [preSelectedDelivery, setPreSelectedDelivery] = useState(-1)
@@ -81,8 +82,6 @@ export function OrderForm({
     devMode && console.log('handleClear', field)
     fields[field] = ''
   }
-
-  let emailExists = false
 
   const validate = () => {
     const user = localStorage.getItem('catpart-user')
@@ -95,6 +94,8 @@ export function OrderForm({
     localStorage.setItem('catpart-user', JSON.stringify(Object.assign(userFields, fields)))
 
     setErrors(errors)
+
+    console.log('setValidForm', errors, profile, userFields)
 
     setValidForm(!Object.values(errors).filter((er) => er === null || er.length).length)
 
@@ -163,9 +164,10 @@ export function OrderForm({
             fields[field],
             (e) => {
               devMode && console.log(fields[field], 'exists', e.hasOwnProperty('exists'), e.exists)
-              emailExists = e.hasOwnProperty('exists') && e.exists
+              const exist = e.hasOwnProperty('exists') && e.exists
+              setEmailExists(exist)
 
-              errors[field] = emailExists ? 'Пользователь существует.' : ''
+              errors[field] = exist ? 'Пользователь существует.' : ''
               validate()
             },
             (e) => {
@@ -193,20 +195,22 @@ export function OrderForm({
     }
 
     setBusy(true)
-    dispatch(setBusyOrder(true))
+    //dispatch(setBusyOrder(true))
 
-    //if (!store.hasOwnProperty('order')) {
-    //  store.order = [];
-    //  localStorage.setItem('catpart', JSON.stringify(store));
-    //}
+    if (!store.hasOwnProperty('order')) {
+      store.order = []
+      localStorage.setItem('catpart', JSON.stringify(store))
+    }
 
     let ymproducts = []
 
     const products = store.map((s) => {
       const priceIndex = findPriceIndex(s.pricebreaks, s.cart)
-      const price = priceFormatter(
-        parseFloat(s.pricebreaks[priceIndex].price).toFixedCustom(currency.precision),
-        currency.precision
+      const price = Number(
+        priceFormatter(
+          parseFloat(s.pricebreaks[priceIndex].price).toFixedCustom(currency.precision),
+          currency.precision
+        ).replace(',', '.')
       )
 
       ymproducts.push({
@@ -258,35 +262,46 @@ export function OrderForm({
         ymproducts = elaboration
       }
 
+      let done = false
+
       apiORDERDB(url, orderDB, {}, (respData) => {
-        devMode && console.log('respData', respData)
-        if (respData && respData.hasOwnProperty('status') && respData.status === 200) {
-          if (typeof ym === 'function') {
-            ym(81774553, 'reachGoal', 'senttheorder')
+        devMode && console.log('respData', respData?.status, respData?.status === 200, done)
+
+        new Promise((resolve) => {
+          resolve(respData && respData.hasOwnProperty('status') && respData.status === 200)
+        }).then((success) => {
+          console.log('resolve', success)
+
+          if (success) {
+            if (typeof ym === 'function') {
+              ym(81774553, 'reachGoal', 'senttheorder')
+            }
+
+            if (typeof window.gTag === 'function') {
+              window.gTag({
+                event: 'order',
+                ecommerce: {
+                  currencyCode: 'RUB',
+                  purchase: {
+                    actionField: {
+                      id: `gtm_${new Date().getTime()}`,
+                    },
+                    // amount: (totalCart / currency.exChange).toFixedCustom(2),
+                    products: ymproducts,
+                  },
+                },
+              })
+            }
+
+            notificationFunc('success', 'Запрос на проработку отправлен!', 'И уже обрабатывается ;)')
+            history.push('/', undefined, { shallow: true })
+          } else {
+            notificationFunc('success', 'Ошибка обработки запроса.', 'Повторите позже.')
           }
 
-          window.gTag({
-            event: 'order',
-            ecommerce: {
-              currencyCode: 'RUB',
-              purchase: {
-                actionField: {
-                  id: `gtm_${new Date().getTime()}`,
-                },
-                // amount: (totalCart / currency.exChange).toFixedCustom(2),
-                products: ymproducts,
-              },
-            },
-          })
-
-          notificationFunc('success', 'Запрос на проработку отправлен!', 'И уже обрабатывается ;)')
-          history.push('/', undefined, { shallow: true })
-        } else {
-          notificationFunc('success', 'Ошибка обработки запроса.', 'Повторите позже.')
-        }
-
-        setBusy(false)
-        dispatch(setBusyOrder(false))
+          setBusy(false)
+          dispatch(setBusyOrder(false))
+        })
       })
     } else if (products.length) {
       let orderDB = {
@@ -311,36 +326,48 @@ export function OrderForm({
       //  }
       // });
 
+      let done = false
+
       apiORDERDB(url, orderDB, {}, (respData) => {
-        devMode && console.log('respData', respData)
-        if (respData && respData.hasOwnProperty('status') && respData.status === 200) {
-          if (typeof ym === 'function') {
-            ym(81774553, 'reachGoal', 'senttheorder')
+        devMode && console.log('respData', respData?.status, respData?.status === 200, done)
+
+        new Promise((resolve) => {
+          resolve(respData && respData.hasOwnProperty('status') && respData.status === 200)
+        }).then((success) => {
+          console.log('resolve', success)
+
+          if (success) {
+            if (typeof ym === 'function') {
+              ym(81774553, 'reachGoal', 'senttheorder')
+            }
+
+            if (typeof window.gTag === 'function') {
+              window.gTag({
+                event: 'order',
+                ecommerce: {
+                  currencyCode: 'RUB',
+                  purchase: {
+                    actionField: {
+                      id: `gtm_${new Date().getTime()}`,
+                    },
+                    // amount: (totalCart / currency.exChange).toFixedCustom(2),
+                    products: ymproducts,
+                  },
+                },
+              })
+            }
+
+            notificationFunc('success', 'Заказ доставлен!', 'И уже обрабатывается ;)')
+            updateCart(null, 0, {}, true)
+            dispatch(setOrderSent(true))
+            history.push('/', undefined, { shallow: true })
+          } else {
+            notificationFunc('success', 'Ошибка обработки заказа.', 'Повторите позже.')
           }
 
-          window.gTag({
-            event: 'order',
-            ecommerce: {
-              currencyCode: 'RUB',
-              purchase: {
-                actionField: {
-                  id: `gtm_${new Date().getTime()}`,
-                },
-                // amount: (totalCart / currency.exChange).toFixedCustom(2),
-                products: ymproducts,
-              },
-            },
-          })
-
-          notificationFunc('success', 'Заказ доставлен!', 'И уже обрабатывается ;)')
-          setOrderSent(true)
-          updateCart(null, 0, {}, true)
-        } else {
-          notificationFunc('success', 'Ошибка обработки заказа.', 'Повторите позже.')
-        }
-
-        setBusy(false)
-        dispatch(setBusyOrder(false))
+          setBusy(false)
+          dispatch(setBusyOrder(false))
+        })
       })
     } else {
       notificationFunc('success', 'В заказе нет товаров.', `Заказ не отправлен.`)
@@ -380,7 +407,22 @@ export function OrderForm({
     }
   }, [totalCart])
 
+  //useEffect(() => {
+  //  console.log('profile', profile)
+  //  setErrors({
+  //    ...errors,
+  //    'order-email': profile?.['email'] ? '' : null,
+  //    'order-name': profile?.['contact_name'] ? '' : null,
+  //    'order-phone': profile?.['contact_phone'] ? '' : null,
+  //  })
+  //}, [profile])
+
   useEffect(() => {
+    console.log('totalCart', totalCart, !elaboration?.length)
+    if (!elaboration?.length && totalCart !== undefined && totalCart === 0) {
+      //history.push('/', undefined, { shallow: true })
+    }
+
     setInputFilter(phoneInput.current, function (value) {
       return /^\+?\d*$/.test(value) // Allow digits and '+' on beginning only, using a RegExp
     })
@@ -404,6 +446,8 @@ export function OrderForm({
       setErrors(errors)
       validate()
     }
+
+    console.log('user', user)
 
     if (user) {
       const userFields = getJsonData(user)
@@ -449,11 +493,23 @@ export function OrderForm({
       }
     }
 
+    if (!(elaboration && elaboration.length) && !totalCart) {
+      //history.push('/')
+    }
+
     setDeliveryOptions([...deliveryList])
 
     return () => {
       phoneInput.current = false
     }
+  }, [])
+
+  const freeDeliveryHTML = useMemo(() => {
+    return totalCart > 20000 ? (
+      <p className={'form-free_shipping'}>
+        Сумма вашего заказа больше 20&nbsp;000 рублей. Для вас доставка за наш счёт.
+      </p>
+    ) : null
   }, [])
 
   return (
@@ -483,7 +539,7 @@ export function OrderForm({
           onBlur={handleChange.bind(this, 'order-email')}
           placeholder="Ваш email"
           name="order-email"
-          disabled={profile.hasOwnProperty('email')}
+          disabled={Boolean(profile?.['email'])}
           //
           error={errors['order-email']}
           className="__lg"
@@ -503,7 +559,7 @@ export function OrderForm({
           onBlur={handleChange.bind(this, 'order-name')}
           placeholder="ФИО"
           name="order-name"
-          disabled={profile.hasOwnProperty('email')}
+          disabled={Boolean(profile?.['contact_name'])}
           //
           error={errors['order-name']}
           className="__lg"
@@ -523,7 +579,7 @@ export function OrderForm({
           onBlur={handleChange.bind(this, 'order-phone')}
           placeholder="Телефон"
           name="order-phone"
-          disabled={profile.hasOwnProperty('email')}
+          disabled={Boolean(profile?.['contact_phone'])}
           //
           error={errors['order-phone']}
           className="__lg"
@@ -591,13 +647,11 @@ export function OrderForm({
 
         {delivery && (
           <>
-            <SlideDown>
-              {totalCart > 20000 ? (
-                <p className={'form-free_shipping'}>
-                  Сумма вашего заказа больше 20&nbsp;000 рублей. Для вас доставка за наш счёт.
-                </p>
-              ) : null}
-            </SlideDown>
+            {typeof window === 'undefined' ? (
+              freeDeliveryHTML
+            ) : (
+              <SlideDown transitionOnAppear={false}>{freeDeliveryHTML}</SlideDown>
+            )}
 
             <FormCheck
               onChange={handleChange.bind(this, 'order-agreement')}

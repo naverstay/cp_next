@@ -6,13 +6,8 @@ import { ReactNotifications, Store } from 'react-notifications-component'
 import { useDispatch, useSelector } from 'react-redux'
 import { SWRConfig } from 'swr'
 
-import {
-  setAsideOpen,
-  setCloseAllMenus,
-  setOpenDetails,
-  setOpenProfile,
-  setOpenRequisites,
-} from '../../../store/menus/action'
+import { setOrderSent } from '../../../store/cart/action'
+import { setCloseAllMenus, setOpenDetails, setOpenProfile, setOpenRequisites } from '../../../store/menus/action'
 import { setFetchingDataInProgress } from '../../../store/search/action'
 import { setFormBusy } from '../../../store/search/action'
 
@@ -27,7 +22,6 @@ import {
   cartCountJotai,
   isAbove1500Jotai,
   isDevModeJotai,
-  openDetailsJotai,
   profileCheckedJotai,
   profileJotai,
   searchCountJotai,
@@ -67,9 +61,6 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
   const [currency, setCurrency] = useState(currencyJotai)
   const [totalCart, setTotalCart] = useState(totalCartJotai)
   const [searchCount, setSearchCount] = useState(searchCountJotai)
-  //const [openProfile, setOpenProfile] = useState(openProfileJotai)
-  //const [openRequisites, setOpenRequisites] = useState(openRequisitesJotai)
-  //const [openDetails, setOpenDetails] = useState(openDetailsJotai)
 
   const getUSDExchange = () => {
     const USD = currencyList.find((f) => f.name === 'USD')
@@ -210,10 +201,6 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
   const sendSearchRequest = (options) => {
     const requestURL = '/search'
 
-    dispatch(setFormBusy(true))
-
-    setSearchData({})
-
     setSearchCount(+(options?.c || 1))
 
     if (typeof ym === 'function') {
@@ -230,19 +217,26 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
     devMode && console.log('onSubmitSearchForm', art, quantity)
 
     if (String(art).length) {
-      sendSearchRequest({
-        q: art,
-        c: quantity || 1,
-      })
+      dispatch(setFormBusy(true))
 
-      history.push(
-        {
-          pathname: '/search/',
-          query: { art: art, q: quantity || 1 },
-        },
-        undefined,
-        { shallow: true }
-      )
+      setSearchData({})
+      setTimeout(() => {
+        history
+          .push(
+            {
+              pathname: '/search/',
+              query: { art: art, q: quantity || 1 },
+            },
+            undefined,
+            { shallow: true }
+          )
+          .then(() => {
+            sendSearchRequest({
+              q: art,
+              c: quantity || 1,
+            })
+          })
+      }, 1)
 
       //history
       //  .replace({
@@ -341,7 +335,7 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
         } else {
           res(store)
         }
-      } else if (history.pathname === '/order') {
+      } else if (history.asPath === '/order') {
         checkSupplierPrices(store, 'Louisyen', res)
       } else {
         res(store)
@@ -355,16 +349,14 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
         localStorage.setItem('catpart-mode', profile.hasOwnProperty('id') ? 'auth' : '')
       }
 
-      console.log('store', store, history.pathname)
+      console.log('store', store, history.asPath)
 
       setCartCount(store?.length || 0)
 
-      if (store?.length) {
+      if (store?.length > 0) {
         setTotalCart(
           store.reduce((total, c) => total + c.cart * c.pricebreaks[findPriceIndex(c.pricebreaks, c.cart)].price, 0)
         )
-      } else if (history.pathname === '/order') {
-        history.push('/', undefined, { shallow: true })
       }
     })
   }
@@ -421,8 +413,9 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
   }
 
   useEffect(() => {
-    document.body.classList[formBusy || busyOrder ? 'add' : 'remove']('__busy')
-  }, [formBusy, busyOrder])
+    console.log('formBusy', formBusy, busyOrder)
+    document.body.classList[formBusy ? 'add' : 'remove']('__busy')
+  }, [formBusy])
 
   useEffect(() => {
     dispatch(setCloseAllMenus())
@@ -477,6 +470,10 @@ function NextCatpartApp({ Component, pageData, errorData, fetchingPage, catalogD
   useEffect(() => {
     updateCart(-1)
   }, [profile])
+
+  useEffect(() => {
+    dispatch(setOrderSent(true))
+  }, [history.asPath])
 
   useEffect(() => {
     setDevMode(process.env.NODE_ENV !== 'production')

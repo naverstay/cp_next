@@ -247,7 +247,7 @@ function Header(props) {
     if (loginInput?.current) {
       const user = localStorage.getItem('catpart-user')
 
-      if (history.pathname === '/order' && user) {
+      if (history.asPath === '/order' && user) {
         userFields = getJsonData(user)
 
         if (userFields.hasOwnProperty('order-email')) {
@@ -327,7 +327,7 @@ function Header(props) {
       <div className="header-right __auth">
         {profile?.id ? (
           <Ripples during={1000} className="btn __blue">
-            {history.pathname === '/orders' ? (
+            {history.asPath === '/orders' ? (
               <span className="btn-inner">
                 <span className="__dotted">{profile?.contact_name || 'name'}</span>
               </span>
@@ -418,8 +418,13 @@ function Header(props) {
               <p>
                 <button
                   onClick={() => {
-                    dispatch(setOpenResetPassword(!openResetPassword))
-                    dispatch(setOpenAuthPopup(!openAuthPopup))
+                    if (openAuthPopup) {
+                      dispatch(setOpenAuthPopup(false))
+                      dispatch(setOpenResetPassword(true))
+                    } else {
+                      dispatch(setOpenResetPassword(false))
+                      dispatch(setOpenAuthPopup(true))
+                    }
                   }}
                   className="header-navbar__link"
                 >

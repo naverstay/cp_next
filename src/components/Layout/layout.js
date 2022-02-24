@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -20,7 +20,10 @@ function Layout(pageProps) {
 
   const { children, appDrag, setAppDrag, setProfileChecked, setProfile, catalogMenu } = pageProps
   const { openMobMenu } = useSelector((state) => state.menus)
-  const { tableHeadFixed, fetchingDataInProgress } = useSelector((state) => state.search)
+  const { tableHeadFixed, fetchingDataInProgress, formBusy } = useSelector((state) => state.search)
+  const { orderSent } = useSelector((state) => state.cart)
+
+  const [centeredForm, setCenteredForm] = useState(true)
 
   const appHeight = () => {
     const doc = document.documentElement
@@ -108,7 +111,13 @@ function Layout(pageProps) {
     window.log = ['localhost', 'html'].indexOf(location.hostname.split('.')[0]) > -1
   }, [])
 
-  console.log('render Layout', tableHeadFixed)
+  const watchLocation = typeof window === 'undefined' ? '' : window.location.pathname
+
+  useEffect(() => {
+    console.log('render Layout', orderSent, formBusy, watchLocation === '/', history)
+
+    setCenteredForm(!formBusy && watchLocation === '/')
+  }, [formBusy, watchLocation, orderSent])
 
   return (
     <div className={`app-wrapper${appDrag ? ' __over' : ''}`}>
@@ -126,14 +135,25 @@ function Layout(pageProps) {
 
       <CatalogueMenu catalogMenu={catalogMenu} />
 
-      <main className={`main${history.asPath === '/' ? ' __center' : ''}`}>
+      <main className={`main${centeredForm && !orderSent ? ' __center' : ''}`}>
         <SearchForm {...pageProps} />
 
-        {fetchingDataInProgress && fetchingDataInProgress !== 'search' ? (
-          <LoadingIndicator page={fetchingDataInProgress} />
-        ) : (
-          <div className="main-content">{children}</div>
-        )}
+        <div className="main-content">
+          {orderSent ? (
+            <article className="article text-center __lg">
+              <h1 className="article-title">Готово! Заказ отправлен!</h1>
+              <p>Спасибо за заказ. В течение 5 минут счет будет на вашей почте.</p>
+            </article>
+          ) : (
+            children
+          )}
+        </div>
+
+        {/*{fetchingDataInProgress && fetchingDataInProgress !== 'search' ? (*/}
+        {/*  <LoadingIndicator page={fetchingDataInProgress} />*/}
+        {/*) : (*/}
+        {/*  <div className="main-content">{children}</div>*/}
+        {/*)}*/}
 
         {tableHeadFixed}
       </main>

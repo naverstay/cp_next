@@ -21,8 +21,6 @@ import DeepElaboration from '../DeepElaboration'
 import { OrderForm } from '../OrderForm'
 import { SearchResults } from '../SearchResults'
 import Share from '../Share'
-import SimilarSlider from '../SimilarSlider'
-import SupplyNotification from '../SupplyNotification'
 
 import LoadingIndicator from '@/components/LoadingIndicator'
 import { RUB, TRIGGER_DROPDOWN_LIMIT } from '@/store/constants'
@@ -64,7 +62,7 @@ export function FilterForm({
 
   const { formBusy, fetchingDataInProgress } = useSelector((state) => state.search)
 
-  const cart = history.pathname === '/order'
+  const cart = history.asPath === '/order'
 
   const { openMobMenu } = useSelector((state) => state.menus)
 
@@ -79,13 +77,13 @@ export function FilterForm({
   const [openMoreTriggers, setOpenMoreTriggers] = useState(false)
 
   const [pageLimitTrigger, setPageLimitTrigger] = useState(0)
-  const paramsPage = parseInt(history.pathname.split('/')[2])
+  const paramsPage = parseInt(history.asPath.split('/')[2])
   const [catPage, setCatPage] = useState(isNaN(paramsPage) ? 1 : paramsPage)
 
   // todo get props from history
   const props = {
     match: {
-      url: history.pathname,
+      url: history.asPath,
       params: {
         catalogue: 'catalog',
         page: '2',
@@ -93,12 +91,12 @@ export function FilterForm({
     },
   }
 
-  //console.log('FilterForm', params, paramsPage, history.pathname.split('/'))
+  //console.log('FilterForm', params, paramsPage, history.asPath.split('/'))
 
   const isCatalogueRoot = () => {
     // todo match catalogue
     // props.match.params.hasOwnProperty('catalogue') &&
-    return history.pathname.split('/')[1] !== 'catalog'
+    return history.asPath.split('/')[1] !== 'catalog'
   }
 
   const plural = (n, str1, str2, str5) =>
@@ -243,8 +241,6 @@ export function FilterForm({
   }, [searchData, totalData])
 
   if (typeof window === 'undefined') {
-    console.log('searchData, totalData', counter, searchData, totalData)
-
     if (!counter) {
       applySearch()
     }
@@ -284,7 +280,7 @@ export function FilterForm({
           <meta name="keywords" content="Оформление заказа - CATPART.RU" />
           <link rel="canonical" href="https://catpart.ru/order/" />
         </Head>
-      ) : history.pathname === '/search' ? (
+      ) : history.asPath === '/search' ? (
         <Head>
           <title>{searchInfo}</title>
           <meta name="description" content={searchInfo} />
@@ -293,9 +289,7 @@ export function FilterForm({
         </Head>
       ) : null}
 
-      {fetchingDataInProgress || (!cart && formBusy && itemData === null) ? (
-        <LoadingIndicator page={fetchingDataInProgress} />
-      ) : null}
+      {fetchingDataInProgress || (!cart && formBusy) ? <LoadingIndicator page={fetchingDataInProgress} /> : null}
 
       {fetchingDataInProgress ? null : (
         <div className="form-filter__holder">
@@ -454,6 +448,7 @@ export function FilterForm({
                 notificationFunc={notificationFunc}
                 totalCart={totalCart}
                 currency={currency}
+                devMode={devMode}
                 delivery
               />
             </React.Fragment>
@@ -476,7 +471,6 @@ export function FilterForm({
                     currency={currency}
                     bom={searchData.bom}
                     list={searchData.res}
-                    relativeTime={itemData !== null}
                   />
                 </>
               ) : elaboration?.length > 0 ? (
@@ -489,6 +483,7 @@ export function FilterForm({
                     notificationFunc={notificationFunc}
                     totalCart={totalCart}
                     currency={currency}
+                    devMode={devMode}
                     elaboration={elaboration}
                   />
                 </>

@@ -400,9 +400,7 @@ export function OrdersPage(props) {
                     return ret
                   })}
               </>
-            ) : (
-              <LoadingIndicator page={'orders'} />
-            )}
+            ) : null}
           </div>
         </>
       ) : (

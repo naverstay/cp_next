@@ -8,29 +8,6 @@ import { getCurrencyAndMenu } from '@/hooks/useCatalogMenu'
 import { STATIC_PAGES } from '@/store/constants'
 import apiGET from '@/utils/search'
 
-const CommonPage = ({ ...props }) => {
-  const router = useRouter()
-  const { id, slug } = router.query
-
-  console.log('CommonPage', props)
-
-  if (STATIC_PAGES.indexOf(id) > -1) {
-    return <FeaturePage pageData={props.pageData} pageName={id} />
-  }
-
-  if (props.catalogData) {
-    return <CatalogPage activeTab={0} {...props} catalogData={props.catalogData} />
-  }
-
-  return (
-    <>
-      <p>any</p>
-      <h2>{id}</h2>
-      <h2>{slug?.join(' / ')}</h2>
-    </>
-  )
-}
-
 export async function getServerSideProps({ query, res }) {
   const { id, slug } = query
   let pageData = {}
@@ -107,6 +84,29 @@ export async function getServerSideProps({ query, res }) {
       currencyList: currencyList,
     },
   }
+}
+
+const CommonPage = ({ ...props }) => {
+  const router = useRouter()
+  const { id, slug } = router.query
+
+  console.log('CommonPage', props)
+
+  if (STATIC_PAGES.indexOf(id) > -1) {
+    return <FeaturePage pageData={props.pageData} pageName={id} />
+  }
+
+  if (props.catalogData) {
+    return <CatalogPage activeTab={0} {...props} catalogData={props.catalogData} />
+  }
+
+  return (
+    <>
+      <p>any</p>
+      <h2>{id}</h2>
+      <h2>{slug?.join(' / ')}</h2>
+    </>
+  )
 }
 
 export default CommonPage

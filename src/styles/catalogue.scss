@@ -724,7 +724,7 @@
         margin: auto;
 
         @include respond-to-max($tablet) {
-          display: flex;
+          display: flex !important;
           justify-content: space-between;
           white-space: normal;
           padding: 6px 10px;
@@ -1077,7 +1077,7 @@
 
         .rt-td {
           padding: 6px 10px;
-          display: flex;
+          display: flex !important;
           align-items: center;
           white-space: nowrap;
           background: inherit;
@@ -1142,6 +1142,8 @@
       }
 
       .rt-tbody {
+        //overflow: hidden;
+
         .rt-tr-group {
           border: 0;
         }

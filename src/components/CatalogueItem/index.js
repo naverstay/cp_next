@@ -186,7 +186,11 @@ export default function CatalogueItem(props) {
                   <p>Технические спецификации</p>
                 </article>
                 <div className={'catalogue-page__specs'}>
-                  <SlideDown transitionOnAppear={false}>{specsHTML}</SlideDown>
+                  {typeof window === 'undefined' ? (
+                    specsHTML
+                  ) : (
+                    <SlideDown transitionOnAppear={false}>{specsHTML}</SlideDown>
+                  )}
 
                   <div className="catalogue-page__controls">
                     {itemData.snippet.specs.length > 10 && typeof window !== 'undefined' ? (

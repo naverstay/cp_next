@@ -154,7 +154,9 @@ export function SomeCatalogPage({
         })
       }
     } else {
-      setCategoryFilterNames(filterNames)
+      if (typeof window !== 'undefined') {
+        setCategoryFilterNames(filterNames)
+      }
     }
   }
 
@@ -203,7 +205,7 @@ export function SomeCatalogPage({
   // todo get props from history
   const props = {
     match: {
-      url: history.pathname,
+      url: history.asPath,
       params: {
         catalogue: 'catalog',
         page: '2',
@@ -211,12 +213,12 @@ export function SomeCatalogPage({
     },
   }
 
-  //console.log('SomeCatalogPage', params, paramsPage, history.pathname.split('/'))
+  //console.log('SomeCatalogPage', params, paramsPage, history.asPath.split('/'))
 
   const isCatalogueRoot = () => {
     // todo match catalogue
     // props.match.params.hasOwnProperty('catalogue') &&
-    return history.pathname.split('/')[1] !== 'catalog'
+    return history.asPath.split('/')[1] !== 'catalog'
   }
 
   const plural = (n, str1, str2, str5) =>
@@ -433,7 +435,9 @@ export function SomeCatalogPage({
           }
         }
 
-        setShowCatPreloader(false)
+        //if (typeof window === 'undefined') {
+        //  setShowCatPreloader(false)
+        //}
       })
 
       //apiGET(requestURL, options, (data) => {
@@ -475,7 +479,9 @@ export function SomeCatalogPage({
       let attrIds = []
       let page = 1
 
-      setShowCatPreloader(true)
+      //if (typeof window === 'undefined') {
+      //  setShowCatPreloader(true)
+      //}
 
       if (props.match.params.hasOwnProperty('catalogue') && props.match.params.catalogue !== 'catalog') {
         url = `/${props.match.params.catalogue.replace(/\//g, '')}`
@@ -551,46 +557,46 @@ export function SomeCatalogPage({
     }
   }
 
-  //useEffect(() => {
-  //  setShowCatPreloader(true)
-  //  setItemData(null)
-  //  setCategoryPage(true)
-  //  let url = ''
-  //  let attrIds = []
-  //  let options = qs.parse(history.asPath.split('?')[1])
-  //
-  //  if (props.match.params.hasOwnProperty('catalogue') && props.match.params.catalogue !== 'catalog') {
-  //    url = '/' + props.match.params.catalogue.replace(/\//g, '')
-  //  } else {
-  //    let queryAttr =
-  //      options && options.hasOwnProperty('a')
-  //        ? options.a.map((m) => {
-  //            return {
-  //              id: m.id,
-  //              values: m.v,
-  //            }
-  //          })
-  //        : []
-  //
-  //    if (options && options.hasOwnProperty('m')) {
-  //      queryAttr.push({
-  //        id: 'm',
-  //        name: 'Производитель',
-  //        values: options.m,
-  //      })
-  //    }
-  //
-  //    setCategoryFilter(queryAttr)
-  //  }
-  //
-  //  if (options && options.hasOwnProperty('a')) {
-  //    attrIds = options.a.map((m) => parseInt(m.id))
-  //  }
-  //
-  //  updateFilterNames(options, attrIds)
-  //
-  //  updateCategoryList(url, options, catPage)
-  //}, [prevPageURL])
+  useEffect(() => {
+    console.log('history.asPath', history)
+    setShowCatPreloader(true)
+    setItemData(null)
+    setCategoryPage(true)
+    let url = ''
+    let attrIds = []
+    let options = history.query
+
+    if (categoryPage) {
+      url = '/' + history.asPath.replace(/\//g, '')
+    } else {
+      let queryAttr = options?.a
+        ? options.a.map((m) => {
+            return {
+              id: m.id,
+              values: m.v,
+            }
+          })
+        : []
+
+      if (options?.m) {
+        queryAttr.push({
+          id: 'm',
+          name: 'Производитель',
+          values: options.m,
+        })
+      }
+
+      setCategoryFilter(queryAttr)
+    }
+
+    if (options?.a) {
+      attrIds = options.a.map((m) => parseInt(m.id))
+    }
+
+    updateFilterNames(options, attrIds)
+
+    updateCategoryList(url, options, catPage)
+  }, [history.asPath])
 
   //useEffect(() => {
   //  let newURL = props.match.url.split('/')[1]
@@ -600,7 +606,7 @@ export function SomeCatalogPage({
   //    }
   //    setPrevPageURL(newURL)
   //  }
-  //}, [history.pathname])
+  //}, [history.asPath])
 
   useEffect(
     (prev) => {
@@ -693,9 +699,7 @@ export function SomeCatalogPage({
       <React.Fragment>
         <Breadcrumbs bread={breadcrumbs} />
 
-        {itemData ? (
-          <CatalogueItem profile={profile} itemData={itemData} props={{ ...props }} />
-        ) : categoryPage ? (
+        {categoryPage ? (
           <>
             <CataloguePage
               showCatPreloader={false}
@@ -797,7 +801,9 @@ export function SomeCatalogPage({
               </div>
             ) : null}
           </>
-        ) : null}
+        ) : (
+          <CatalogueItem profile={profile} itemData={itemData} props={{ ...props }} />
+        )}
       </React.Fragment>
 
       {fetchingDataInProgress || (!cart && formBusy && itemData === null) ? (

@@ -11,6 +11,9 @@ import { useDetectClickOutside } from 'react-detect-click-outside'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import Ripples from 'react-ripples'
 // Import React Table
+//import { useTable, useBlockLayout, usePagination } from 'react-table'
+//import { useSticky } from 'react-table-sticky'
+
 import ReactTable from 'react-table'
 // Import React Table HOC Fixed columns
 import withFixedColumns from 'react-table-hoc-fixed-columns'
@@ -226,11 +229,329 @@ export default function CataloguePage(props) {
     return ret
   }, [nestedCategories])
 
+  const defaultColumn = React.useMemo((col, i) => {
+    console.log('defaultColumn', col, i)
+    return {
+      minWidth: 150,
+      width: 150,
+      maxWidth: 400,
+    }
+  }, [])
+
   console.log('categoryItems', categoryItems)
+
+  const Table = ({ columns, data }) => {
+    // Use the state and functions returned from useTable to build your UI
+    const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+      {
+        columns,
+        data,
+      }
+      //usePagination,
+      //useBlockLayout,
+      //useSticky
+    )
+
+    console.log('columns', columns)
+
+    // Render the UI for your table
+    return (
+      <div className={'rt-table'} {...getTableProps()}>
+        {headerGroups.map((headerGroup, hi) => {
+          return (
+            <div key={hi} className={'rt-thead ' + (hi ? '-header' : '-headerGroups')}>
+              <div className={'rt-tr-group'}>
+                <div {...headerGroup.getHeaderGroupProps()} className={'rt-tr '}>
+                  {headerGroup.headers.map((column, ci) => {
+                    return hi ? (
+                      <div key={ci} {...column.getHeaderProps()} className={'rt-th'}>
+                        {column.render('Header')}
+                      </div>
+                    ) : (
+                      <div key={ci} {...column.getHeaderProps()} className={'rt-th'}>
+                        <div className={'rt-resizable-header'}>
+                          <div className={'rt-resizable-header-content'}>{column.render('Header')}</div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          )
+        })}
+
+        <div className={'rt-tbody'} {...getTableBodyProps()}>
+          {rows.map((row, ri) => {
+            prepareRow(row)
+            return (
+              <div key={ri} className={'rt-tr-group'}>
+                <div {...row.getRowProps()} className={'rt-tr ' + (ri % 2 ? '-odd' : '-even')}>
+                  {row.cells.map((cell, ci) => {
+                    return (
+                      <div key={ci} {...cell.getCellProps()} className={'rt-td'}>
+                        {cell.render('Cell')}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Name',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Info',
+        columns: [
+          {
+            Header: 'Age',
+            accessor: 'age',
+          },
+          {
+            Header: 'Visits',
+            accessor: 'visits',
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Profile Progress',
+            accessor: 'progress',
+          },
+        ],
+      },
+    ],
+    []
+  )
 
   const catalogHTML = useMemo(() => {
     return categoryItems?.length ? (
-      <>
+      <React.Fragment>
+        {/*<div className={'ReactTable catalogue-striped'}>*/}
+        {/*  <Table*/}
+        {/*    key={categoryItems.length}*/}
+        {/*    //columns={columns}*/}
+        {/*    data={categoryItems}*/}
+        {/*    showPagination={false}*/}
+        {/*    showPageJump={false}*/}
+        {/*    sortable={false}*/}
+        {/*    getTdProps={(state, rowInfo, column, instance) => {*/}
+        {/*      return {*/}
+        {/*        onMouseEnter: (e) => {*/}
+        {/*          let nodes = Array.prototype.slice.call(e.target.parentNode.children)*/}
+        {/*          const index = nodes.indexOf(e.target)*/}
+        {/*          let header = e.target.closest('.rt-table').querySelector('.rt-thead.-header')*/}
+
+        {/*          Array.prototype.slice.call(header.querySelectorAll('.rt-th')).forEach((h, hi) => {*/}
+        {/*            h.classList[index === hi ? 'add' : 'remove']('__hover')*/}
+        {/*          })*/}
+        {/*        },*/}
+        {/*        onMouseLeave: (e) => {*/}
+        {/*          let nodes = Array.prototype.slice.call(e.target.parentNode.children)*/}
+        {/*          let header = e.target.closest('.rt-table').querySelector('.rt-thead.-header')*/}
+        {/*          Array.prototype.slice*/}
+        {/*            .call(header.querySelectorAll('.rt-th'))*/}
+        {/*            [nodes.indexOf(e.target)].classList.remove('__hover')*/}
+        {/*        },*/}
+        {/*      }*/}
+        {/*    }}*/}
+        {/*    columns={[*/}
+        {/*      {*/}
+        {/*        Header: '',*/}
+        {/*        id: 'photo',*/}
+        {/*        sticky: 'left',*/}
+        {/*        columns: [*/}
+        {/*          {*/}
+        {/*            Header: (*/}
+        {/*              <div className={'catalogue-page__table-cell text-center'}>*/}
+        {/*                <span>Фото</span>*/}
+        {/*              </div>*/}
+        {/*            ),*/}
+        {/*            id: 'catImage',*/}
+        {/*            accessor: 'catImage',*/}
+        {/*            Cell: (tableProps) => {*/}
+        {/*              return (*/}
+        {/*                <span className={'catalogue-page__table-image'}>*/}
+        {/*                  {tableProps.row.catImage ? (*/}
+        {/*                    <img*/}
+        {/*                      //effect="opacity"*/}
+        {/*                      src={tableProps.row.catImage}*/}
+        {/*                      // placeholder={<span className={"catalogue-page__table-loader"} />}*/}
+        {/*                      alt={tableProps.row.catPartNum}*/}
+        {/*                    />*/}
+        {/*                  ) : null}*/}
+        {/*                </span>*/}
+        {/*              )*/}
+        {/*            },*/}
+        {/*            minWidth: 10,*/}
+        {/*            width: 70,*/}
+        {/*          },*/}
+        {/*          {*/}
+        {/*            Header: (*/}
+        {/*              <div*/}
+        {/*                aria-hidden="true"*/}
+        {/*                onClick={(e) => {*/}
+        {/*                  if (!e.target.classList.contains('sort-btn')) {*/}
+        {/*                    setCategorySort('title')*/}
+        {/*                  }*/}
+        {/*                }}*/}
+        {/*                className={'catalogue-page__table-cell text-center'}*/}
+        {/*              >*/}
+        {/*                <span style={{ fontWeight: categorySortField === 'title' ? 'bold' : 400 }}>Номер детали</span>*/}
+        {/*              </div>*/}
+        {/*            ),*/}
+        {/*            id: 'catPartNum',*/}
+        {/*            accessor: 'catPartNum',*/}
+        {/*            Cell: (tableProps) => {*/}
+        {/*              console.log('tableProps', tableProps.row.original)*/}
+        {/*              return tableProps.row.original.catPartLink ? (*/}
+        {/*                <div className={'catalogue-page__table-name'}>*/}
+        {/*                  <NextLink*/}
+        {/*                    className={'catalogue-page__table-link'}*/}
+        {/*                    to={'/' + tableProps.row.original.catPartLink + '/'}*/}
+        {/*                  >*/}
+        {/*                    {tableProps.row.catPartNum}*/}
+        {/*                  </NextLink>*/}
+        {/*                  <div*/}
+        {/*                    aria-hidden="true"*/}
+        {/*                    className={'catalogue-page__table-expander icon icon-chevron-up'}*/}
+        {/*                    onClick={(e) => {*/}
+        {/*                      e.target.closest('.rt-tr').classList.toggle('__opened')*/}
+        {/*                    }}*/}
+        {/*                  />*/}
+        {/*                </div>*/}
+        {/*              ) : (*/}
+        {/*                <span>{tableProps.row.catPartNum}</span>*/}
+        {/*              )*/}
+        {/*            },*/}
+        {/*            // width: 170,*/}
+        {/*            minWidth: 10,*/}
+        {/*            width: getColumnWidth('catPartNum', 'Номер детали', categorySortField === 'title' ? 'bold' : 400),*/}
+        {/*          },*/}
+        {/*          {*/}
+        {/*            // Header: <div className={"text-center"}>Производитель</div>,*/}
+        {/*            id: 'catManufacturer',*/}
+        {/*            accessor: 'catManufacturer',*/}
+        {/*            Header: (tableProps) => {*/}
+        {/*              return (*/}
+        {/*                <div*/}
+        {/*                  aria-hidden="true"*/}
+        {/*                  className={'catalogue-page__table-cell text-center'}*/}
+        {/*                  onClick={(e) => {*/}
+        {/*                    if (!e.target.classList.contains('sort-btn')) {*/}
+        {/*                      setCategorySort('manufacturer')*/}
+        {/*                    }*/}
+        {/*                  }}*/}
+        {/*                >*/}
+        {/*                  <span style={{ fontWeight: categorySortField === 'manufacturer' ? 'bold' : 400 }}>*/}
+        {/*                    Производитель*/}
+        {/*                  </span>*/}
+        {/*                  {rtSortExtension('catManufacturer', 'm')}*/}
+        {/*                </div>*/}
+        {/*              )*/}
+        {/*            },*/}
+        {/*            Cell: (tableProps) => {*/}
+        {/*              return (*/}
+        {/*                <span className={'text-center catalogue-page__table-param'}>*/}
+        {/*                  <span className={'catalogue-page__table-key'}>Производитель</span>*/}
+        {/*                  <span className={'catalogue-page__table-value white-space__normal'}>*/}
+        {/*                    {tableProps.row.catManufacturer}*/}
+        {/*                  </span>*/}
+        {/*                </span>*/}
+        {/*              )*/}
+        {/*            },*/}
+        {/*            minWidth: 10,*/}
+        {/*            width: getColumnWidth(*/}
+        {/*              'catManufacturer',*/}
+        {/*              'Производитель',*/}
+        {/*              categorySortField === 'manufacturer' ? 'bold' : 400*/}
+        {/*            ),*/}
+        {/*            // width: 110*/}
+        {/*          },*/}
+        {/*        ],*/}
+        {/*      },*/}
+        {/*      {*/}
+        {/*        Header: '',*/}
+        {/*        id: 'attributes',*/}
+        {/*        columns: [].concat(*/}
+        {/*          catColumnsList.map((c, ci) => {*/}
+        {/*            //eslint-disable-next-line react/display-name*/}
+        {/*            c.Header = (tableProps) => {*/}
+        {/*              return (*/}
+        {/*                <div*/}
+        {/*                  aria-hidden="true"*/}
+        {/*                  className={'catalogue-page__table-cell'}*/}
+        {/*                  onClick={(e) => {*/}
+        {/*                    if (!e.target.classList.contains('sort-btn')) {*/}
+        {/*                      if (c.attributeId.indexOf('no_id') === 0) {*/}
+        {/*                        console.log('attributes', c)*/}
+        {/*                      } else {*/}
+        {/*                        setCategorySort('attributes.' + c.attributeId)*/}
+        {/*                      }*/}
+        {/*                    }*/}
+        {/*                  }}*/}
+        {/*                >*/}
+        {/*                  <span*/}
+        {/*                    style={{ fontWeight: categorySortField === 'attributes.' + c.attributeId ? 'bold' : 400 }}*/}
+        {/*                  >*/}
+        {/*                    {c.accessor}*/}
+        {/*                  </span>*/}
+        {/*                  {rtSortExtension(c.accessor, c.attributeId)}*/}
+        {/*                </div>*/}
+        {/*              )*/}
+        {/*            }*/}
+
+        {/*            c.minWidth = 10*/}
+        {/*            c.width = getColumnWidth(*/}
+        {/*              c.accessor,*/}
+        {/*              c.accessor,*/}
+        {/*              categorySortField === 'attributes.' + c.attributeId ? 'bold' : 400*/}
+        {/*            )*/}
+
+        {/*            //eslint-disable-next-line react/display-name*/}
+        {/*            c.Cell = (cell) => {*/}
+        {/*              let name = catColumnsList.find((f) => f.attributeId === cell.column.attributeId).accessor*/}
+
+        {/*              return (*/}
+        {/*                <span*/}
+        {/*                  className={'text-center catalogue-page__table-param' + (cell.value ? '' : ' mob-hidden__')}*/}
+        {/*                >*/}
+        {/*                  <span className={'catalogue-page__table-key'}>{name}</span>*/}
+        {/*                  <span className={'catalogue-page__table-value'}>{cell.value}</span>*/}
+        {/*                </span>*/}
+        {/*              )*/}
+        {/*            }*/}
+
+        {/*            return c*/}
+        {/*          })*/}
+        {/*        ),*/}
+        {/*      },*/}
+        {/*    ]}*/}
+        {/*    defaultPageSize={categoryItems.length}*/}
+        {/*    // style={{ height: 500 }}*/}
+        {/*    className="catalogue-striped"*/}
+        {/*  />*/}
+        {/*</div>*/}
+
         <ReactTableFixedColumns
           key={categoryItems.length}
           data={categoryItems}
@@ -425,7 +746,7 @@ export default function CataloguePage(props) {
           // style={{ height: 500 }}
           className="catalogue-striped"
         />
-      </>
+      </React.Fragment>
     ) : null
   }, [categoryItems])
 
@@ -435,7 +756,7 @@ export default function CataloguePage(props) {
         <title>{title}</title>
         <meta name="description" content={title} />
         <meta name="keywords" content={title} />
-        <link rel="canonical" href={`https://catpart.ru/${history.pathname.split('/')[1]}/`} />
+        <link rel="canonical" href={`https://catpart.ru/${history.asPath.split('/')[1]}/`} />
       </Head>
 
       {categoryInfo !== null ? (
