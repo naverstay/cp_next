@@ -386,6 +386,16 @@ export function SomeCatalogPage({
       setNodataText('')
 
       new Promise((resolve, reject) => {
+        console.log(
+          'Promise',
+          requestURL,
+          attributes,
+          catPage || 1,
+          query?.l || 10,
+          categorySortField || '',
+          categorySortAsc ? 'asc' : 'desc'
+        )
+
         const data = getCategoryList(
           requestURL,
           attributes,
@@ -565,6 +575,8 @@ export function SomeCatalogPage({
     let url = ''
     let attrIds = []
     let options = history.query
+
+    delete options.id
 
     if (categoryPage) {
       url = '/' + history.asPath.replace(/\//g, '')

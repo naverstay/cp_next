@@ -13,7 +13,6 @@ import Ripples from 'react-ripples'
 // Import React Table
 //import { useTable, useBlockLayout, usePagination } from 'react-table'
 //import { useSticky } from 'react-table-sticky'
-
 import ReactTable from 'react-table'
 // Import React Table HOC Fixed columns
 import withFixedColumns from 'react-table-hoc-fixed-columns'
